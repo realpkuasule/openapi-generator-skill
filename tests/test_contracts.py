@@ -52,6 +52,8 @@ class ContractTests(unittest.TestCase):
         expected = {
             "/v1/inspections": "inspectProject",
             "/v1/profile-validations": "validateGovernanceProfile",
+            "/v1/profile-state-comparisons": "compareGovernanceProfileState",
+            "/v1/profile-state-applications": "applyGovernanceProfileProposal",
             "/v1/generation-comparisons": "compareGeneration",
         }
         observed = {
@@ -146,6 +148,7 @@ class ContractTests(unittest.TestCase):
         mapping = {
             "inspect-response.json": "InspectionResponse",
             "profile-validation-response.json": "ProfileValidationResponse",
+            "profile-state-response.json": "ProfileStateComparisonResponse",
             "generation-comparison-response.json": "GenerationComparisonResponse",
             "error-response.json": "ErrorResponse",
         }
@@ -205,6 +208,7 @@ class ContractTests(unittest.TestCase):
                 "./examples/error-response.json",
                 "./examples/inspect-response.json",
                 "./examples/profile-validation-response.json",
+                "./examples/profile-state-response.json",
                 "./examples/generation-comparison-response.json",
             },
         )

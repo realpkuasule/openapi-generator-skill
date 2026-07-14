@@ -22,6 +22,7 @@ Allow only read-only project discovery and current official-source verification 
 3. Identify project kind and stage, owned and third-party boundaries, consumers, languages, contract sources of truth, OpenAPI/JSON Schema files, generator configs, generated directories, build systems, CI, and validation gates.
 4. Separate observed facts, user decisions, and inferences. Cite file evidence.
 5. Optionally run `scripts/inspect_project.py --root <project>`; it must remain read-only.
+6. If a profile exists, run `scripts/profile_state.py check --profile <profile> --inspection <inspection>`. Reuse `unchanged`; ask only about `changed`, `conflict`, or `unknown` items. Never treat stored permissions as current approval.
 
 Do not treat discovery as authorization to implement.
 
@@ -94,7 +95,7 @@ After approval:
 
 ### 7. Persist decisions
 
-After approved execution and validation, update the project's version-controlled governance profile. Prefer `.openapi-engineering/profile.yaml`; follow an existing ADR/contracts convention when the user approved it instead.
+After approved execution and validation, create a candidate with `scripts/profile_state.py propose`. Show its changes and approval digest. Apply only when the current user explicitly approves that exact proposal, using `scripts/profile_state.py apply --profile <profile> --proposal <proposal> --approve <digest>`. Prefer `.openapi-engineering/profile.yaml`; follow an existing ADR/contracts convention when the user approved it instead.
 
 Record selected and rejected strategies, rationale, version pins, contract ownership, outputs, generated-file policy, gates, permissions, evidence sources, actual commands, and verification time. Never store credentials or sensitive payloads. Validate with `scripts/validate_profile.py <profile>`.
 

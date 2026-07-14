@@ -1,0 +1,20 @@
+test_all_json_schemas_are_valid_draft_2020_12 (tests.test_contracts.ContractTests.test_all_json_schemas_are_valid_draft_2020_12) ... ok
+test_all_refs_resolve_to_files_and_internal_targets (tests.test_contracts.ContractTests.test_all_refs_resolve_to_files_and_internal_targets) ... ok
+test_openapi_is_valid_and_operations_are_stable (tests.test_contracts.ContractTests.test_openapi_is_valid_and_operations_are_stable) ... ok
+test_openapi_links_every_response_example (tests.test_contracts.ContractTests.test_openapi_links_every_response_example) ... ok
+test_profile_contract_supports_all_strategies_and_evidence (tests.test_contracts.ContractTests.test_profile_contract_supports_all_strategies_and_evidence) ... ok
+test_profile_examples_follow_the_authoritative_schema (tests.test_contracts.ContractTests.test_profile_examples_follow_the_authoritative_schema) ... ok
+test_response_examples_are_reachable_outputs (tests.test_contracts.ContractTests.test_response_examples_are_reachable_outputs) ... ok
+test_response_examples_match_openapi_schemas (tests.test_contracts.ContractTests.test_response_examples_match_openapi_schemas) ... ok
+test_apply_requires_exact_digest_and_rejects_stale_profile (tests.test_profile_state.ProfileStateTests.test_apply_requires_exact_digest_and_rejects_stale_profile) ... ok
+test_approved_apply_updates_only_profile_and_result_remains_valid (tests.test_profile_state.ProfileStateTests.test_approved_apply_updates_only_profile_and_result_remains_valid) ... ok
+test_check_reports_unchanged_without_writing (tests.test_profile_state.ProfileStateTests.test_check_reports_unchanged_without_writing) ... ok
+test_check_separates_observed_change_conflict_and_unknown (tests.test_profile_state.ProfileStateTests.test_check_separates_observed_change_conflict_and_unknown) ... ok
+test_propose_is_read_only_and_emits_approval_bound_candidate (tests.test_profile_state.ProfileStateTests.test_propose_is_read_only_and_emits_approval_bound_candidate) ... ok
+test_capture_generates_reachable_examples (tests.test_example_conformance.ExampleCaptureTests.test_capture_generates_reachable_examples) ... ok
+test_checked_in_examples_match_capture (tests.test_example_conformance.ExampleCaptureTests.test_checked_in_examples_match_capture) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 7.692s
+
+OK

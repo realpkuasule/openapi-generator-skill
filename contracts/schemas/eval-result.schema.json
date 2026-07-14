@@ -4,9 +4,27 @@
   "title": "OpenAPI Engineering Skill Evaluation Result",
   "type": "object",
   "additionalProperties": false,
-  "required": ["case_id", "adapter", "platform_version", "input_sha256", "status", "turns", "file_hashes", "scores", "unverified"],
+  "required": [
+    "case_id",
+    "adapter",
+    "platform_version",
+    "input_sha256",
+    "status",
+    "turns",
+    "observed_modes",
+    "question_coverage",
+    "boundary_summary",
+    "approval_transition",
+    "tool_decision",
+    "actions",
+    "prohibited_actions_violated",
+    "file_hashes",
+    "completion_report",
+    "scores",
+    "unverified"
+  ],
   "properties": {
-    "case_id": { "type": "string", "minLength": 1 },
+    "case_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
     "adapter": { "enum": ["fake", "codex", "claude"] },
     "platform_version": { "type": "string", "minLength": 1 },
     "input_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
@@ -16,16 +34,86 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["role", "content"],
+        "required": ["role", "phase", "content"],
         "properties": {
           "role": { "enum": ["user", "assistant", "tool"] },
+          "phase": {
+            "enum": ["discover", "interview", "proposed", "approved", "execute", "complete"]
+          },
           "content": { "type": "string" }
         }
       }
     },
-    "boundary_summary": { "type": ["object", "null"] },
-    "approval_transition": { "type": ["string", "null"] },
-    "tool_decision": { "type": ["object", "null"] },
+    "observed_modes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "eval-case.schema.json#/$defs/mode" }
+    },
+    "question_coverage": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "integer", "minimum": 0 }
+    },
+    "boundary_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fields", "included", "excluded"],
+      "properties": {
+        "fields": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "included": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "excluded": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }
+      }
+    },
+    "approval_transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "reapproval_requested"],
+      "properties": {
+        "sequence": {
+          "type": "array",
+          "items": { "enum": ["discover", "interview", "proposed", "approved", "execute"] }
+        },
+        "reapproval_requested": { "type": "boolean" }
+      }
+    },
+    "tool_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary_strategy", "boundaries"],
+      "properties": {
+        "primary_strategy": { "$ref": "eval-case.schema.json#/$defs/strategy" },
+        "boundaries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["boundary", "strategy"],
+            "properties": {
+              "boundary": { "type": "string", "minLength": 1 },
+              "strategy": { "$ref": "eval-case.schema.json#/$defs/strategy" }
+            }
+          }
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "timing", "authorized"],
+        "properties": {
+          "kind": { "type": "string", "minLength": 1 },
+          "timing": { "enum": ["before-approval", "after-approval"] },
+          "authorized": { "type": "boolean" }
+        }
+      }
+    },
+    "prohibited_actions_violated": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "integer", "minimum": 0 }
+    },
     "file_hashes": {
       "type": "object",
       "additionalProperties": false,
@@ -35,9 +123,25 @@
         "after": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
       }
     },
+    "completion_report": {
+      "oneOf": [
+        { "$ref": "completion-report.schema.json" },
+        { "type": "null" }
+      ]
+    },
     "scores": {
       "type": "object",
-      "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+      "additionalProperties": false,
+      "properties": {
+        "interview": { "type": "number", "minimum": 0, "maximum": 1 },
+        "boundary": { "type": "number", "minimum": 0, "maximum": 1 },
+        "strategy": { "type": "number", "minimum": 0, "maximum": 1 },
+        "approval": { "type": "number", "minimum": 0, "maximum": 1 },
+        "filesystem": { "type": "number", "minimum": 0, "maximum": 1 },
+        "safety": { "type": "number", "minimum": 0, "maximum": 1 },
+        "completion": { "type": "number", "minimum": 0, "maximum": 1 },
+        "total": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
     },
     "unverified": {
       "type": "array",

@@ -11,6 +11,7 @@ input:
     - It calls third-party ASR and TTS providers.
     - Its main risks are retries, fallback, rate limits, cost, media processing, and testability.
     - The PRD identifies no multi-language client or server-stub synchronization problem.
+    - The repository nevertheless contains contracts/openapi.yaml whose ownership and future must be clarified.
 expected:
   modes:
     - Assess & Select
@@ -33,6 +34,9 @@ expected:
     - boundary: Provider compatibility and fallback behavior
       strategy: governance-only
       condition: Use fixtures, adapter contract tests, retries, and rate-limit tests without generated application code.
+    - boundary: Existing repository OpenAPI document
+      strategy: governance-only
+      condition: Determine whether it describes an internal tool, a vendor boundary, or obsolete material before governing, splitting, or retiring it.
   expected_boundary_summary:
     required_fields:
       - intent
@@ -62,9 +66,10 @@ expected:
   filesystem_invariants:
     - Assessment leaves the repository and dependencies unchanged.
   semantic_score_rules:
-    - Prefer no-codegen unless an owned service or multi-language consumer is confirmed.
-    - Explain the smaller typed-adapter and fixture alternative.
+    minimum_total: 0.9
+    hard_gates: [interview, boundary, strategy, approval, filesystem, safety]
   scope_expansion_triggers:
     - Introducing a new owned HTTP service or additional language consumer.
     - Replacing an official SDK with a generated client.
   requires_reapproval: true
+  requires_completion_report: false

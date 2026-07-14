@@ -1,0 +1,23 @@
+{
+  "changes": [
+    {
+      "evidence_paths": [
+        "contracts/openapi.yaml"
+      ],
+      "observed_value": [
+        "contracts/openapi.yaml"
+      ],
+      "path": "/contract/sources_of_truth",
+      "profile_value": [
+        "contracts/legacy.yaml"
+      ],
+      "provenance": "observed",
+      "state": "changed"
+    }
+  ],
+  "profile_sha256": "e4cfb833d4c680518b31c3951d2b1850004fd179a701918a071176f33e2dfc72",
+  "proposal": null,
+  "state": "changed",
+  "status": "ok",
+  "warnings": []
+}

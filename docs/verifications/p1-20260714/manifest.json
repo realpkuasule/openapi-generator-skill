@@ -1,0 +1,212 @@
+{
+  "approval": {
+    "approved_at": "2026-07-14T23:41:00+08:00",
+    "approved_message": "好，继续",
+    "excludes": [
+      "real Codex or Claude Code forward tests",
+      "writes to real ~/.codex or ~/.claude",
+      "generator downloads or execution"
+    ],
+    "includes": [
+      "P1 deterministic repository implementation",
+      "temporary-directory fake adapter tests",
+      "temporary-HOME Codex and Claude installation tests"
+    ]
+  },
+  "artifacts": [
+    {
+      "bytes": 267,
+      "path": "docs/verifications/p1-20260714/P1-01-approval-forgery-green.log",
+      "sha256": "3c8b4a58d0904ef753f1c1b9e74c5c1d89cbd100625a02698c63b74c4de292eb"
+    },
+    {
+      "bytes": 848,
+      "path": "docs/verifications/p1-20260714/P1-01-approval-forgery-red.log",
+      "sha256": "1e48ffbafca01e6842767db4ca8f05df4092984bffdace069777dab623cf23ce"
+    },
+    {
+      "bytes": 2353,
+      "path": "docs/verifications/p1-20260714/P1-01-green.log",
+      "sha256": "351ce3717f2501c562d1c7805fe69399cf2f788f88180b61bab28a098d19a95a"
+    },
+    {
+      "bytes": 10601,
+      "path": "docs/verifications/p1-20260714/P1-01-red.log",
+      "sha256": "c95bf1a7d641adf1d40195ecdbddcdc662899d237b6cdb60a3c1785bc4838f08"
+    },
+    {
+      "bytes": 267,
+      "path": "docs/verifications/p1-20260714/P1-01-tool-output-green.log",
+      "sha256": "e5f1fde8b5924098c4ed32c4f662fcda22804e99f9831bebb2491caa4de34e6d"
+    },
+    {
+      "bytes": 848,
+      "path": "docs/verifications/p1-20260714/P1-01-tool-output-red.log",
+      "sha256": "add40698054226a9aa77650a59f3a63161bec238d9589bddc18f51bafcb877de"
+    },
+    {
+      "bytes": 2765,
+      "path": "docs/verifications/p1-20260714/P1-02-03-green.log",
+      "sha256": "30e96885fe25d05bda357fe3ac66010bd697ff55cd5ebf817d8c3546e52d06d7"
+    },
+    {
+      "bytes": 1716,
+      "path": "docs/verifications/p1-20260714/P1-02-03-red.log",
+      "sha256": "d31d47b35167fe71af639fc36f324b4d04cb591f6236836eb8474064ac86045e"
+    },
+    {
+      "bytes": 894,
+      "path": "docs/verifications/p1-20260714/P1-04-green.log",
+      "sha256": "494b2c1a52d1d47be0fffe093bc0c0ca7725fb1bd30568ba2df1b5ba558d3012"
+    },
+    {
+      "bytes": 950,
+      "path": "docs/verifications/p1-20260714/P1-04-red.log",
+      "sha256": "bec9665dd57b565416abc4a44f434102b93ad6cbe2058b8c7da040760210f384"
+    },
+    {
+      "bytes": 1885,
+      "path": "docs/verifications/p1-20260714/P1-06-green.log",
+      "sha256": "a54b15db4ec819eb55edb6120422030f720029b65295087947eea0bf5e92e8b4"
+    },
+    {
+      "bytes": 952,
+      "path": "docs/verifications/p1-20260714/P1-06-red.log",
+      "sha256": "82639a3f6ee6bc89c569c22b15d1ab8923cab7489871f01c0a0ff496d98adf70"
+    },
+    {
+      "bytes": 1671,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/01-contract-validation.log",
+      "sha256": "05a923aa8613d9ce59917fadb0735c9b1c5cfbf028d4ba75c5a8bc999a7dc108"
+    },
+    {
+      "bytes": 372,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/02-captured-example-conformance.log",
+      "sha256": "644a72967daa78942c6982da109f1b2e299bb639a429f375e6fa06043b9f9f4f"
+    },
+    {
+      "bytes": 10909,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/03-unit-test-suite.log",
+      "sha256": "8ff864c288650ceeebcb7402675d5afbe0bae968a6ad3f74ffb9597fca9ccbdc"
+    },
+    {
+      "bytes": 263,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/04-skill-quick-validation.log",
+      "sha256": "36d00e8aa2f15724b86e8c0f30a128a9e1600ca03645df5cfce30ef28ec7eb43"
+    },
+    {
+      "bytes": 789,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/05-inspect-project-help.log",
+      "sha256": "4128585912a006edae803540b56ec5c2c4ac9b5b5a6faece54a569f7b90b80dc"
+    },
+    {
+      "bytes": 480,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/06-validate-profile-help.log",
+      "sha256": "6d6e2a389317e0969d5daebb952e7e895cf0816c63c9362ef2ab6e54b552d8ed"
+    },
+    {
+      "bytes": 522,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/07-compare-generation-help.log",
+      "sha256": "9117e7ab192a962d5defe65d28ace8ca79a1c354f89aa4e85f2f87031dbfe50a"
+    },
+    {
+      "bytes": 670,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/08-profile-state-help.log",
+      "sha256": "c5fe5884ff5b10859162074502b5a8cb429e6660e0fc6052b9af13f5f6d369f7"
+    },
+    {
+      "bytes": 362,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/09-eval-case-validation.log",
+      "sha256": "94d50bc00bfc374701d7f11c5a24ad040666d42c39e3d647cd589615f396e9b8"
+    },
+    {
+      "bytes": 637,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/10-eval-runner-help.log",
+      "sha256": "5ca6e15bf37ec566b7274df8a5294a1bd6f749ff0ed2a673445dda1a490414c4"
+    },
+    {
+      "bytes": 958,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/11-eval-scorer-help.log",
+      "sha256": "5d6c742b89c19b8b58bdedc67610816efb99df764d550dcbb8d17c0e9b3add36"
+    },
+    {
+      "bytes": 777,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/12-skill-installer-dry-run.log",
+      "sha256": "5fa665fd6a7a6d1bcf450ff4ef40fb88b5c11a1a5b8eeaa9b34674012e44a8a3"
+    },
+    {
+      "bytes": 432,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/13-tdd-evidence-help.log",
+      "sha256": "19f6e74d4aa0d56bcd8b696bec90757f271d37c88cfb5408e23ebb33399b948f"
+    },
+    {
+      "bytes": 156,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/14-source-tree-read-only.log",
+      "sha256": "e61f29e7c3a8f3600bb653f525a21ab6f72c7dd8eb90296c59a7b4738fc5cda4"
+    },
+    {
+      "bytes": 8775,
+      "path": "docs/verifications/p1-20260714/deterministic-report.json",
+      "sha256": "a019bb9795082e115d69335890e96e81fc54f890ecbbb8016cb083ac71a46469"
+    }
+  ],
+  "base_commit": "b77e809e0e7af975dcb80669944d0621c0c18c1a",
+  "branch": "feat/p1-governance-evals",
+  "schema_version": 1,
+  "tasks": [
+    {
+      "green_evidence": [
+        "docs/verifications/p1-20260714/P1-01-approval-forgery-green.log",
+        "docs/verifications/p1-20260714/P1-01-green.log",
+        "docs/verifications/p1-20260714/P1-01-tool-output-green.log",
+        "docs/verifications/p1-20260714/deterministic-report.json"
+      ],
+      "id": "P1-01",
+      "red_evidence": [
+        "docs/verifications/p1-20260714/P1-01-approval-forgery-red.log",
+        "docs/verifications/p1-20260714/P1-01-red.log",
+        "docs/verifications/p1-20260714/P1-01-tool-output-red.log"
+      ],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/p1-20260714/P1-02-03-green.log",
+        "docs/verifications/p1-20260714/deterministic-report.json"
+      ],
+      "id": "P1-02/P1-03",
+      "red_evidence": [
+        "docs/verifications/p1-20260714/P1-02-03-red.log"
+      ],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/p1-20260714/P1-04-green.log",
+        "docs/verifications/p1-20260714/deterministic-report.json"
+      ],
+      "id": "P1-04",
+      "red_evidence": [
+        "docs/verifications/p1-20260714/P1-04-red.log"
+      ],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [],
+      "id": "P1-05",
+      "red_evidence": [],
+      "status": "pending-authorization"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/p1-20260714/P1-06-green.log",
+        "docs/verifications/p1-20260714/deterministic-report.json"
+      ],
+      "id": "P1-06",
+      "red_evidence": [
+        "docs/verifications/p1-20260714/P1-06-red.log"
+      ],
+      "status": "passed"
+    }
+  ]
+}

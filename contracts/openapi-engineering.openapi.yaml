@@ -1,11 +1,12 @@
 openapi: 3.1.0
 info:
   title: OpenAPI Engineering Control Plane
-  version: 0.2.0
+  version: 0.3.0
   description: >-
-    Platform-neutral contracts for the read-only helpers bundled with the
-    openapi-engineering skill. The initial implementation is CLI based; future
-    HTTP or MCP adapters must preserve these request and response semantics.
+    Platform-neutral contracts for helpers bundled with the openapi-engineering
+    skill. Discovery, comparison, and proposal operations are read-only; the
+    profile apply operation is explicitly approval-bound. The implementation is
+    CLI based, and future HTTP or MCP adapters must preserve these semantics.
 x-runtime: cli-only
 x-server-status: no-http-server-ships-with-this-skill
 tags:
@@ -78,6 +79,78 @@ paths:
               examples:
                 invalidProfile:
                   externalValue: './examples/profile-validation-response.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/profile-state-comparisons:
+    post:
+      operationId: compareGovernanceProfileState
+      x-cli-command: >-
+        python3 scripts/profile_state.py <check|propose> --profile <profile>
+        --inspection <inspection>
+      x-cli-arguments:
+        mode: first positional argument; check or propose
+        profile: --profile
+        inspection: --inspection
+      x-cli-exit-codes:
+        '0': comparison completed
+        '1': profile conflicts with observed project state
+        '2': usage, dependency, schema, or load error
+      tags: [Governance]
+      summary: Compare a governance profile with read-only project evidence
+      description: >-
+        Reports unchanged, changed, conflict, or unknown state. Propose mode may
+        return an approval-bound candidate profile but never writes the project.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileStateComparisonRequest'
+      responses:
+        '200':
+          description: Profile comparison completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileStateComparisonResponse'
+              examples:
+                changedProfile:
+                  externalValue: './examples/profile-state-response.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/profile-state-applications:
+    post:
+      operationId: applyGovernanceProfileProposal
+      x-cli-command: >-
+        python3 scripts/profile_state.py apply --profile <profile>
+        --proposal <proposal> --approve <approval-digest>
+      x-cli-arguments:
+        profile: --profile
+        proposal: --proposal
+        approval_digest: --approve
+      x-cli-exit-codes:
+        '0': approved proposal applied atomically
+        '1': proposal is stale or approval digest does not match
+        '2': usage, dependency, schema, or load error
+      tags: [Governance]
+      summary: Apply an explicitly approved governance profile proposal
+      description: >-
+        Writes only the requested profile after validating the current profile,
+        proposed profile, and exact approval digest. Historical permissions do
+        not authorize this operation.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileStateApplyRequest'
+      responses:
+        '200':
+          description: Approved proposal applied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileStateApplyResponse'
         '400':
           $ref: '#/components/responses/InvalidRequest'
   /v1/generation-comparisons:
@@ -231,6 +304,133 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ValidationFinding'
+    ProfileStateComparisonRequest:
+      type: object
+      additionalProperties: false
+      required: [mode, profile, inspection]
+      properties:
+        mode:
+          enum: [check, propose]
+        profile:
+          $ref: './schemas/governance-profile.schema.json'
+        inspection:
+          $ref: '#/components/schemas/InspectionResponse'
+    ProfileStateComparisonResponse:
+      type: object
+      additionalProperties: false
+      required: [status, state, profile_sha256, changes, proposal, warnings]
+      properties:
+        status:
+          const: ok
+        state:
+          enum: [unchanged, changed, conflict, unknown]
+        profile_sha256:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProfileStateChange'
+        proposal:
+          oneOf:
+            - $ref: '#/components/schemas/ProfileStateProposal'
+            - type: 'null'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationFinding'
+    ProfileStateChange:
+      type: object
+      additionalProperties: false
+      required:
+        - path
+        - state
+        - profile_value
+        - observed_value
+        - provenance
+        - evidence_paths
+      properties:
+        path:
+          type: string
+          pattern: '^/'
+        state:
+          enum: [changed, conflict, unknown]
+        profile_value: {}
+        observed_value: {}
+        provenance:
+          enum: [observed, user-decided, inferred]
+        evidence_paths:
+          type: array
+          items: { type: string }
+    ProfileStateProposal:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - profile_sha256
+        - proposed_profile_sha256
+        - approval_digest
+        - requires_approval
+        - operations
+        - proposed_profile
+      properties:
+        status:
+          const: proposed
+        profile_sha256:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
+        proposed_profile_sha256:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
+        approval_digest:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
+        requires_approval:
+          const: true
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProfilePatchOperation'
+        proposed_profile:
+          $ref: './schemas/governance-profile.schema.json'
+    ProfilePatchOperation:
+      type: object
+      additionalProperties: false
+      required: [op, path, value]
+      properties:
+        op:
+          enum: [add, replace, remove]
+        path:
+          type: string
+          pattern: '^/'
+        value: {}
+    ProfileStateApplyRequest:
+      type: object
+      additionalProperties: false
+      required: [profile_path, proposal, approval_digest]
+      properties:
+        profile_path:
+          type: string
+          minLength: 1
+        proposal:
+          $ref: '#/components/schemas/ProfileStateProposal'
+        approval_digest:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
+    ProfileStateApplyResponse:
+      type: object
+      additionalProperties: false
+      required: [status, applied, profile, profile_sha256]
+      properties:
+        status:
+          const: ok
+        applied:
+          const: true
+        profile:
+          type: string
+        profile_sha256:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
     GenerationComparisonRequest:
       type: object
       additionalProperties: false

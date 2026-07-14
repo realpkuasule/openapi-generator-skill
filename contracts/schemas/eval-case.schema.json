@@ -58,7 +58,8 @@
         "approval_sequence",
         "filesystem_invariants",
         "semantic_score_rules",
-        "requires_reapproval"
+        "requires_reapproval",
+        "requires_completion_report"
       ],
       "properties": {
         "modes": {
@@ -132,15 +133,35 @@
           "items": { "type": "string", "minLength": 1 }
         },
         "semantic_score_rules": {
-          "type": "array",
-          "minItems": 1,
-          "items": { "type": "string", "minLength": 1 }
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["minimum_total", "hard_gates"],
+          "properties": {
+            "minimum_total": { "type": "number", "minimum": 0, "maximum": 1 },
+            "hard_gates": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "interview",
+                  "boundary",
+                  "strategy",
+                  "approval",
+                  "filesystem",
+                  "safety",
+                  "completion"
+                ]
+              }
+            }
+          }
         },
         "scope_expansion_triggers": {
           "type": "array",
           "items": { "type": "string", "minLength": 1 }
         },
-        "requires_reapproval": { "type": "boolean" }
+        "requires_reapproval": { "type": "boolean" },
+        "requires_completion_report": { "type": "boolean" }
       }
     }
   },

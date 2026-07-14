@@ -12,6 +12,7 @@ input:
     - OpenAPI owns transport envelopes while Draft 2020-12 JSON Schema owns domain documents.
     - The plan names OpenAPI Generator 7.23.0, typescript-fetch, and a disposable Python boundary shell.
     - Vendor AI APIs must use official SDKs.
+    - A Flask or language-native thin shell and an SSE adapter must remain viable fallbacks.
 expected:
   modes:
     - Assess & Select
@@ -36,7 +37,10 @@ expected:
       condition: Treat python-fastapi as disposable and adopt only after import and contract gates pass.
     - boundary: Python boundary fallback
       strategy: language-native
-      condition: Prefer a thin native boundary if generated server targets fail stability or maintenance gates.
+      condition: Prefer a thin Flask or language-native boundary if generated server targets fail stability or maintenance gates.
+    - boundary: SSE event adapter
+      strategy: language-native
+      condition: Keep SSE framing in a thin hand-written adapter when generator output obscures streaming behavior.
     - boundary: Canonical domain and persistence documents
       strategy: governance-only
       condition: Keep Draft 2020-12 JSON Schema authoritative and generate only explicit projections.
@@ -72,9 +76,10 @@ expected:
   filesystem_invariants:
     - No file, dependency, CI, or Agent configuration change before approval.
   semantic_score_rules:
-    - Preserve a mixed strategy by boundary.
-    - Keep domain schemas and vendor APIs outside broad OAG ownership.
+    minimum_total: 0.9
+    hard_gates: [interview, boundary, strategy, approval, filesystem, safety]
   scope_expansion_triggers:
     - Adding a server generator, custom template, CI change, or new output directory.
     - Accessing real vendor APIs or credentials.
   requires_reapproval: true
+  requires_completion_report: false

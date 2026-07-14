@@ -28,6 +28,12 @@ For both platforms verify:
 - no-codegen and official SDK remain valid decisions;
 - completion reports contain actual evidence and unverified items.
 
+## Installation
+
+Run `python3 scripts/install_skill.py --home <temporary-home>` first. It is dry-run by default and plans both Codex and Claude Code targets from the same canonical Skill directory. Use `--apply` only after the installation paths and external configuration boundary are approved. Use `--copy` for Windows or environments where directory links are unavailable.
+
+The installer must preflight every selected target before writing, reject divergent existing directories, compare complete Skill tree digests after link/copy, and leave unrelated Agent settings unchanged. Repeating an identical installation is `unchanged`; it must not create a second behavioral source.
+
 ## Script portability
 
 Invoke scripts with `python3` or the platform's configured Python 3 executable. Keep JSON stdout, stable sorting, and explicit exit codes. Never auto-install PyYAML: JSON profiles work without it, while YAML validation must report the missing optional parser clearly.

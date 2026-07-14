@@ -17,6 +17,7 @@ EXAMPLE_NAMES = (
     "error-response.json",
     "generation-comparison-response.json",
     "inspect-response.json",
+    "profile-state-response.json",
     "profile-validation-response.json",
 )
 
@@ -100,6 +101,36 @@ def capture_comparison(root: Path) -> dict[str, Any]:
     return payload
 
 
+def capture_profile_state(root: Path) -> dict[str, Any]:
+    import yaml
+
+    profile = yaml.safe_load(
+        (EXAMPLE_ROOT / "governance-profile.valid.yaml").read_text(encoding="utf-8")
+    )
+    profile["contract"]["sources_of_truth"] = ["contracts/legacy.yaml"]
+    profile_path = root / "profile.yaml"
+    write_text(profile_path, yaml.safe_dump(profile, allow_unicode=True, sort_keys=False))
+    inspection = {
+        "status": "ok",
+        "root": "/workspace/project",
+        "contract_files": ["contracts/openapi.yaml"],
+        "schema_files": [],
+        "truncated": False,
+        "evidence": [{"kind": "contract", "path": "contracts/openapi.yaml"}],
+    }
+    inspection_path = root / "inspection.json"
+    write_text(inspection_path, json.dumps(inspection, sort_keys=True))
+    return run_json(
+        "profile_state.py",
+        "check",
+        "--profile",
+        str(profile_path),
+        "--inspection",
+        str(inspection_path),
+        "--pretty",
+    )
+
+
 def capture_examples(output: Path) -> None:
     output.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as directory:
@@ -107,6 +138,7 @@ def capture_examples(output: Path) -> None:
         examples = {
             "inspect-response.json": capture_inspection(root / "inspection"),
             "generation-comparison-response.json": capture_comparison(root / "comparison"),
+            "profile-state-response.json": capture_profile_state(root / "profile-state"),
             "profile-validation-response.json": run_json(
                 "validate_profile.py",
                 str(EXAMPLE_ROOT / "governance-profile.invalid-secret.yaml"),

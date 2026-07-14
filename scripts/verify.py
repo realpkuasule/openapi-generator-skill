@@ -199,6 +199,28 @@ def deterministic_gates() -> list[Gate]:
         Gate("inspect-project-help", [python, str(SKILL_SCRIPTS / "inspect_project.py"), "--help"]),
         Gate("validate-profile-help", [python, str(SKILL_SCRIPTS / "validate_profile.py"), "--help"]),
         Gate("compare-generation-help", [python, str(SKILL_SCRIPTS / "compare_generation.py"), "--help"]),
+        Gate("profile-state-help", [python, str(SKILL_SCRIPTS / "profile_state.py"), "--help"]),
+        Gate(
+            "eval-case-validation",
+            [python, str(REPO_ROOT / "scripts" / "evals" / "load_cases.py")],
+        ),
+        Gate(
+            "eval-runner-help",
+            [python, str(REPO_ROOT / "scripts" / "run_skill_evals.py"), "--help"],
+        ),
+        Gate(
+            "eval-scorer-help",
+            [python, str(REPO_ROOT / "scripts" / "evals" / "score_result.py"), "--help"],
+        ),
+        Gate(
+            "skill-installer-dry-run",
+            [
+                python,
+                str(REPO_ROOT / "scripts" / "install_skill.py"),
+                "--home",
+                "/tmp/openapi-engineering-installer-dry-run",
+            ],
+        ),
         Gate(
             "tdd-evidence-help",
             [python, str(REPO_ROOT / "scripts" / "tdd_evidence.py"), "--help"],

@@ -1,0 +1,120 @@
+test_all_json_schemas_are_valid_draft_2020_12 (tests.test_contracts.ContractTests.test_all_json_schemas_are_valid_draft_2020_12) ... ok
+test_all_refs_resolve_to_files_and_internal_targets (tests.test_contracts.ContractTests.test_all_refs_resolve_to_files_and_internal_targets) ... ok
+test_openapi_is_valid_and_operations_are_stable (tests.test_contracts.ContractTests.test_openapi_is_valid_and_operations_are_stable) ... ok
+test_openapi_links_every_response_example (tests.test_contracts.ContractTests.test_openapi_links_every_response_example) ... ok
+test_profile_contract_supports_all_strategies_and_evidence (tests.test_contracts.ContractTests.test_profile_contract_supports_all_strategies_and_evidence) ... ok
+test_profile_examples_follow_the_authoritative_schema (tests.test_contracts.ContractTests.test_profile_examples_follow_the_authoritative_schema) ... ok
+test_response_examples_are_reachable_outputs (tests.test_contracts.ContractTests.test_response_examples_are_reachable_outputs) ... ok
+test_response_examples_match_openapi_schemas (tests.test_contracts.ContractTests.test_response_examples_match_openapi_schemas) ... ok
+test_apply_requires_exact_digest_and_rejects_stale_profile (tests.test_profile_state.ProfileStateTests.test_apply_requires_exact_digest_and_rejects_stale_profile) ... FAIL
+test_approved_apply_updates_only_profile_and_result_remains_valid (tests.test_profile_state.ProfileStateTests.test_approved_apply_updates_only_profile_and_result_remains_valid) ... FAIL
+test_check_reports_unchanged_without_writing (tests.test_profile_state.ProfileStateTests.test_check_reports_unchanged_without_writing) ... FAIL
+test_check_separates_observed_change_conflict_and_unknown (tests.test_profile_state.ProfileStateTests.test_check_separates_observed_change_conflict_and_unknown) ... 
+  test_check_separates_observed_change_conflict_and_unknown (tests.test_profile_state.ProfileStateTests.test_check_separates_observed_change_conflict_and_unknown) (state='changed') ... FAIL
+  test_check_separates_observed_change_conflict_and_unknown (tests.test_profile_state.ProfileStateTests.test_check_separates_observed_change_conflict_and_unknown) (state='conflict') ... FAIL
+  test_check_separates_observed_change_conflict_and_unknown (tests.test_profile_state.ProfileStateTests.test_check_separates_observed_change_conflict_and_unknown) (state='unknown') ... FAIL
+test_propose_is_read_only_and_emits_approval_bound_candidate (tests.test_profile_state.ProfileStateTests.test_propose_is_read_only_and_emits_approval_bound_candidate) ... FAIL
+
+======================================================================
+FAIL: test_apply_requires_exact_digest_and_rejects_stale_profile (tests.test_profile_state.ProfileStateTests.test_apply_requires_exact_digest_and_rejects_stale_profile)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/zhichao/codex/openapi-generator/tests/support.py", line 28, in parse_json_output
+    return json.loads(result.stdout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhichao/.local/share/uv/python/cpython-3.11.15-macos-aarch64-none/lib/python3.11/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhichao/.local/share/uv/python/cpython-3.11.15-macos-aarch64-none/lib/python3.11/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhichao/.local/share/uv/python/cpython-3.11.15-macos-aarch64-none/lib/python3.11/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/zhichao/codex/openapi-generator/tests/test_profile_state.py", line 160, in test_apply_requires_exact_digest_and_rejects_stale_profile
+    proposal_payload = parse_json_output(proposed)["proposal"]
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhichao/codex/openapi-generator/tests/support.py", line 30, in parse_json_output
+    raise AssertionError(
+AssertionError: stdout was not JSON (exit=2): ''; stderr="/Users/zhichao/codex/openapi-generator/.venv/bin/python3: can't open file '/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/profile_state.py': [Errno 2] No such file or directory\n"
+
+======================================================================
+FAIL: test_approved_apply_updates_only_profile_and_result_remains_valid (tests.test_profile_state.ProfileStateTests.test_approved_apply_updates_only_profile_and_result_remains_valid)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/zhichao/codex/openapi-generator/tests/support.py", line 28, in parse_json_output
+    return json.loads(result.stdout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhichao/.local/share/uv/python/cpython-3.11.15-macos-aarch64-none/lib/python3.11/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhichao/.local/share/uv/python/cpython-3.11.15-macos-aarch64-none/lib/python3.11/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhichao/.local/share/uv/python/cpython-3.11.15-macos-aarch64-none/lib/python3.11/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/zhichao/codex/openapi-generator/tests/test_profile_state.py", line 201, in test_approved_apply_updates_only_profile_and_result_remains_valid
+    proposed = parse_json_output(
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/zhichao/codex/openapi-generator/tests/support.py", line 30, in parse_json_output
+    raise AssertionError(
+AssertionError: stdout was not JSON (exit=2): ''; stderr="/Users/zhichao/codex/openapi-generator/.venv/bin/python3: can't open file '/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/profile_state.py': [Errno 2] No such file or directory\n"
+
+======================================================================
+FAIL: test_check_reports_unchanged_without_writing (tests.test_profile_state.ProfileStateTests.test_check_reports_unchanged_without_writing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/zhichao/codex/openapi-generator/tests/test_profile_state.py", line 80, in test_check_reports_unchanged_without_writing
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 2 != 0 : /Users/zhichao/codex/openapi-generator/.venv/bin/python3: can't open file '/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/profile_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_check_separates_observed_change_conflict_and_unknown (tests.test_profile_state.ProfileStateTests.test_check_separates_observed_change_conflict_and_unknown) (state='changed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/zhichao/codex/openapi-generator/tests/test_profile_state.py", line 111, in test_check_separates_observed_change_conflict_and_unknown
+    self.assertEqual(result.returncode, exit_code, result.stderr)
+AssertionError: 2 != 0 : /Users/zhichao/codex/openapi-generator/.venv/bin/python3: can't open file '/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/profile_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_check_separates_observed_change_conflict_and_unknown (tests.test_profile_state.ProfileStateTests.test_check_separates_observed_change_conflict_and_unknown) (state='conflict')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/zhichao/codex/openapi-generator/tests/test_profile_state.py", line 111, in test_check_separates_observed_change_conflict_and_unknown
+    self.assertEqual(result.returncode, exit_code, result.stderr)
+AssertionError: 2 != 1 : /Users/zhichao/codex/openapi-generator/.venv/bin/python3: can't open file '/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/profile_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_check_separates_observed_change_conflict_and_unknown (tests.test_profile_state.ProfileStateTests.test_check_separates_observed_change_conflict_and_unknown) (state='unknown')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/zhichao/codex/openapi-generator/tests/test_profile_state.py", line 111, in test_check_separates_observed_change_conflict_and_unknown
+    self.assertEqual(result.returncode, exit_code, result.stderr)
+AssertionError: 2 != 0 : /Users/zhichao/codex/openapi-generator/.venv/bin/python3: can't open file '/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/profile_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_propose_is_read_only_and_emits_approval_bound_candidate (tests.test_profile_state.ProfileStateTests.test_propose_is_read_only_and_emits_approval_bound_candidate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/zhichao/codex/openapi-generator/tests/test_profile_state.py", line 135, in test_propose_is_read_only_and_emits_approval_bound_candidate
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 2 != 0 : /Users/zhichao/codex/openapi-generator/.venv/bin/python3: can't open file '/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/profile_state.py': [Errno 2] No such file or directory
+
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.284s
+
+FAILED (failures=7)
