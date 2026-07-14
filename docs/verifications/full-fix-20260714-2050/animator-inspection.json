@@ -1,0 +1,204 @@
+{
+  "build_systems": [
+    "npm",
+    "pyproject"
+  ],
+  "ci_files": [
+    ".github/workflows/p1-headless.yml"
+  ],
+  "contract_files": [],
+  "evidence": [
+    {
+      "kind": "ci",
+      "path": ".github/workflows/p1-headless.yml"
+    },
+    {
+      "kind": "generator",
+      "path": "contracts/fixtures/valid/dependency-lock.json"
+    },
+    {
+      "kind": "generator",
+      "path": "contracts/locks/dependency-lock.json"
+    },
+    {
+      "kind": "generator",
+      "path": "openapitools.json"
+    },
+    {
+      "kind": "generator",
+      "path": "package.json"
+    },
+    {
+      "kind": "generator",
+      "path": "pnpm-lock.yaml"
+    },
+    {
+      "kind": "generator",
+      "path": "pnpm-workspace.yaml"
+    },
+    {
+      "kind": "manifest",
+      "path": "package.json"
+    },
+    {
+      "kind": "manifest",
+      "path": "pyproject.toml"
+    },
+    {
+      "kind": "manifest",
+      "path": "tsconfig.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/ai-capabilities.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/audio.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/base.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/changeset.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/definitions.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/export-manifest.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/frozen-snapshot.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/jobs.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/locks.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/media.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/preflight.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/project-core-state.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/project-layout.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/project.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/render.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/schedule.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/security.schema.json"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/schemas/timeline.schema.json"
+    }
+  ],
+  "excluded_paths": [
+    {
+      "path": ".git",
+      "reason": "vcs"
+    },
+    {
+      "path": ".pytest_cache",
+      "reason": "cache"
+    },
+    {
+      "path": ".venv",
+      "reason": "dependency"
+    },
+    {
+      "path": ".worktrees",
+      "reason": "worktree"
+    },
+    {
+      "path": "generated",
+      "reason": "generated"
+    },
+    {
+      "path": "node_modules",
+      "reason": "dependency"
+    },
+    {
+      "path": "tests/e2e/determinism/composition/vendor",
+      "reason": "dependency"
+    },
+    {
+      "path": "tests/python/__pycache__",
+      "reason": "cache"
+    }
+  ],
+  "generated_directories": [
+    "generated"
+  ],
+  "generation_signals": [
+    "generated-output-directory",
+    "openapi-generator-config"
+  ],
+  "governance_profiles": [],
+  "languages": [
+    "JavaScript",
+    "Python",
+    "TypeScript"
+  ],
+  "project_signals": [
+    "json-schema",
+    "ci",
+    "code-generation"
+  ],
+  "root": "/Users/zhichao/Documents/animator",
+  "scan_counts": {
+    "directories": 72,
+    "files": 259
+  },
+  "schema_files": [
+    "contracts/schemas/ai-capabilities.schema.json",
+    "contracts/schemas/audio.schema.json",
+    "contracts/schemas/base.schema.json",
+    "contracts/schemas/changeset.schema.json",
+    "contracts/schemas/definitions.schema.json",
+    "contracts/schemas/export-manifest.schema.json",
+    "contracts/schemas/frozen-snapshot.schema.json",
+    "contracts/schemas/jobs.schema.json",
+    "contracts/schemas/locks.schema.json",
+    "contracts/schemas/media.schema.json",
+    "contracts/schemas/preflight.schema.json",
+    "contracts/schemas/project-core-state.schema.json",
+    "contracts/schemas/project-layout.schema.json",
+    "contracts/schemas/project.schema.json",
+    "contracts/schemas/render.schema.json",
+    "contracts/schemas/schedule.schema.json",
+    "contracts/schemas/security.schema.json",
+    "contracts/schemas/timeline.schema.json"
+  ],
+  "status": "ok",
+  "truncated": false,
+  "warnings": []
+}

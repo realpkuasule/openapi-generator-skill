@@ -1,0 +1,62 @@
+command=["/Users/zhichao/codex/openapi-generator/.venv/bin/python3", "-m", "unittest", "discover", "-s", "tests", "-v"]
+exit_code=0
+stdout:
+
+stderr:
+test_comparison_classifies_files_and_preserves_directories (test_compare_generation.CompareGenerationTests.test_comparison_classifies_files_and_preserves_directories) ... ok
+test_missing_directory_returns_json_error (test_compare_generation.CompareGenerationTests.test_missing_directory_returns_json_error) ... ok
+test_output_is_stable_and_ignores_noise (test_compare_generation.CompareGenerationTests.test_output_is_stable_and_ignores_noise) ... ok
+test_all_json_schemas_are_valid_draft_2020_12 (test_contracts.ContractTests.test_all_json_schemas_are_valid_draft_2020_12) ... ok
+test_all_refs_resolve_to_files_and_internal_targets (test_contracts.ContractTests.test_all_refs_resolve_to_files_and_internal_targets) ... ok
+test_openapi_is_valid_and_operations_are_stable (test_contracts.ContractTests.test_openapi_is_valid_and_operations_are_stable) ... ok
+test_openapi_links_every_response_example (test_contracts.ContractTests.test_openapi_links_every_response_example) ... ok
+test_profile_contract_supports_all_strategies_and_evidence (test_contracts.ContractTests.test_profile_contract_supports_all_strategies_and_evidence) ... ok
+test_profile_examples_follow_the_authoritative_schema (test_contracts.ContractTests.test_profile_examples_follow_the_authoritative_schema) ... ok
+test_response_examples_are_reachable_outputs (test_contracts.ContractTests.test_response_examples_are_reachable_outputs) ... ok
+test_response_examples_match_openapi_schemas (test_contracts.ContractTests.test_response_examples_match_openapi_schemas) ... ok
+test_locked_validation_dependencies_are_available (test_environment.EnvironmentTests.test_locked_validation_dependencies_are_available) ... ok
+test_project_and_lock_files_exist (test_environment.EnvironmentTests.test_project_and_lock_files_exist) ... ok
+test_animator_requires_a_mixed_strategy (test_evals.EvalCaseTests.test_animator_requires_a_mixed_strategy) ... ok
+test_cases_follow_contract_shape (test_evals.EvalCaseTests.test_cases_follow_contract_shape) ... ok
+test_expected_eval_cases_exist (test_evals.EvalCaseTests.test_expected_eval_cases_exist) ... ok
+test_revoice_prefers_no_codegen_or_official_sdk (test_evals.EvalCaseTests.test_revoice_prefers_no_codegen_or_official_sdk) ... ok
+test_scope_expansion_stops_for_reapproval (test_evals.EvalCaseTests.test_scope_expansion_stops_for_reapproval) ... ok
+test_capture_generates_reachable_examples (test_example_conformance.ExampleCaptureTests.test_capture_generates_reachable_examples) ... ok
+test_checked_in_examples_match_capture (test_example_conformance.ExampleCaptureTests.test_checked_in_examples_match_capture) ... ok
+test_file_limit_is_explicit_and_deterministic (test_inspect_project.InspectProjectTests.test_file_limit_is_explicit_and_deterministic) ... ok
+test_generator_configuration_is_not_misclassified_as_a_contract (test_inspect_project.InspectProjectTests.test_generator_configuration_is_not_misclassified_as_a_contract) ... ok
+test_inspection_finds_project_signals_without_writing (test_inspect_project.InspectProjectTests.test_inspection_finds_project_signals_without_writing) ... ok
+test_missing_root_returns_json_error (test_inspect_project.InspectProjectTests.test_missing_root_returns_json_error) ... ok
+test_output_is_stable (test_inspect_project.InspectProjectTests.test_output_is_stable) ... ok
+test_worktrees_and_generated_outputs_do_not_pollute_contracts (test_inspect_project.InspectProjectTests.test_worktrees_and_generated_outputs_do_not_pollute_contracts) ... ok
+test_authoritative_schema_location_is_stable (test_schema_authority.SchemaAuthorityTests.test_authoritative_schema_location_is_stable) ... ok
+test_profile_validator_does_not_duplicate_structural_constants (test_schema_authority.SchemaAuthorityTests.test_profile_validator_does_not_duplicate_structural_constants) ... ok
+test_profile_validator_loads_the_authoritative_schema (test_schema_authority.SchemaAuthorityTests.test_profile_validator_loads_the_authoritative_schema) ... ok
+test_all_references_exist_and_are_one_hop_from_skill (test_skill_package.SkillPackageTests.test_all_references_exist_and_are_one_hop_from_skill) ... ok
+test_core_workflow_enforces_approval_boundary (test_skill_package.SkillPackageTests.test_core_workflow_enforces_approval_boundary) ... ok
+test_decision_reference_supports_every_strategy (test_skill_package.SkillPackageTests.test_decision_reference_supports_every_strategy) ... ok
+test_frontmatter_is_portable_and_trigger_complete (test_skill_package.SkillPackageTests.test_frontmatter_is_portable_and_trigger_complete) ... ok
+test_generator_evaluation_has_seven_step_empirical_gate (test_skill_package.SkillPackageTests.test_generator_evaluation_has_seven_step_empirical_gate) ... ok
+test_lifecycle_reference_defines_all_modes (test_skill_package.SkillPackageTests.test_lifecycle_reference_defines_all_modes) ... ok
+test_platform_metadata_and_package_are_minimal (test_skill_package.SkillPackageTests.test_platform_metadata_and_package_are_minimal) ... ok
+test_refresh_is_byte_stable_and_does_not_inventory_itself (test_tdd_evidence.TddEvidenceTests.test_refresh_is_byte_stable_and_does_not_inventory_itself) ... ok
+test_refresh_records_artifact_digest_and_size (test_tdd_evidence.TddEvidenceTests.test_refresh_records_artifact_digest_and_size) ... ok
+test_invalid_yaml_is_a_redacted_json_load_error (test_validate_profile.ValidateProfileTests.test_invalid_yaml_is_a_redacted_json_load_error) ... ok
+test_missing_file_is_load_error (test_validate_profile.ValidateProfileTests.test_missing_file_is_load_error) ... ok
+test_missing_required_section_fails (test_validate_profile.ValidateProfileTests.test_missing_required_section_fails) ... ok
+test_public_digest_is_not_treated_as_a_secret (test_validate_profile.ValidateProfileTests.test_public_digest_is_not_treated_as_a_secret) ... ok
+test_schema_rejects_invalid_strategy (test_validate_profile.ValidateProfileTests.test_schema_rejects_invalid_strategy) ... ok
+test_schema_rejects_non_exact_versions (test_validate_profile.ValidateProfileTests.test_schema_rejects_non_exact_versions) ... ok
+test_schema_rejects_wrong_container_types (test_validate_profile.ValidateProfileTests.test_schema_rejects_wrong_container_types) ... ok
+test_sensitive_values_are_rejected_and_redacted (test_validate_profile.ValidateProfileTests.test_sensitive_values_are_rejected_and_redacted) ... ok
+test_valid_yaml_profile_passes (test_validate_profile.ValidateProfileTests.test_valid_yaml_profile_passes) ... ok
+test_failed_required_gate_makes_report_failed_and_exit_one (test_verify_runner.VerifyRunnerTests.test_failed_required_gate_makes_report_failed_and_exit_one) ... ok
+test_forward_tier_is_explicitly_blocked_until_adapter_work_is_authorized (test_verify_runner.VerifyRunnerTests.test_forward_tier_is_explicitly_blocked_until_adapter_work_is_authorized) ... ok
+test_missing_required_validator_is_blocked_and_exit_two (test_verify_runner.VerifyRunnerTests.test_missing_required_validator_is_blocked_and_exit_two) ... ok
+test_passed_report_conforms_to_schema_and_records_evidence_digest (test_verify_runner.VerifyRunnerTests.test_passed_report_conforms_to_schema_and_records_evidence_digest) ... ok
+test_previous_gate_logs_are_removed_before_a_new_run (test_verify_runner.VerifyRunnerTests.test_previous_gate_logs_are_removed_before_a_new_run) ... ok
+
+----------------------------------------------------------------------
+Ran 52 tests in 6.982s
+
+OK

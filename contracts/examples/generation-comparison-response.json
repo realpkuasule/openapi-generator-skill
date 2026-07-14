@@ -1,0 +1,37 @@
+{
+  "baseline": "/tmp/baseline",
+  "candidate": "/tmp/candidate",
+  "files": [
+    {
+      "baseline_sha256": null,
+      "candidate_sha256": "3428719b7688c78a0cc8ba4b9e80b4e464c815fbccfd4b20695a15ffcefc22af",
+      "path": "added.txt",
+      "state": "added"
+    },
+    {
+      "baseline_sha256": "9160d4be34c8695bd172a76c7c7966587ea5a4d991ad22c87b2b91af54aa9ebb",
+      "candidate_sha256": "7b9a72466d3960eb2aacccfc848939453490db0678bd4725def3f789b891c919",
+      "path": "changed.txt",
+      "state": "changed"
+    },
+    {
+      "baseline_sha256": "6b95743f7339e0aff16c1d1b9f453711ffcdc3fed9b6787af264f9601c4e2961",
+      "candidate_sha256": null,
+      "path": "removed.txt",
+      "state": "removed"
+    },
+    {
+      "baseline_sha256": "a6328afc76e9db71da297ebff4b0d3e7a7eb3b01d917c05a6573fef121b6ecb6",
+      "candidate_sha256": "a6328afc76e9db71da297ebff4b0d3e7a7eb3b01d917c05a6573fef121b6ecb6",
+      "path": "same.txt",
+      "state": "unchanged"
+    }
+  ],
+  "status": "ok",
+  "summary": {
+    "added": 1,
+    "changed": 1,
+    "removed": 1,
+    "unchanged": 1
+  }
+}

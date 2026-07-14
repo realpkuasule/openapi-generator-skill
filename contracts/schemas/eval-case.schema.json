@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openapi-engineering.local/schemas/eval-case.schema.json",
+  "title": "OpenAPI Engineering Skill Evaluation Case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_version",
+    "id",
+    "title",
+    "fixture_binding",
+    "input",
+    "expected"
+  ],
+  "properties": {
+    "case_version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "title": { "type": "string", "minLength": 1 },
+    "fixture_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["compact_fixture", "real_project_env"],
+      "properties": {
+        "compact_fixture": { "type": "string", "minLength": 1 },
+        "real_project_env": { "type": ["string", "null"] }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prompt", "project_facts"],
+      "properties": {
+        "prompt": { "type": "string", "minLength": 1 },
+        "project_facts": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "adversarial_inputs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "modes",
+        "read_only_evidence",
+        "questions",
+        "minimum_interview_turns",
+        "primary_strategy",
+        "boundary_decisions",
+        "expected_boundary_summary",
+        "prohibited_actions",
+        "wait_points",
+        "approval_sequence",
+        "filesystem_invariants",
+        "semantic_score_rules",
+        "requires_reapproval"
+      ],
+      "properties": {
+        "modes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/mode" }
+        },
+        "read_only_evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "questions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "minimum_interview_turns": { "type": "integer", "minimum": 2 },
+        "primary_strategy": { "$ref": "#/$defs/strategy" },
+        "boundary_decisions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["boundary", "strategy", "condition"],
+            "properties": {
+              "boundary": { "type": "string", "minLength": 1 },
+              "strategy": { "$ref": "#/$defs/strategy" },
+              "condition": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "expected_boundary_summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["required_fields", "must_include", "must_exclude"],
+          "properties": {
+            "required_fields": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "must_include": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "must_exclude": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "prohibited_actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "wait_points": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "approval_sequence": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "enum": ["discover", "interview", "proposed", "approved", "execute"] }
+        },
+        "filesystem_invariants": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "semantic_score_rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "scope_expansion_triggers": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "requires_reapproval": { "type": "boolean" }
+      }
+    }
+  },
+  "$defs": {
+    "strategy": {
+      "enum": [
+        "openapi-generator",
+        "language-native",
+        "official-sdk",
+        "governance-only",
+        "mcp",
+        "no-codegen"
+      ]
+    },
+    "mode": {
+      "enum": [
+        "Assess & Select",
+        "Initial Design",
+        "First Integration",
+        "Daily Evolution",
+        "Audit & Drift",
+        "Upgrade & Migration",
+        "Troubleshoot",
+        "Governance Hardening",
+        "Reselect & Decommission"
+      ]
+    }
+  }
+}

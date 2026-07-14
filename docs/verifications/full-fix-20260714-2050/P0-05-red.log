@@ -1,0 +1,25 @@
+test_capture_generates_reachable_examples (tests.test_example_conformance.ExampleCaptureTests.test_capture_generates_reachable_examples) ... FAIL
+test_checked_in_examples_match_capture (tests.test_example_conformance.ExampleCaptureTests.test_checked_in_examples_match_capture) ... FAIL
+
+======================================================================
+FAIL: test_capture_generates_reachable_examples (tests.test_example_conformance.ExampleCaptureTests.test_capture_generates_reachable_examples)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/zhichao/codex/openapi-generator/tests/test_example_conformance.py", line 26, in test_capture_generates_reachable_examples
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 2 != 0 : /Users/zhichao/codex/openapi-generator/.venv/bin/python3: can't open file '/Users/zhichao/codex/openapi-generator/scripts/capture_contract_examples.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_checked_in_examples_match_capture (tests.test_example_conformance.ExampleCaptureTests.test_checked_in_examples_match_capture)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/zhichao/codex/openapi-generator/tests/test_example_conformance.py", line 43, in test_checked_in_examples_match_capture
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 2 != 0 : /Users/zhichao/codex/openapi-generator/.venv/bin/python3: can't open file '/Users/zhichao/codex/openapi-generator/scripts/capture_contract_examples.py': [Errno 2] No such file or directory
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.034s
+
+FAILED (failures=2)

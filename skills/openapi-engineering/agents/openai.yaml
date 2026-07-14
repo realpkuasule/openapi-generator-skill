@@ -1,0 +1,4 @@
+interface:
+  display_name: "OpenAPI Engineering"
+  short_description: "Choose and govern OpenAPI tooling safely"
+  default_prompt: "Use $openapi-engineering to inspect this project, confirm the work boundary, and recommend the right contract and code generation strategy."

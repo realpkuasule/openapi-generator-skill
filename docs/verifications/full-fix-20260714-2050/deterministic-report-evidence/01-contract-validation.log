@@ -1,0 +1,20 @@
+command=["/Users/zhichao/codex/openapi-generator/.venv/bin/python3", "-m", "unittest", "tests.test_contracts", "tests.test_environment", "-v"]
+exit_code=0
+stdout:
+
+stderr:
+test_all_json_schemas_are_valid_draft_2020_12 (tests.test_contracts.ContractTests.test_all_json_schemas_are_valid_draft_2020_12) ... ok
+test_all_refs_resolve_to_files_and_internal_targets (tests.test_contracts.ContractTests.test_all_refs_resolve_to_files_and_internal_targets) ... ok
+test_openapi_is_valid_and_operations_are_stable (tests.test_contracts.ContractTests.test_openapi_is_valid_and_operations_are_stable) ... ok
+test_openapi_links_every_response_example (tests.test_contracts.ContractTests.test_openapi_links_every_response_example) ... ok
+test_profile_contract_supports_all_strategies_and_evidence (tests.test_contracts.ContractTests.test_profile_contract_supports_all_strategies_and_evidence) ... ok
+test_profile_examples_follow_the_authoritative_schema (tests.test_contracts.ContractTests.test_profile_examples_follow_the_authoritative_schema) ... ok
+test_response_examples_are_reachable_outputs (tests.test_contracts.ContractTests.test_response_examples_are_reachable_outputs) ... ok
+test_response_examples_match_openapi_schemas (tests.test_contracts.ContractTests.test_response_examples_match_openapi_schemas) ... ok
+test_locked_validation_dependencies_are_available (tests.test_environment.EnvironmentTests.test_locked_validation_dependencies_are_available) ... ok
+test_project_and_lock_files_exist (tests.test_environment.EnvironmentTests.test_project_and_lock_files_exist) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.092s
+
+OK

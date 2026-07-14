@@ -1,0 +1,106 @@
+{
+  "build_systems": [
+    "pyproject"
+  ],
+  "ci_files": [
+    ".github/workflows/build.yml"
+  ],
+  "contract_files": [
+    "contracts/openapi.yaml"
+  ],
+  "evidence": [
+    {
+      "kind": "ci",
+      "path": ".github/workflows/build.yml"
+    },
+    {
+      "kind": "contract",
+      "path": "contracts/openapi.yaml"
+    },
+    {
+      "kind": "manifest",
+      "path": "pyproject.toml"
+    },
+    {
+      "kind": "project-rule",
+      "path": "AGENTS.md"
+    },
+    {
+      "kind": "project-rule",
+      "path": "CLAUDE.md"
+    }
+  ],
+  "excluded_paths": [
+    {
+      "path": ".git",
+      "reason": "vcs"
+    },
+    {
+      "path": ".pytest_cache",
+      "reason": "cache"
+    },
+    {
+      "path": ".venv",
+      "reason": "dependency"
+    },
+    {
+      "path": "build",
+      "reason": "generated"
+    },
+    {
+      "path": "dist",
+      "reason": "generated"
+    },
+    {
+      "path": "revoice/__pycache__",
+      "reason": "cache"
+    },
+    {
+      "path": "revoice/asr/__pycache__",
+      "reason": "cache"
+    },
+    {
+      "path": "revoice/audio/__pycache__",
+      "reason": "cache"
+    },
+    {
+      "path": "revoice/tts/__pycache__",
+      "reason": "cache"
+    },
+    {
+      "path": "scripts/__pycache__",
+      "reason": "cache"
+    },
+    {
+      "path": "tests/__pycache__",
+      "reason": "cache"
+    }
+  ],
+  "generated_directories": [
+    "build",
+    "dist"
+  ],
+  "generation_signals": [
+    "generated-output-directory"
+  ],
+  "governance_profiles": [],
+  "languages": [
+    "Python",
+    "Swift"
+  ],
+  "project_signals": [
+    "project-rules",
+    "openapi-contract",
+    "ci",
+    "code-generation"
+  ],
+  "root": "/Users/zhichao/claude/revoice",
+  "scan_counts": {
+    "directories": 168,
+    "files": 672
+  },
+  "schema_files": [],
+  "status": "ok",
+  "truncated": false,
+  "warnings": []
+}

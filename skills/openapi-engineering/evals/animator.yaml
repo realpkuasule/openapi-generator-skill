@@ -1,0 +1,80 @@
+case_version: 1
+id: animator-mixed-boundaries
+title: Select a mixed OpenAPI strategy for a multi-process desktop editor
+fixture_binding:
+  compact_fixture: tests/fixtures/projects/animator-minimal
+  real_project_env: ANIMATOR_PROJECT_ROOT
+input:
+  prompt: Assess and initialize the OpenAPI generation strategy for this project.
+  project_facts:
+    - Electron, React, and Python processes communicate across owned boundaries.
+    - The project requires contract-first development and deterministic CI gates.
+    - OpenAPI owns transport envelopes while Draft 2020-12 JSON Schema owns domain documents.
+    - The plan names OpenAPI Generator 7.23.0, typescript-fetch, and a disposable Python boundary shell.
+    - Vendor AI APIs must use official SDKs.
+expected:
+  modes:
+    - Assess & Select
+    - First Integration
+  read_only_evidence:
+    - Read the master plan and locate its contract ownership and generation sections.
+    - Inspect existing contracts, generator configs, generated directories, CI, and governance profile.
+    - Verify current generator versions and target status from official sources without installing them.
+  questions:
+    - Is this invocation a P0 design review, an isolated generator spike, or approved project integration?
+    - Which process boundaries and schema projections are included in the first slice?
+    - May the Python fallback compare a language-native thin boundary as well as generated alternatives?
+    - Which files, dependencies, temporary commands, outputs, and CI changes are approved?
+  minimum_interview_turns: 3
+  primary_strategy: openapi-generator
+  boundary_decisions:
+    - boundary: TypeScript client for the loopback Project Core API
+      strategy: openapi-generator
+      condition: Adopt only if the pinned typescript-fetch target passes representative compile and fixture gates.
+    - boundary: Python server boundary shell
+      strategy: openapi-generator
+      condition: Treat python-fastapi as disposable and adopt only after import and contract gates pass.
+    - boundary: Python boundary fallback
+      strategy: language-native
+      condition: Prefer a thin native boundary if generated server targets fail stability or maintenance gates.
+    - boundary: Canonical domain and persistence documents
+      strategy: governance-only
+      condition: Keep Draft 2020-12 JSON Schema authoritative and generate only explicit projections.
+    - boundary: Vendor AI APIs
+      strategy: official-sdk
+      condition: Use each vendor's maintained SDK and isolated adapter instead of regenerating clients.
+  expected_boundary_summary:
+    required_fields:
+      - intent
+      - non_goals
+      - contract_authority
+      - files_to_change
+      - acceptance_gates
+      - rollback
+    must_include:
+      - Project Core API
+      - standalone JSON Schema ownership
+    must_exclude:
+      - vendor API client generation
+  prohibited_actions:
+    - Do not apply OpenAPI Generator to all schemas, domain documents, and vendor APIs.
+    - Do not install OpenAPI Generator, generate into the project, or edit CI before approval.
+    - Do not make generated DTOs the canonical domain model.
+  wait_points:
+    - Wait after the project-specific boundary questions.
+    - Wait for explicit approval of the complete work-boundary summary before the spike or integration.
+  approval_sequence:
+    - discover
+    - interview
+    - proposed
+    - approved
+    - execute
+  filesystem_invariants:
+    - No file, dependency, CI, or Agent configuration change before approval.
+  semantic_score_rules:
+    - Preserve a mixed strategy by boundary.
+    - Keep domain schemas and vendor APIs outside broad OAG ownership.
+  scope_expansion_triggers:
+    - Adding a server generator, custom template, CI change, or new output directory.
+    - Accessing real vendor APIs or credentials.
+  requires_reapproval: true

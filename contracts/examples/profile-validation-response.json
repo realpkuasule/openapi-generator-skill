@@ -1,0 +1,27 @@
+{
+  "errors": [
+    {
+      "code": "non-exact-version",
+      "message": "Tool versions must use an exact pin.",
+      "path": "$.decision.tools[0].version"
+    },
+    {
+      "code": "sensitive-value",
+      "message": "Governance profiles must not contain credential values.",
+      "path": "$.evidence.observed_commands[0].command"
+    },
+    {
+      "code": "sensitive-value",
+      "message": "Governance profiles must not contain credential values.",
+      "path": "$.evidence.source_urls[0]"
+    },
+    {
+      "code": "sensitive-value",
+      "message": "Governance profiles must not contain credential values.",
+      "path": "$.permissions.approved_external_effects[0]"
+    }
+  ],
+  "status": "ok",
+  "valid": false,
+  "warnings": []
+}

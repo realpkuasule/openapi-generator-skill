@@ -1,0 +1,15 @@
+command=["/Users/zhichao/codex/openapi-generator/.venv/bin/python3", "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/validate_profile.py", "--help"]
+exit_code=0
+stdout:
+usage: validate_profile.py [-h] [--pretty] profile
+
+Validate an OpenAPI engineering governance profile.
+
+positional arguments:
+  profile     YAML or JSON governance profile path.
+
+options:
+  -h, --help  show this help message and exit
+  --pretty    Pretty-print JSON output.
+
+stderr:

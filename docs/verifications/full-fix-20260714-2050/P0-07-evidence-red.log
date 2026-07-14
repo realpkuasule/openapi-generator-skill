@@ -1,0 +1,19 @@
+test_tdd_evidence (unittest.loader._FailedTest.test_tdd_evidence) ... ERROR
+
+======================================================================
+ERROR: test_tdd_evidence (unittest.loader._FailedTest.test_tdd_evidence)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_tdd_evidence
+Traceback (most recent call last):
+  File "/Users/zhichao/.local/share/uv/python/cpython-3.11.15-macos-aarch64-none/lib/python3.11/unittest/loader.py", line 162, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhichao/codex/openapi-generator/tests/test_tdd_evidence.py", line 9, in <module>
+    from scripts import tdd_evidence
+ImportError: cannot import name 'tdd_evidence' from 'scripts' (unknown location)
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

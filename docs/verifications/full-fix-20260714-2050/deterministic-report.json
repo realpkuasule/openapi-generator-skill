@@ -1,0 +1,152 @@
+{
+  "finished_at": "2026-07-14T14:05:02.950554Z",
+  "gates": [
+    {
+      "command": [
+        "/Users/zhichao/codex/openapi-generator/.venv/bin/python3",
+        "-m",
+        "unittest",
+        "tests.test_contracts",
+        "tests.test_environment",
+        "-v"
+      ],
+      "duration_ms": 734,
+      "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/01-contract-validation.log",
+      "evidence_sha256": "07016a5ef5de7980892e46dfbf129c6db8befb1c484d96ad5e417ee677d7ab07",
+      "exit_code": 0,
+      "name": "contract-validation",
+      "risk": null,
+      "rollback": null,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "/Users/zhichao/codex/openapi-generator/.venv/bin/python3",
+        "/Users/zhichao/codex/openapi-generator/scripts/capture_contract_examples.py",
+        "--check"
+      ],
+      "duration_ms": 582,
+      "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/02-captured-example-conformance.log",
+      "evidence_sha256": "0cf4d731d4e43e28fd8daa56796edec2bcb9ab0c57416742f9527a9b0fdb3c22",
+      "exit_code": 0,
+      "name": "captured-example-conformance",
+      "risk": null,
+      "rollback": null,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "/Users/zhichao/codex/openapi-generator/.venv/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "duration_ms": 7546,
+      "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/03-unit-test-suite.log",
+      "evidence_sha256": "a3210682291f682bdbc28d1a5dc3264c6d590cbb5ee9922e7bf962c2e970830d",
+      "exit_code": 0,
+      "name": "unit-test-suite",
+      "risk": null,
+      "rollback": null,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "/Users/zhichao/codex/openapi-generator/.venv/bin/python3",
+        "/Users/zhichao/.codex/skills/.system/skill-creator/scripts/quick_validate.py",
+        "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering"
+      ],
+      "duration_ms": 23,
+      "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/04-skill-quick-validation.log",
+      "evidence_sha256": "36d00e8aa2f15724b86e8c0f30a128a9e1600ca03645df5cfce30ef28ec7eb43",
+      "exit_code": 0,
+      "name": "skill-quick-validation",
+      "risk": null,
+      "rollback": null,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "/Users/zhichao/codex/openapi-generator/.venv/bin/python3",
+        "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/inspect_project.py",
+        "--help"
+      ],
+      "duration_ms": 20,
+      "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/05-inspect-project-help.log",
+      "evidence_sha256": "4128585912a006edae803540b56ec5c2c4ac9b5b5a6faece54a569f7b90b80dc",
+      "exit_code": 0,
+      "name": "inspect-project-help",
+      "risk": null,
+      "rollback": null,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "/Users/zhichao/codex/openapi-generator/.venv/bin/python3",
+        "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/validate_profile.py",
+        "--help"
+      ],
+      "duration_ms": 20,
+      "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/06-validate-profile-help.log",
+      "evidence_sha256": "6d6e2a389317e0969d5daebb952e7e895cf0816c63c9362ef2ab6e54b552d8ed",
+      "exit_code": 0,
+      "name": "validate-profile-help",
+      "risk": null,
+      "rollback": null,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "/Users/zhichao/codex/openapi-generator/.venv/bin/python3",
+        "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/compare_generation.py",
+        "--help"
+      ],
+      "duration_ms": 20,
+      "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/07-compare-generation-help.log",
+      "evidence_sha256": "9117e7ab192a962d5defe65d28ace8ca79a1c354f89aa4e85f2f87031dbfe50a",
+      "exit_code": 0,
+      "name": "compare-generation-help",
+      "risk": null,
+      "rollback": null,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "/Users/zhichao/codex/openapi-generator/.venv/bin/python3",
+        "/Users/zhichao/codex/openapi-generator/scripts/tdd_evidence.py",
+        "--help"
+      ],
+      "duration_ms": 23,
+      "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/08-tdd-evidence-help.log",
+      "evidence_sha256": "19f6e74d4aa0d56bcd8b696bec90757f271d37c88cfb5408e23ebb33399b948f",
+      "exit_code": 0,
+      "name": "tdd-evidence-help",
+      "risk": null,
+      "rollback": null,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "internal:sha256-tree",
+        "contracts",
+        "skills/openapi-engineering",
+        "scripts"
+      ],
+      "duration_ms": 0,
+      "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/09-source-tree-read-only.log",
+      "evidence_sha256": "48d64a1d95a3887298bb74b674942e122f09d994970560b8fed0bff3b9640167",
+      "exit_code": 0,
+      "name": "source-tree-read-only",
+      "risk": null,
+      "rollback": null,
+      "status": "passed"
+    }
+  ],
+  "report_version": 1,
+  "started_at": "2026-07-14T14:04:53.968357Z",
+  "status": "passed",
+  "tier": "deterministic"
+}

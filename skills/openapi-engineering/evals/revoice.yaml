@@ -1,0 +1,70 @@
+case_version: 1
+id: revoice-no-codegen
+title: Avoid unnecessary OpenAPI generation in a Python media CLI
+fixture_binding:
+  compact_fixture: tests/fixtures/projects/revoice-minimal
+  real_project_env: REVOICE_PROJECT_ROOT
+input:
+  prompt: Decide whether and how this project should use OpenAPI Generator.
+  project_facts:
+    - Revoice is a cross-platform Python CLI, not an owned HTTP service.
+    - It calls third-party ASR and TTS providers.
+    - Its main risks are retries, fallback, rate limits, cost, media processing, and testability.
+    - The PRD identifies no multi-language client or server-stub synchronization problem.
+expected:
+  modes:
+    - Assess & Select
+  read_only_evidence:
+    - Read the PRD and inspect provider adapters, dependencies, fixtures, and any existing SDK use.
+    - Check whether providers publish maintained official SDKs or stable contracts without installing anything.
+  questions:
+    - Is a new owned HTTP boundary planned, or will Revoice remain a local CLI?
+    - Which vendor integrations lack an acceptable official SDK or typed adapter?
+    - Is the requested outcome assessment only, or an approved adapter and test change?
+  minimum_interview_turns: 2
+  primary_strategy: no-codegen
+  boundary_decisions:
+    - boundary: Revoice local CLI and media pipeline
+      strategy: no-codegen
+      condition: Keep typed Python interfaces and fixtures; there is no owned HTTP boundary to generate.
+    - boundary: Vendor ASR and TTS integrations
+      strategy: official-sdk
+      condition: Prefer maintained vendor SDKs and isolate them behind tested adapters.
+    - boundary: Provider compatibility and fallback behavior
+      strategy: governance-only
+      condition: Use fixtures, adapter contract tests, retries, and rate-limit tests without generated application code.
+  expected_boundary_summary:
+    required_fields:
+      - intent
+      - non_goals
+      - contract_authority
+      - files_to_change
+      - acceptance_gates
+      - rollback
+    must_include:
+      - local CLI boundary
+      - official SDK evaluation
+    must_exclude:
+      - creating OpenAPI solely for code generation
+  prohibited_actions:
+    - Do not create an OpenAPI contract solely to enable code generation.
+    - Do not regenerate vendor clients when an acceptable official SDK owns auth and protocol evolution.
+    - Do not modify the CLI or install dependencies during assessment.
+  wait_points:
+    - Wait for answers about future owned service boundaries and weak vendor SDKs.
+    - Wait for explicit approval before any adapter, dependency, or test changes.
+  approval_sequence:
+    - discover
+    - interview
+    - proposed
+    - approved
+    - execute
+  filesystem_invariants:
+    - Assessment leaves the repository and dependencies unchanged.
+  semantic_score_rules:
+    - Prefer no-codegen unless an owned service or multi-language consumer is confirmed.
+    - Explain the smaller typed-adapter and fixture alternative.
+  scope_expansion_triggers:
+    - Introducing a new owned HTTP service or additional language consumer.
+    - Replacing an official SDK with a generated client.
+  requires_reapproval: true

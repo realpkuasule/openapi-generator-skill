@@ -1,0 +1,13 @@
+command=["/Users/zhichao/codex/openapi-generator/.venv/bin/python3", "/Users/zhichao/codex/openapi-generator/scripts/tdd_evidence.py", "--help"]
+exit_code=0
+stdout:
+usage: tdd_evidence.py [-h] --manifest MANIFEST --evidence-root EVIDENCE_ROOT
+
+Refresh a deterministic SHA-256 inventory of TDD evidence.
+
+options:
+  -h, --help            show this help message and exit
+  --manifest MANIFEST
+  --evidence-root EVIDENCE_ROOT
+
+stderr:

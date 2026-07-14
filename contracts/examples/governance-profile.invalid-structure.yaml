@@ -1,0 +1,52 @@
+profile_version: 1
+project:
+  kind: cli
+  stage: prototype
+intent_history: not-an-array
+statements: []
+contract:
+  approach: none
+  sources_of_truth: []
+  ownership_rules: []
+  openapi_version: null
+boundaries: not-an-array
+consumers:
+  - name: ''
+    language: ''
+    provenance: observed
+decision:
+  strategy: no-codegen
+  tools: []
+  rejected_options:
+    - option: openapi-generator
+      reason: No owned HTTP boundary exists.
+  rationale: not-an-array
+  confidence: high
+  conditions: []
+  revisit_triggers: []
+generation:
+  version_pins:
+    - name: example-tool
+      version: '>=7'
+  config_files: []
+  output_directories: []
+  generated_files_committed: false
+  manual_edit_policy: null
+validation:
+  gates: not-an-array
+  representative_fixtures: []
+permissions:
+  authorization_status: historical-only
+  approved_write_scope: []
+  approved_external_effects: []
+  approved_at: null
+  scope_digest: null
+evidence:
+  verified_at: null
+  source_urls:
+    - not a uri
+  input_digests: []
+  observed_commands: []
+  gate_results: []
+  risks: []
+  rollback: []

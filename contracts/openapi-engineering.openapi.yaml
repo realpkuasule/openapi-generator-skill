@@ -1,0 +1,345 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI Engineering Control Plane
+  version: 0.2.0
+  description: >-
+    Platform-neutral contracts for the read-only helpers bundled with the
+    openapi-engineering skill. The initial implementation is CLI based; future
+    HTTP or MCP adapters must preserve these request and response semantics.
+x-runtime: cli-only
+x-server-status: no-http-server-ships-with-this-skill
+tags:
+  - name: Inspection
+  - name: Governance
+  - name: Generation
+paths:
+  /v1/inspections:
+    post:
+      operationId: inspectProject
+      x-cli-command: python3 scripts/inspect_project.py --root <root>
+      x-cli-arguments:
+        root: --root
+      x-cli-exit-codes:
+        '0': inspection completed
+        '2': invalid root or usage error
+      tags: [Inspection]
+      summary: Inspect a project without changing it
+      description: >-
+        Reads project metadata and reports contract, build, CI, generation, and
+        governance signals. It performs no writes, network calls, installs, or
+        service starts.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InspectionRequest'
+      responses:
+        '200':
+          description: Inspection completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InspectionResponse'
+              examples:
+                projectInspection:
+                  externalValue: './examples/inspect-response.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/profile-validations:
+    post:
+      operationId: validateGovernanceProfile
+      x-cli-command: python3 scripts/validate_profile.py <profile>
+      x-cli-arguments:
+        profile: positional profile file path; the adapter loads the document before validation
+      x-cli-exit-codes:
+        '0': profile is valid
+        '1': profile is invalid
+        '2': usage, dependency, schema, or load error
+      tags: [Governance]
+      summary: Validate a project governance profile
+      description: >-
+        Validates structure and safety rules without modifying the profile.
+        Exit semantics for the CLI adapter are 0 for valid, 1 for invalid, and
+        2 for usage or load errors.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileValidationRequest'
+      responses:
+        '200':
+          description: Validation completed; inspect the valid field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileValidationResponse'
+              examples:
+                invalidProfile:
+                  externalValue: './examples/profile-validation-response.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/generation-comparisons:
+    post:
+      operationId: compareGeneration
+      x-cli-command: python3 scripts/compare_generation.py <baseline> <candidate>
+      x-cli-arguments:
+        baseline: first positional directory
+        candidate: second positional directory
+      x-cli-exit-codes:
+        '0': comparison completed
+        '2': invalid directory or usage error
+      tags: [Generation]
+      summary: Compare two generated output directories
+      description: >-
+        Computes stable path and SHA-256 differences. It never runs a generator
+        and never writes either directory.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerationComparisonRequest'
+      responses:
+        '200':
+          description: Comparison completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerationComparisonResponse'
+              examples:
+                generationDiff:
+                  externalValue: './examples/generation-comparison-response.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+components:
+  responses:
+    InvalidRequest:
+      description: The request could not be loaded or validated.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            invalidRequest:
+              externalValue: './examples/error-response.json'
+  schemas:
+    InspectionRequest:
+      type: object
+      additionalProperties: false
+      required: [root]
+      properties:
+        root:
+          type: string
+          minLength: 1
+          description: Absolute or working-directory-relative project path.
+    InspectionResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - root
+        - project_signals
+        - languages
+        - build_systems
+        - contract_files
+        - schema_files
+        - governance_profiles
+        - ci_files
+        - generation_signals
+        - generated_directories
+        - excluded_paths
+        - warnings
+        - truncated
+        - scan_counts
+        - evidence
+      properties:
+        status:
+          const: ok
+        root:
+          type: string
+        project_signals:
+          type: array
+          items: { type: string }
+        languages:
+          type: array
+          items: { type: string }
+        build_systems:
+          type: array
+          items: { type: string }
+        contract_files:
+          type: array
+          items: { type: string }
+        schema_files:
+          type: array
+          items: { type: string }
+        governance_profiles:
+          type: array
+          items: { type: string }
+        ci_files:
+          type: array
+          items: { type: string }
+        generation_signals:
+          type: array
+          items: { type: string }
+        generated_directories:
+          type: array
+          items: { type: string }
+        excluded_paths:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExcludedPath'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/InspectionWarning'
+        truncated:
+          type: boolean
+        scan_counts:
+          type: object
+          additionalProperties: false
+          required: [files, directories]
+          properties:
+            files: { type: integer, minimum: 0 }
+            directories: { type: integer, minimum: 0 }
+        evidence:
+          type: array
+          items:
+            $ref: '#/components/schemas/Evidence'
+    ProfileValidationRequest:
+      type: object
+      additionalProperties: false
+      required: [profile]
+      properties:
+        profile:
+          $ref: './schemas/governance-profile.schema.json'
+    ProfileValidationResponse:
+      type: object
+      additionalProperties: false
+      required: [status, valid, errors, warnings]
+      properties:
+        status:
+          const: ok
+        valid:
+          type: boolean
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationFinding'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationFinding'
+    GenerationComparisonRequest:
+      type: object
+      additionalProperties: false
+      required: [baseline, candidate]
+      properties:
+        baseline:
+          type: string
+          minLength: 1
+        candidate:
+          type: string
+          minLength: 1
+    GenerationComparisonResponse:
+      type: object
+      additionalProperties: false
+      required: [status, baseline, candidate, summary, files]
+      properties:
+        status:
+          const: ok
+        baseline:
+          type: string
+        candidate:
+          type: string
+        summary:
+          type: object
+          additionalProperties: false
+          required: [added, removed, changed, unchanged]
+          properties:
+            added: { type: integer, minimum: 0 }
+            removed: { type: integer, minimum: 0 }
+            changed: { type: integer, minimum: 0 }
+            unchanged: { type: integer, minimum: 0 }
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileComparison'
+    FileComparison:
+      type: object
+      additionalProperties: false
+      required: [path, state]
+      properties:
+        path:
+          type: string
+        state:
+          enum: [added, removed, changed, unchanged]
+        baseline_sha256:
+          type: [string, 'null']
+          pattern: '^[a-f0-9]{64}$'
+        candidate_sha256:
+          type: [string, 'null']
+          pattern: '^[a-f0-9]{64}$'
+    Evidence:
+      type: object
+      additionalProperties: false
+      required: [kind, path]
+      properties:
+        kind:
+          type: string
+        path:
+          type: string
+    ExcludedPath:
+      type: object
+      additionalProperties: false
+      required: [path, reason]
+      properties:
+        path:
+          type: string
+        reason:
+          enum: [vcs, worktree, dependency, cache, generated, explicit, limit]
+    InspectionWarning:
+      type: object
+      additionalProperties: false
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    ValidationFinding:
+      type: object
+      additionalProperties: false
+      required: [path, code, message]
+      properties:
+        path:
+          type: string
+        code:
+          type: string
+        message:
+          type: string
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required: [status, error]
+      properties:
+        status:
+          const: error
+        error:
+          type: object
+          additionalProperties: false
+          required: [code, message]
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+    EvaluationCase:
+      $ref: './schemas/eval-case.schema.json'
+    EvaluationResult:
+      $ref: './schemas/eval-result.schema.json'
+    VerificationReport:
+      $ref: './schemas/verification-report.schema.json'
+    CompletionReport:
+      $ref: './schemas/completion-report.schema.json'

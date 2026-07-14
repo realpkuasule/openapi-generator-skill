@@ -1,0 +1,173 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+import json
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+from typing import Any
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SKILL_SCRIPTS = REPO_ROOT / "skills" / "openapi-engineering" / "scripts"
+EXAMPLE_ROOT = REPO_ROOT / "contracts" / "examples"
+EXAMPLE_NAMES = (
+    "error-response.json",
+    "generation-comparison-response.json",
+    "inspect-response.json",
+    "profile-validation-response.json",
+)
+
+
+def write_text(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+
+
+def run_json(script: str, *arguments: str, expected_exit: int = 0) -> dict[str, Any]:
+    result = subprocess.run(
+        [sys.executable, str(SKILL_SCRIPTS / script), *arguments],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode != expected_exit:
+        raise RuntimeError(
+            f"{script} exited {result.returncode}, expected {expected_exit}: "
+            f"{result.stderr.strip()}"
+        )
+    try:
+        payload = json.loads(result.stdout)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"{script} did not emit JSON.") from exc
+    if not isinstance(payload, dict):
+        raise RuntimeError(f"{script} did not emit a JSON object.")
+    return payload
+
+
+def make_inspection_fixture(root: Path) -> Path:
+    project = root / "project"
+    write_text(project / "AGENTS.md", "Use contract-first API engineering.\n")
+    write_text(
+        project / "package.json",
+        json.dumps(
+            {
+                "devDependencies": {
+                    "@openapitools/openapi-generator-cli": "2.15.3"
+                }
+            }
+        ),
+    )
+    write_text(project / "pyproject.toml", "[project]\nname = \"fixture\"\n")
+    write_text(project / "tsconfig.json", "{}\n")
+    write_text(
+        project / "contracts" / "openapi.yaml",
+        "openapi: 3.1.0\ninfo:\n  title: Fixture\n  version: 1.0.0\npaths: {}\n",
+    )
+    write_text(
+        project / "contracts" / "domain.schema.json",
+        '{"$schema":"https://json-schema.org/draft/2020-12/schema"}\n',
+    )
+    write_text(project / ".github" / "workflows" / "ci.yml", "name: CI\n")
+    write_text(project / ".openapi-engineering" / "profile.yaml", "profile_version: 1\n")
+    write_text(project / "generated" / "client.ts", "export const generated = true;\n")
+    write_text(project / ".worktrees" / "stale" / "openapi.yaml", "openapi: 3.1.0\n")
+    return project
+
+
+def capture_inspection(root: Path) -> dict[str, Any]:
+    project = make_inspection_fixture(root)
+    payload = run_json("inspect_project.py", "--root", str(project), "--pretty")
+    payload["root"] = "/workspace/project"
+    return payload
+
+
+def capture_comparison(root: Path) -> dict[str, Any]:
+    baseline = root / "baseline"
+    candidate = root / "candidate"
+    write_text(baseline / "removed.txt", "removed\n")
+    write_text(baseline / "changed.txt", "before\n")
+    write_text(baseline / "same.txt", "same\n")
+    write_text(candidate / "added.txt", "added\n")
+    write_text(candidate / "changed.txt", "after\n")
+    write_text(candidate / "same.txt", "same\n")
+    payload = run_json("compare_generation.py", str(baseline), str(candidate), "--pretty")
+    payload["baseline"] = "/tmp/baseline"
+    payload["candidate"] = "/tmp/candidate"
+    return payload
+
+
+def capture_examples(output: Path) -> None:
+    output.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        examples = {
+            "inspect-response.json": capture_inspection(root / "inspection"),
+            "generation-comparison-response.json": capture_comparison(root / "comparison"),
+            "profile-validation-response.json": run_json(
+                "validate_profile.py",
+                str(EXAMPLE_ROOT / "governance-profile.invalid-secret.yaml"),
+                "--pretty",
+                expected_exit=1,
+            ),
+            "error-response.json": run_json(
+                "inspect_project.py",
+                "--root",
+                str(root / "does-not-exist"),
+                "--pretty",
+                expected_exit=2,
+            ),
+        }
+    for name, payload in examples.items():
+        (output / name).write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+
+
+def check_examples() -> int:
+    with tempfile.TemporaryDirectory() as directory:
+        generated = Path(directory)
+        capture_examples(generated)
+        mismatches = [
+            name
+            for name in EXAMPLE_NAMES
+            if not (EXAMPLE_ROOT / name).is_file()
+            or (EXAMPLE_ROOT / name).read_bytes() != (generated / name).read_bytes()
+        ]
+    if mismatches:
+        print(
+            json.dumps(
+                {"status": "failed", "mismatched_examples": mismatches},
+                ensure_ascii=False,
+                sort_keys=True,
+            )
+        )
+        return 1
+    print(json.dumps({"status": "ok", "checked": list(EXAMPLE_NAMES)}, sort_keys=True))
+    return 0
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        description="Capture deterministic OpenAPI engineering contract examples."
+    )
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--output-dir", type=Path, help="Write examples to this directory.")
+    mode.add_argument("--write", action="store_true", help="Update checked-in examples.")
+    mode.add_argument("--check", action="store_true", help="Check examples for drift.")
+    args = parser.parse_args()
+
+    if args.check:
+        return check_examples()
+    output = EXAMPLE_ROOT if args.write else args.output_dir.expanduser().resolve()
+    capture_examples(output)
+    print(json.dumps({"status": "ok", "output": str(output)}, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

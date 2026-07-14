@@ -1,0 +1,107 @@
+profile_version: 1
+project:
+  kind: desktop-app
+  stage: initial
+intent_history:
+  - intent: assess-and-select
+    recorded_at: '2026-07-14T12:03:00Z'
+statements:
+  - subject: project-boundary
+    value: Project Core is an owned process boundary.
+    provenance: observed
+    evidence_paths:
+      - docs/architecture.md
+contract:
+  approach: hybrid
+  sources_of_truth:
+    - contracts/openapi.yaml
+    - contracts/domain.schema.json
+  ownership_rules:
+    - OpenAPI owns transport envelopes.
+    - JSON Schema owns domain documents.
+  openapi_version: 3.0.3
+boundaries:
+  - name: project-core
+    scope: included
+    strategy: openapi-generator
+    tool_names:
+      - openapi-generator
+    rationale:
+      - Multiple languages consume this owned boundary.
+    confidence: medium
+    conditions:
+      - Representative compile and fixture gates must pass.
+    revisit_triggers:
+      - Target generator support becomes insufficient.
+    provenance: user-decided
+consumers:
+  - name: desktop-ui
+    language: TypeScript
+    provenance: observed
+decision:
+  strategy: openapi-generator
+  tools:
+    - name: openapi-generator
+      version: 7.23.0
+      distribution: npm-cli-wrapper
+      status: stable
+      feature_gaps:
+        - Python server target requires an empirical spike.
+      verified_at: '2026-07-14T12:03:00Z'
+      source_urls:
+        - https://openapi-generator.tech/
+  rejected_options:
+    - option: no-codegen
+      reason: Multiple languages consume an owned process boundary.
+  rationale:
+    - Generation may reduce transport synchronization work.
+  confidence: medium
+  conditions:
+    - All representative gates pass.
+  revisit_triggers:
+    - Generated output requires broad template forks.
+generation:
+  version_pins:
+    - name: openapi-generator
+      version: 7.23.0
+  config_files:
+    - contracts/generator/typescript.yaml
+  output_directories:
+    - src/generated/api
+  generated_files_committed: true
+  manual_edit_policy: Never edit generated files.
+validation:
+  gates:
+    - validate
+    - generation-diff
+    - compile
+    - fixture
+  representative_fixtures:
+    - contracts/fixtures/change-set.json
+permissions:
+  authorization_status: historical-only
+  approved_write_scope:
+    - contracts/
+    - src/generated/api/
+  approved_external_effects: []
+  approved_at: '2026-07-14T12:03:00Z'
+  scope_digest: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+evidence:
+  verified_at: '2026-07-14T12:03:00Z'
+  source_urls:
+    - https://openapi-generator.tech/
+  input_digests:
+    - path: contracts/openapi.yaml
+      sha256: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+  observed_commands:
+    - command: openapi-generator-cli version
+      exit_code: 0
+      status: passed
+  gate_results:
+    - gate: version-check
+      status: passed
+      evidence: openapi-generator 7.23.0
+  risks:
+    - Python server generation remains unverified.
+  rollback:
+    - Remove proposed generated output and retain the previous baseline.

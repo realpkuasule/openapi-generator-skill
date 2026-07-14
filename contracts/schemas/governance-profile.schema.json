@@ -1,0 +1,387 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openapi-engineering.local/schemas/governance-profile.schema.json",
+  "title": "OpenAPI Engineering Governance Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_version",
+    "project",
+    "intent_history",
+    "statements",
+    "contract",
+    "boundaries",
+    "consumers",
+    "decision",
+    "generation",
+    "validation",
+    "permissions",
+    "evidence"
+  ],
+  "properties": {
+    "profile_version": { "const": 1 },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "stage"],
+      "properties": {
+        "kind": {
+          "enum": ["desktop-app", "service", "cli", "library", "monorepo", "other"]
+        },
+        "stage": {
+          "enum": ["prototype", "initial", "active", "stable", "migration", "maintenance"]
+        }
+      }
+    },
+    "intent_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["intent", "recorded_at"],
+        "properties": {
+          "intent": { "type": "string", "minLength": 1 },
+          "recorded_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "statements": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/provenancedStatement" }
+    },
+    "contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approach", "sources_of_truth", "ownership_rules", "openapi_version"],
+      "properties": {
+        "approach": {
+          "enum": ["spec-first", "code-first", "hybrid", "third-party", "none"]
+        },
+        "sources_of_truth": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "ownership_rules": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "openapi_version": {
+          "type": ["string", "null"],
+          "pattern": "^3\\.[0-9]+(?:\\.[0-9]+)?$"
+        }
+      }
+    },
+    "boundaries": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/boundaryDecision" }
+    },
+    "consumers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "language", "provenance"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "language": { "type": "string", "minLength": 1 },
+          "provenance": { "$ref": "#/$defs/provenance" }
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "strategy",
+        "tools",
+        "rejected_options",
+        "rationale",
+        "confidence",
+        "conditions",
+        "revisit_triggers"
+      ],
+      "properties": {
+        "strategy": { "$ref": "#/$defs/strategy" },
+        "tools": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/tool" }
+        },
+        "rejected_options": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rejectedOption" }
+        },
+        "rationale": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "confidence": { "enum": ["low", "medium", "high"] },
+        "conditions": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "revisit_triggers": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "generation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version_pins",
+        "config_files",
+        "output_directories",
+        "generated_files_committed",
+        "manual_edit_policy"
+      ],
+      "properties": {
+        "version_pins": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/toolPin" }
+        },
+        "config_files": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "output_directories": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "generated_files_committed": { "type": ["boolean", "null"] },
+        "manual_edit_policy": { "type": ["string", "null"] }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gates", "representative_fixtures"],
+      "properties": {
+        "gates": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "representative_fixtures": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authorization_status",
+        "approved_write_scope",
+        "approved_external_effects",
+        "approved_at",
+        "scope_digest"
+      ],
+      "properties": {
+        "authorization_status": { "const": "historical-only" },
+        "approved_write_scope": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "approved_external_effects": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "approved_at": { "type": ["string", "null"], "format": "date-time" },
+        "scope_digest": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verified_at",
+        "source_urls",
+        "input_digests",
+        "observed_commands",
+        "gate_results",
+        "risks",
+        "rollback"
+      ],
+      "properties": {
+        "verified_at": { "type": ["string", "null"], "format": "date-time" },
+        "source_urls": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" }
+        },
+        "input_digests": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/inputDigest" }
+        },
+        "observed_commands": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/commandResult" }
+        },
+        "gate_results": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/gateResult" }
+        },
+        "risks": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "rollback": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "strategy": {
+      "enum": [
+        "openapi-generator",
+        "language-native",
+        "official-sdk",
+        "governance-only",
+        "mcp",
+        "no-codegen"
+      ]
+    },
+    "provenance": {
+      "enum": ["observed", "user-decided", "inferred"]
+    },
+    "provenancedStatement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["subject", "value", "provenance", "evidence_paths"],
+      "properties": {
+        "subject": { "type": "string", "minLength": 1 },
+        "value": { "type": "string", "minLength": 1 },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "evidence_paths": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "boundaryDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "scope",
+        "strategy",
+        "tool_names",
+        "rationale",
+        "confidence",
+        "conditions",
+        "revisit_triggers",
+        "provenance"
+      ],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "scope": { "enum": ["included", "excluded"] },
+        "strategy": { "$ref": "#/$defs/strategy" },
+        "tool_names": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "rationale": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "confidence": { "enum": ["low", "medium", "high"] },
+        "conditions": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "revisit_triggers": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "provenance": { "$ref": "#/$defs/provenance" }
+      }
+    },
+    "toolPin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "$ref": "#/$defs/exactVersion" }
+      }
+    },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "distribution",
+        "status",
+        "feature_gaps",
+        "verified_at",
+        "source_urls"
+      ],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "$ref": "#/$defs/exactVersion" },
+        "distribution": { "type": "string", "minLength": 1 },
+        "status": {
+          "enum": ["stable", "beta", "experimental", "deprecated", "unknown"]
+        },
+        "feature_gaps": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "verified_at": { "type": ["string", "null"], "format": "date-time" },
+        "source_urls": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+    "exactVersion": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![Ll][Aa][Tt][Ee][Ss][Tt]$)(?!.*[<>=*^~|xX\\s]).+$"
+    },
+    "rejectedOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["option", "reason"],
+      "properties": {
+        "option": { "$ref": "#/$defs/strategy" },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "inputDigest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "commandResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command", "exit_code", "status"],
+      "properties": {
+        "command": { "type": "string", "minLength": 1 },
+        "exit_code": { "type": ["integer", "null"] },
+        "status": { "enum": ["passed", "failed", "blocked", "unverified"] }
+      }
+    },
+    "gateResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gate", "status", "evidence"],
+      "properties": {
+        "gate": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["passed", "failed", "blocked", "unverified"] },
+        "evidence": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

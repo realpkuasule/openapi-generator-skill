@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "invalid-root",
+    "message": "Root is not a directory."
+  },
+  "status": "error"
+}

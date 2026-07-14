@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openapi-engineering.local/schemas/verification-report.schema.json",
+  "title": "OpenAPI Engineering Verification Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["report_version", "tier", "status", "started_at", "finished_at", "gates"],
+  "properties": {
+    "report_version": { "const": 1 },
+    "tier": { "enum": ["deterministic", "forward", "full"] },
+    "status": { "enum": ["passed", "failed", "blocked"] },
+    "started_at": { "type": "string", "format": "date-time" },
+    "finished_at": { "type": "string", "format": "date-time" },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "command",
+          "exit_code",
+          "status",
+          "duration_ms",
+          "evidence",
+          "evidence_sha256",
+          "risk",
+          "rollback"
+        ],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "command": { "type": "array", "items": { "type": "string" } },
+          "exit_code": { "type": ["integer", "null"] },
+          "status": { "enum": ["passed", "failed", "blocked", "unverified"] },
+          "duration_ms": { "type": "integer", "minimum": 0 },
+          "evidence": { "type": "string" },
+          "evidence_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "risk": { "type": ["string", "null"] },
+          "rollback": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}

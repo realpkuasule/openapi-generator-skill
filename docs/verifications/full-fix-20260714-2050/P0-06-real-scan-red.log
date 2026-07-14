@@ -1,0 +1,21 @@
+test_generator_configuration_is_not_misclassified_as_a_contract (tests.test_inspect_project.InspectProjectTests.test_generator_configuration_is_not_misclassified_as_a_contract) ... FAIL
+
+======================================================================
+FAIL: test_generator_configuration_is_not_misclassified_as_a_contract (tests.test_inspect_project.InspectProjectTests.test_generator_configuration_is_not_misclassified_as_a_contract)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/zhichao/codex/openapi-generator/tests/test_inspect_project.py", line 107, in test_generator_configuration_is_not_misclassified_as_a_contract
+    self.assertEqual(payload["contract_files"], ["contracts/openapi.yaml"])
+AssertionError: Lists differ: ['contracts/openapi.yaml', 'openapitools.json'] != ['contracts/openapi.yaml']
+
+First list contains 1 additional elements.
+First extra element 1:
+'openapitools.json'
+
+- ['contracts/openapi.yaml', 'openapitools.json']
++ ['contracts/openapi.yaml']
+
+----------------------------------------------------------------------
+Ran 1 test in 0.031s
+
+FAILED (failures=1)

@@ -1,0 +1,19 @@
+test_verify_runner (unittest.loader._FailedTest.test_verify_runner) ... ERROR
+
+======================================================================
+ERROR: test_verify_runner (unittest.loader._FailedTest.test_verify_runner)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_verify_runner
+Traceback (most recent call last):
+  File "/Users/zhichao/.local/share/uv/python/cpython-3.11.15-macos-aarch64-none/lib/python3.11/unittest/loader.py", line 162, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhichao/codex/openapi-generator/tests/test_verify_runner.py", line 12, in <module>
+    from scripts import verify
+ImportError: cannot import name 'verify' from 'scripts' (unknown location)
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

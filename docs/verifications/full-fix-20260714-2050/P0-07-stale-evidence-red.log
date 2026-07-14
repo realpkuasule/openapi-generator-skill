@@ -1,0 +1,14 @@
+test_previous_gate_logs_are_removed_before_a_new_run (tests.test_verify_runner.VerifyRunnerTests.test_previous_gate_logs_are_removed_before_a_new_run) ... FAIL
+
+======================================================================
+FAIL: test_previous_gate_logs_are_removed_before_a_new_run (tests.test_verify_runner.VerifyRunnerTests.test_previous_gate_logs_are_removed_before_a_new_run)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/zhichao/codex/openapi-generator/tests/test_verify_runner.py", line 105, in test_previous_gate_logs_are_removed_before_a_new_run
+    self.assertFalse(stale.exists())
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 1 test in 0.009s
+
+FAILED (failures=1)

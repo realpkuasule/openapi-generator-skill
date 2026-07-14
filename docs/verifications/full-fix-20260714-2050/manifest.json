@@ -1,0 +1,208 @@
+{
+  "approval": {
+    "approved_message": "继续",
+    "checkpoint": "A",
+    "excludes": [
+      "real Codex or Claude Code forward tests",
+      "generator downloads or execution",
+      "real project modifications"
+    ],
+    "includes": [
+      "repository changes",
+      "locked validation dependencies in an isolated development environment"
+    ]
+  },
+  "artifacts": [
+    {
+      "bytes": 2559,
+      "path": "docs/verifications/full-fix-20260714-2050/P0-03-04-green.log",
+      "sha256": "fdb4397a6bf12908b7aaf073e403ce9a2e3eaa0d5180d664f52e8a739f32048b"
+    },
+    {
+      "bytes": 1515,
+      "path": "docs/verifications/full-fix-20260714-2050/P0-05-06-green.log",
+      "sha256": "ec22077c454bdcfd52e0dd00a6b4a54121dc3c041719e6b7a9b33710e7aeb241"
+    },
+    {
+      "bytes": 1870,
+      "path": "docs/verifications/full-fix-20260714-2050/P0-05-red.log",
+      "sha256": "0e25374bb449806c584f81b6264c7a06bd506f4de2f49352ab7c738d8f089218"
+    },
+    {
+      "bytes": 1168,
+      "path": "docs/verifications/full-fix-20260714-2050/P0-06-real-scan-red.log",
+      "sha256": "bc9559e4889b9777bb52e3b8b3859732992df11ff070d5ab2a7121affc84c852"
+    },
+    {
+      "bytes": 937,
+      "path": "docs/verifications/full-fix-20260714-2050/P0-07-evidence-red.log",
+      "sha256": "dbebf232a27f6d91dad76978be0df5e7444d4063d019871a85e260e90bdb7a73"
+    },
+    {
+      "bytes": 932,
+      "path": "docs/verifications/full-fix-20260714-2050/P0-07-red.log",
+      "sha256": "3f43f2a128460e51ca65e937cc1d6d1420a1b43cb7226466d70cf39f2ee1ec91"
+    },
+    {
+      "bytes": 823,
+      "path": "docs/verifications/full-fix-20260714-2050/P0-07-stale-evidence-red.log",
+      "sha256": "bacb899656cf1de741292e69eebbd69bb95fe62594214173f1720a6124e0c68c"
+    },
+    {
+      "bytes": 79462,
+      "path": "docs/verifications/full-fix-20260714-2050/P0-contract-and-core-red.log",
+      "sha256": "1d934e7ad54dfd9359873e6b9c647a869940735b43308b88aa746ee6dc7b41e3"
+    },
+    {
+      "bytes": 4585,
+      "path": "docs/verifications/full-fix-20260714-2050/animator-inspection.json",
+      "sha256": "0d40db0305ba86d21ef778c68d43e6214c7d307aefd51510e35587d669b5546e"
+    },
+    {
+      "bytes": 1671,
+      "path": "docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/01-contract-validation.log",
+      "sha256": "07016a5ef5de7980892e46dfbf129c6db8befb1c484d96ad5e417ee677d7ab07"
+    },
+    {
+      "bytes": 341,
+      "path": "docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/02-captured-example-conformance.log",
+      "sha256": "0cf4d731d4e43e28fd8daa56796edec2bcb9ab0c57416742f9527a9b0fdb3c22"
+    },
+    {
+      "bytes": 7550,
+      "path": "docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/03-unit-test-suite.log",
+      "sha256": "a3210682291f682bdbc28d1a5dc3264c6d590cbb5ee9922e7bf962c2e970830d"
+    },
+    {
+      "bytes": 263,
+      "path": "docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/04-skill-quick-validation.log",
+      "sha256": "36d00e8aa2f15724b86e8c0f30a128a9e1600ca03645df5cfce30ef28ec7eb43"
+    },
+    {
+      "bytes": 789,
+      "path": "docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/05-inspect-project-help.log",
+      "sha256": "4128585912a006edae803540b56ec5c2c4ac9b5b5a6faece54a569f7b90b80dc"
+    },
+    {
+      "bytes": 480,
+      "path": "docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/06-validate-profile-help.log",
+      "sha256": "6d6e2a389317e0969d5daebb952e7e895cf0816c63c9362ef2ab6e54b552d8ed"
+    },
+    {
+      "bytes": 522,
+      "path": "docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/07-compare-generation-help.log",
+      "sha256": "9117e7ab192a962d5defe65d28ace8ca79a1c354f89aa4e85f2f87031dbfe50a"
+    },
+    {
+      "bytes": 432,
+      "path": "docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/08-tdd-evidence-help.log",
+      "sha256": "19f6e74d4aa0d56bcd8b696bec90757f271d37c88cfb5408e23ebb33399b948f"
+    },
+    {
+      "bytes": 156,
+      "path": "docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/09-source-tree-read-only.log",
+      "sha256": "48d64a1d95a3887298bb74b674942e122f09d994970560b8fed0bff3b9640167"
+    },
+    {
+      "bytes": 5825,
+      "path": "docs/verifications/full-fix-20260714-2050/deterministic-report.json",
+      "sha256": "ec70f9d13f0f8b75c7d618e29c9727ee4efd6e4f8709aa51fdbe1759884aff13"
+    },
+    {
+      "bytes": 928,
+      "path": "docs/verifications/full-fix-20260714-2050/real-project-readonly.json",
+      "sha256": "1612b11004c9e32d15782560ff0da550ffa981dd15fb7c2bca89344bc51eb0e9"
+    },
+    {
+      "bytes": 1830,
+      "path": "docs/verifications/full-fix-20260714-2050/revoice-inspection.json",
+      "sha256": "6f2c5dd7304d897823c66be4998f19eb33e7171d33b828fd5c0411d377d823d5"
+    }
+  ],
+  "baseline": {
+    "captured_at": "2026-07-14T20:59:02+08:00",
+    "snapshot": "/tmp/openapi-generator-baseline-20260714-2050/repo",
+    "tree_sha256": "35bf895294040f949a532c06cdd90fa01160ec302c42a853d2a250e9223412b9"
+  },
+  "checkpoint_a_completed_at": "2026-07-14T22:03:14+08:00",
+  "plan": "docs/plans/full-fix-20260714-2050.md",
+  "repository_sync": {
+    "authorized_at": "2026-07-14T22:08:44+08:00",
+    "authorized_message": "本项目远程仓库同步到 git@github.com:realpkuasule/openapi-generator-skill.git",
+    "initial_branch": "main",
+    "remote": "git@github.com:realpkuasule/openapi-generator-skill.git",
+    "remote_was_empty": true
+  },
+  "schema_version": 1,
+  "tasks": [
+    {
+      "green_evidence": [
+        "docs/verifications/full-fix-20260714-2050/deterministic-report.json"
+      ],
+      "id": "P0-01",
+      "notes": "OpenAPI 3.1 and five Draft 2020-12 schemas are standard-validator clean.",
+      "red_evidence": [
+        "docs/verifications/full-fix-20260714-2050/P0-contract-and-core-red.log"
+      ],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/full-fix-20260714-2050/deterministic-report-evidence/01-contract-validation.log"
+      ],
+      "id": "P0-02",
+      "notes": "Infrastructure exception: dependency locking was performed before a dedicated failing test. pyproject.toml and uv.lock are present; locked-environment tests pass.",
+      "red_evidence": [],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/full-fix-20260714-2050/P0-03-04-green.log"
+      ],
+      "id": "P0-03/P0-04",
+      "notes": "The validator now delegates structure to the authoritative schema and rejects/redacts credential-bearing values.",
+      "red_evidence": [
+        "docs/verifications/full-fix-20260714-2050/P0-contract-and-core-red.log"
+      ],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/full-fix-20260714-2050/P0-05-06-green.log"
+      ],
+      "id": "P0-05",
+      "notes": "All four OpenAPI response examples are deterministic captures from the real CLI entry points.",
+      "red_evidence": [
+        "docs/verifications/full-fix-20260714-2050/P0-05-red.log"
+      ],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/full-fix-20260714-2050/real-project-readonly.json",
+        "docs/verifications/full-fix-20260714-2050/animator-inspection.json",
+        "docs/verifications/full-fix-20260714-2050/revoice-inspection.json"
+      ],
+      "id": "P0-06",
+      "notes": "Animator and Revoice scans are untruncated and read-only; OpenAPI generator configuration is no longer misclassified as a contract.",
+      "red_evidence": [
+        "docs/verifications/full-fix-20260714-2050/P0-contract-and-core-red.log",
+        "docs/verifications/full-fix-20260714-2050/P0-06-real-scan-red.log"
+      ],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/full-fix-20260714-2050/deterministic-report.json"
+      ],
+      "id": "P0-07",
+      "notes": "The unified runner records argv, exit code, status, duration, evidence digest, and source-tree integrity; the manifest inventory is deterministic.",
+      "red_evidence": [
+        "docs/verifications/full-fix-20260714-2050/P0-07-red.log",
+        "docs/verifications/full-fix-20260714-2050/P0-07-evidence-red.log",
+        "docs/verifications/full-fix-20260714-2050/P0-07-stale-evidence-red.log"
+      ],
+      "status": "passed"
+    }
+  ]
+}

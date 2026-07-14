@@ -1,0 +1,22 @@
+test_invalid_yaml_is_a_redacted_json_load_error (tests.test_validate_profile.ValidateProfileTests.test_invalid_yaml_is_a_redacted_json_load_error) ... ok
+test_missing_file_is_load_error (tests.test_validate_profile.ValidateProfileTests.test_missing_file_is_load_error) ... ok
+test_missing_required_section_fails (tests.test_validate_profile.ValidateProfileTests.test_missing_required_section_fails) ... ok
+test_public_digest_is_not_treated_as_a_secret (tests.test_validate_profile.ValidateProfileTests.test_public_digest_is_not_treated_as_a_secret) ... ok
+test_schema_rejects_invalid_strategy (tests.test_validate_profile.ValidateProfileTests.test_schema_rejects_invalid_strategy) ... ok
+test_schema_rejects_non_exact_versions (tests.test_validate_profile.ValidateProfileTests.test_schema_rejects_non_exact_versions) ... ok
+test_schema_rejects_wrong_container_types (tests.test_validate_profile.ValidateProfileTests.test_schema_rejects_wrong_container_types) ... ok
+test_sensitive_values_are_rejected_and_redacted (tests.test_validate_profile.ValidateProfileTests.test_sensitive_values_are_rejected_and_redacted) ... ok
+test_valid_yaml_profile_passes (tests.test_validate_profile.ValidateProfileTests.test_valid_yaml_profile_passes) ... ok
+test_authoritative_schema_location_is_stable (tests.test_schema_authority.SchemaAuthorityTests.test_authoritative_schema_location_is_stable) ... ok
+test_profile_validator_does_not_duplicate_structural_constants (tests.test_schema_authority.SchemaAuthorityTests.test_profile_validator_does_not_duplicate_structural_constants) ... ok
+test_profile_validator_loads_the_authoritative_schema (tests.test_schema_authority.SchemaAuthorityTests.test_profile_validator_loads_the_authoritative_schema) ... ok
+test_file_limit_is_explicit_and_deterministic (tests.test_inspect_project.InspectProjectTests.test_file_limit_is_explicit_and_deterministic) ... ok
+test_inspection_finds_project_signals_without_writing (tests.test_inspect_project.InspectProjectTests.test_inspection_finds_project_signals_without_writing) ... ok
+test_missing_root_returns_json_error (tests.test_inspect_project.InspectProjectTests.test_missing_root_returns_json_error) ... ok
+test_output_is_stable (tests.test_inspect_project.InspectProjectTests.test_output_is_stable) ... ok
+test_worktrees_and_generated_outputs_do_not_pollute_contracts (tests.test_inspect_project.InspectProjectTests.test_worktrees_and_generated_outputs_do_not_pollute_contracts) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 6.015s
+
+OK

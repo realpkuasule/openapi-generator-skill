@@ -1,0 +1,21 @@
+{
+  "scope": "Files visible to inspect_project.py; VCS, worktrees, dependencies, caches, and generated directories are pruned.",
+  "projects": [
+    {
+      "name": "animator",
+      "root": "/Users/zhichao/Documents/animator",
+      "before_sha256": "60d4dc253707db1560ad5205814c247f4ce4623bd11cd0f96a369e97c36f9683",
+      "after_sha256": "60d4dc253707db1560ad5205814c247f4ce4623bd11cd0f96a369e97c36f9683",
+      "inspection_report": "docs/verifications/full-fix-20260714-2050/animator-inspection.json",
+      "unchanged": true
+    },
+    {
+      "name": "revoice",
+      "root": "/Users/zhichao/claude/revoice",
+      "before_sha256": "dbea3f7f60fa3835a7d097a7897e5c3778eedd76aa0a1739ff5fce09bd7efb37",
+      "after_sha256": "dbea3f7f60fa3835a7d097a7897e5c3778eedd76aa0a1739ff5fce09bd7efb37",
+      "inspection_report": "docs/verifications/full-fix-20260714-2050/revoice-inspection.json",
+      "unchanged": true
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "build_systems": [
+    "npm",
+    "pyproject"
+  ],
+  "ci_files": [
+    ".github/workflows/ci.yml"
+  ],
+  "contract_files": [
+    "contracts/openapi.yaml"
+  ],
+  "evidence": [
+    {
+      "kind": "ci",
+      "path": ".github/workflows/ci.yml"
+    },
+    {
+      "kind": "contract",
+      "path": "contracts/openapi.yaml"
+    },
+    {
+      "kind": "generator",
+      "path": "package.json"
+    },
+    {
+      "kind": "governance",
+      "path": ".openapi-engineering/profile.yaml"
+    },
+    {
+      "kind": "manifest",
+      "path": "package.json"
+    },
+    {
+      "kind": "manifest",
+      "path": "pyproject.toml"
+    },
+    {
+      "kind": "manifest",
+      "path": "tsconfig.json"
+    },
+    {
+      "kind": "project-rule",
+      "path": "AGENTS.md"
+    },
+    {
+      "kind": "schema",
+      "path": "contracts/domain.schema.json"
+    }
+  ],
+  "excluded_paths": [
+    {
+      "path": ".worktrees",
+      "reason": "worktree"
+    },
+    {
+      "path": "generated",
+      "reason": "generated"
+    }
+  ],
+  "generated_directories": [
+    "generated"
+  ],
+  "generation_signals": [
+    "generated-output-directory",
+    "openapi-generator-config"
+  ],
+  "governance_profiles": [
+    ".openapi-engineering/profile.yaml"
+  ],
+  "languages": [
+    "Python",
+    "TypeScript"
+  ],
+  "project_signals": [
+    "project-rules",
+    "openapi-contract",
+    "json-schema",
+    "governance-profile",
+    "ci",
+    "code-generation"
+  ],
+  "root": "/workspace/project",
+  "scan_counts": {
+    "directories": 5,
+    "files": 8
+  },
+  "schema_files": [
+    "contracts/domain.schema.json"
+  ],
+  "status": "ok",
+  "truncated": false,
+  "warnings": []
+}
