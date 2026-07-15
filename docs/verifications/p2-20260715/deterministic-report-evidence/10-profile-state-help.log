@@ -1,0 +1,21 @@
+command=["/Users/zhichao/codex/openapi-generator/.venv/bin/python", "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/profile_state.py", "--help"]
+exit_code=0
+stdout:
+usage: profile_state.py [-h] --profile PROFILE [--inspection INSPECTION]
+                        [--proposal PROPOSAL] [--approve APPROVE] [--pretty]
+                        {check,propose,apply}
+
+Check, propose, or apply governance profile state changes.
+
+positional arguments:
+  {check,propose,apply}
+
+options:
+  -h, --help            show this help message and exit
+  --profile PROFILE
+  --inspection INSPECTION
+  --proposal PROPOSAL
+  --approve APPROVE
+  --pretty
+
+stderr:

@@ -1,0 +1,80 @@
+openapi: 3.0.3
+info:
+  title: Empirical Gate Fixture
+  version: 1.0.0
+servers:
+  - url: https://api.example.invalid
+paths:
+  /pets/{petId}:
+    get:
+      operationId: getPet
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-Request-Id
+          in: header
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Pet found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          description: Pet not found.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+  schemas:
+    Pet:
+      type: object
+      additionalProperties: false
+      required: [id, name, status]
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        status:
+          type: string
+          enum: [available, adopted]
+        tag:
+          type: string
+          nullable: true
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+    Problem:
+      type: object
+      additionalProperties: false
+      required: [title, status]
+      properties:
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+    SearchResult:
+      oneOf:
+        - $ref: '#/components/schemas/Pet'
+        - $ref: '#/components/schemas/Problem'

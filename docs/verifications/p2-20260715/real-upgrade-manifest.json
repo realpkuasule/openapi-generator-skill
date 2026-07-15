@@ -1,0 +1,143 @@
+{
+  "manifest_version": 1,
+  "mode": "upgrade",
+  "project_root": "/tmp/openapi-empirical-real-project-20260715",
+  "contract": {
+    "path": "/tmp/openapi-empirical-real-project-20260715/openapi.yaml",
+    "sha256": "7d1e07b0c746ffdd36e8b607ebfd3469c18ead0ebfef4f09ca62641b6c18ea54"
+  },
+  "fixture": {
+    "path": "/tmp/openapi-empirical-real-project-20260715/fixtures/fixture.py",
+    "sha256": "bae2cc3d1f63a19bfcabeb4306ac81c87ba80c4935e1003642f1484cf528c137"
+  },
+  "baseline": {
+    "path": "/tmp/openapi-empirical-real-project-20260715/accepted",
+    "tree_sha256": "c835580503c43bf0d34956ab877c24ccffe8abbcba7b2c3b80634795c6f53a7f"
+  },
+  "previous_generator": {
+    "name": "openapi-generator-cli",
+    "version": "7.22.0",
+    "distribution": "jar",
+    "target": "go",
+    "maturity": "stable",
+    "artifact": {
+      "path": "/tmp/openapi-generator-tools-7.22.0/openapi-generator-cli-7.22.0.jar",
+      "sha256": "3f1e6ce5c6ad4f15242c6170ab43aad4bad771622617eeece4a7d4f72ffaf329"
+    },
+    "feature_gaps": [
+      {
+        "feature": "OpenAPI 3.1",
+        "status": "partial",
+        "evidence": "The official project overview describes OpenAPI 3.1 support as beta; the shared upgrade fixture uses OpenAPI 3.0.3."
+      }
+    ],
+    "official_sources": [
+      "https://repo.maven.apache.org/maven2/org/openapitools/openapi-generator-cli/7.22.0/",
+      "https://github.com/OpenAPITools/openapi-generator/releases/tag/v7.22.0"
+    ]
+  },
+  "generator": {
+    "name": "openapi-generator-cli",
+    "version": "7.23.0",
+    "distribution": "jar",
+    "target": "go",
+    "maturity": "stable",
+    "artifact": {
+      "path": "/tmp/openapi-generator-tools-7.23.0/openapi-generator-cli-7.23.0.jar",
+      "sha256": "cb087e40001e31eb08ef6140dd5de10938dbeb89016a1fe0481eaa25cd569026"
+    },
+    "feature_gaps": [
+      {
+        "feature": "OpenAPI 3.1",
+        "status": "partial",
+        "evidence": "The official project overview describes OpenAPI 3.1 support as beta; the shared upgrade fixture uses OpenAPI 3.0.3."
+      }
+    ],
+    "official_sources": [
+      "https://repo.maven.apache.org/maven2/org/openapitools/openapi-generator-cli/7.23.0/",
+      "https://github.com/OpenAPITools/openapi-generator/releases/tag/v7.23.0"
+    ]
+  },
+  "commands": [
+    {
+      "gate": "validate",
+      "argv": ["java", "-Xmx512m", "-jar", "{artifact}", "validate", "-i", "{contract}"],
+      "timeout_seconds": 120,
+      "network": false,
+      "dependency_install": false
+    },
+    {
+      "gate": "generate-previous",
+      "argv": ["java", "-Xmx512m", "-jar", "{previous_artifact}", "generate", "-i", "{contract}", "-g", "go", "-o", "{previous_output}", "--additional-properties=packageName=openapi,packageVersion=1.0.0"],
+      "timeout_seconds": 300,
+      "network": false,
+      "dependency_install": false
+    },
+    {
+      "gate": "generate",
+      "argv": ["java", "-Xmx512m", "-jar", "{artifact}", "generate", "-i", "{contract}", "-g", "go", "-o", "{output}", "--additional-properties=packageName=openapi,packageVersion=1.0.0"],
+      "timeout_seconds": 300,
+      "network": false,
+      "dependency_install": false
+    },
+    {
+      "gate": "compile-previous",
+      "argv": ["go", "-C", "{previous_output}", "test", "-run", "^$", "."],
+      "timeout_seconds": 180,
+      "network": true,
+      "dependency_install": true
+    },
+    {
+      "gate": "compile",
+      "argv": ["go", "-C", "{output}", "test", "-run", "^$", "."],
+      "timeout_seconds": 180,
+      "network": true,
+      "dependency_install": true
+    },
+    {
+      "gate": "fixture-previous",
+      "argv": ["/Users/zhichao/codex/openapi-generator/.venv/bin/python", "{fixture}", "{previous_output}"],
+      "timeout_seconds": 180,
+      "network": true,
+      "dependency_install": true
+    },
+    {
+      "gate": "fixture",
+      "argv": ["/Users/zhichao/codex/openapi-generator/.venv/bin/python", "{fixture}", "{output}"],
+      "timeout_seconds": 180,
+      "network": true,
+      "dependency_install": true
+    }
+  ],
+  "required_gates": ["validate", "generate-previous", "baseline-match", "generate", "inventory-previous", "inventory", "diff", "compile-previous", "compile", "fixture-previous", "fixture"],
+  "diff_policy": {
+    "allow_initial_generation": false,
+    "accepted_changes": [
+      {
+        "path": ".openapi-generator/VERSION",
+        "state": "changed",
+        "reason": "Expected generator provenance update from 7.22.0 to 7.23.0."
+      },
+      {
+        "path": "README.md",
+        "state": "changed",
+        "reason": "Only the documented generator version changes from 7.22.0 to 7.23.0."
+      },
+      {
+        "path": "api/openapi.yaml",
+        "state": "changed",
+        "reason": "The embedded example map is reordered without changing keys or values."
+      },
+      {
+        "path": "client.go",
+        "state": "changed",
+        "reason": "7.23.0 adds raw byte and io.Reader response decoding; the version-aware Go fixture verifies both behaviors."
+      }
+    ]
+  },
+  "rollback": [
+    "Keep the accepted 7.22.0 output read-only and discard both temporary generations.",
+    "Retain the 7.22.0 version pin until every 7.23.0 diff is explained and all gates pass.",
+    "Delete /tmp/openapi-generator-tools-7.22.0 and /tmp/openapi-generator-tools-7.23.0 to remove downloaded artifacts."
+  ]
+}

@@ -1,0 +1,605 @@
+{
+  "completion_report": {
+    "changed_files": [],
+    "commands": [
+      "python scripts/check_traceability.py --manifest contracts/acceptance-traceability.yaml"
+    ],
+    "outcome": "All 12 acceptance requirements have machine-verifiable evidence.",
+    "profile_changes": [],
+    "results": [
+      "AC-01: passed",
+      "AC-02: passed",
+      "AC-03: passed",
+      "AC-04: passed",
+      "AC-05: passed",
+      "AC-06: passed",
+      "AC-07: passed",
+      "AC-08: passed",
+      "AC-09: passed",
+      "AC-10: passed",
+      "AC-11: passed",
+      "AC-12: passed"
+    ],
+    "risks": [],
+    "rollback": [
+      "Delete the generated traceability report; source evidence is read-only."
+    ],
+    "unverified": []
+  },
+  "generated_at": "2026-07-15T17:54:52.052047Z",
+  "manifest_sha256": "3da79ae3ae3194016795995e6e2bb5d66ef9bd50efa821dec99602f80dfa332a",
+  "report_version": 1,
+  "requirements": [
+    {
+      "computed_status": "passed",
+      "contracts": [
+        {
+          "path": "skills/openapi-engineering/SKILL.md",
+          "reason": null,
+          "sha256": "a5a92d34e2bca9a4c605f2893793c0b02416fc7c587304a9da08bc5d158874d1",
+          "status": "passed"
+        },
+        {
+          "path": "contracts/schemas/eval-case.schema.json",
+          "reason": null,
+          "sha256": "06a775be1e4d6e2a88d47f4dff86dcda084522487c2daaa410b4e530c74619d1",
+          "status": "passed"
+        }
+      ],
+      "declared_status": "passed",
+      "evidence": [
+        {
+          "kind": "forward",
+          "path": "docs/verifications/p2-20260715/forward-eval-report.json",
+          "platforms": [
+            "claude",
+            "codex"
+          ],
+          "reason": null,
+          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "source_status": "passed",
+          "status": "passed"
+        }
+      ],
+      "id": "AC-01",
+      "reasons": [],
+      "tests": [
+        {
+          "path": "tests/test_eval_scorer.py::test_missing_interview_turns_fails_without_keyword_matching",
+          "reason": null,
+          "sha256": "d3d92becc5dd0cbd634505a8a3ea2a67fa347831093561cbbd6dd58d0178f58d",
+          "status": "passed"
+        },
+        {
+          "path": "tests/test_eval_scorer.py::test_early_or_unauthorized_write_is_a_hard_failure",
+          "reason": null,
+          "sha256": "d3d92becc5dd0cbd634505a8a3ea2a67fa347831093561cbbd6dd58d0178f58d",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "computed_status": "passed",
+      "contracts": [
+        {
+          "path": "skills/openapi-engineering/SKILL.md",
+          "reason": null,
+          "sha256": "a5a92d34e2bca9a4c605f2893793c0b02416fc7c587304a9da08bc5d158874d1",
+          "status": "passed"
+        },
+        {
+          "path": "contracts/schemas/eval-result.schema.json",
+          "reason": null,
+          "sha256": "613ad2cb898273cdd0c8a90154f698faff769f24f08b0cb49de4e434c13bf106",
+          "status": "passed"
+        }
+      ],
+      "declared_status": "passed",
+      "evidence": [
+        {
+          "kind": "forward",
+          "path": "docs/verifications/p2-20260715/forward-eval-report.json",
+          "platforms": [
+            "claude",
+            "codex"
+          ],
+          "reason": null,
+          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "source_status": "passed",
+          "status": "passed"
+        }
+      ],
+      "id": "AC-02",
+      "reasons": [],
+      "tests": [
+        {
+          "path": "tests/test_eval_runner.py::test_early_write_is_detected_by_hash_gate",
+          "reason": null,
+          "sha256": "4a74ea588927aed46c4ef763247f32825ec024d1f152240f94d275818b953e5a",
+          "status": "passed"
+        },
+        {
+          "path": "tests/test_empirical_gate.py::test_execute_requires_the_exact_manifest_digest",
+          "reason": null,
+          "sha256": "44197ad344cc588d91e44169a0276072f47d3bc8bb537f8fdd1d38e660571fec",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "computed_status": "passed",
+      "contracts": [
+        {
+          "path": "skills/openapi-engineering/evals/animator.yaml",
+          "reason": null,
+          "sha256": "62c788f12b95b90d33bc7e917140549234cc38cb2706faa470965e5ae01b18a5",
+          "status": "passed"
+        },
+        {
+          "path": "skills/openapi-engineering/references/decision-framework.md",
+          "reason": null,
+          "sha256": "4e77729ec62bb330b523fbdfac235198114d73f38b6708f178bfb7084d63232e",
+          "status": "passed"
+        }
+      ],
+      "declared_status": "passed",
+      "evidence": [
+        {
+          "kind": "forward",
+          "path": "docs/verifications/p2-20260715/forward-eval-report.json",
+          "platforms": [
+            "claude",
+            "codex"
+          ],
+          "reason": null,
+          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "source_status": "passed",
+          "status": "passed"
+        }
+      ],
+      "id": "AC-03",
+      "reasons": [],
+      "tests": [
+        {
+          "path": "tests/test_evals.py::test_animator_covers_flask_sse_domain_and_vendor_boundaries",
+          "reason": null,
+          "sha256": "697b8374ac077b065ed3c82f5bba3fa534f08fca040468823d1de8057ddd603d",
+          "status": "passed"
+        },
+        {
+          "path": "tests/test_eval_scorer.py::test_full_boundary_matrix_can_rank_a_different_selected_boundary_primary",
+          "reason": null,
+          "sha256": "d3d92becc5dd0cbd634505a8a3ea2a67fa347831093561cbbd6dd58d0178f58d",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "computed_status": "passed",
+      "contracts": [
+        {
+          "path": "skills/openapi-engineering/evals/revoice.yaml",
+          "reason": null,
+          "sha256": "9e9fdeaacd74e662fc446d55286ec9e513c424001ae2e3516e07123a6802624e",
+          "status": "passed"
+        },
+        {
+          "path": "skills/openapi-engineering/references/decision-framework.md",
+          "reason": null,
+          "sha256": "4e77729ec62bb330b523fbdfac235198114d73f38b6708f178bfb7084d63232e",
+          "status": "passed"
+        }
+      ],
+      "declared_status": "passed",
+      "evidence": [
+        {
+          "kind": "forward",
+          "path": "docs/verifications/p2-20260715/forward-eval-report.json",
+          "platforms": [
+            "claude",
+            "codex"
+          ],
+          "reason": null,
+          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "source_status": "passed",
+          "status": "passed"
+        }
+      ],
+      "id": "AC-04",
+      "reasons": [],
+      "tests": [
+        {
+          "path": "tests/test_evals.py::test_revoice_surfaces_existing_openapi_conflict",
+          "reason": null,
+          "sha256": "697b8374ac077b065ed3c82f5bba3fa534f08fca040468823d1de8057ddd603d",
+          "status": "passed"
+        },
+        {
+          "path": "tests/test_eval_scorer.py::test_no_codegen_accepts_official_sdk_when_generation_is_explicitly_excluded",
+          "reason": null,
+          "sha256": "d3d92becc5dd0cbd634505a8a3ea2a67fa347831093561cbbd6dd58d0178f58d",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "computed_status": "passed",
+      "contracts": [
+        {
+          "path": "contracts/schemas/forward-eval-report.schema.json",
+          "reason": null,
+          "sha256": "944b18a83ddaad339683b02f2896bc29d13b9d91276d4cd39614471b48da89b9",
+          "status": "passed"
+        },
+        {
+          "path": "skills/openapi-engineering/references/platform-compatibility.md",
+          "reason": null,
+          "sha256": "c306f73a1a434ce3b9090c5fc5234c3549ab292e7dfb1083c28a1177855f03d7",
+          "status": "passed"
+        }
+      ],
+      "declared_status": "passed",
+      "evidence": [
+        {
+          "kind": "forward",
+          "path": "docs/verifications/p2-20260715/forward-eval-report.json",
+          "platforms": [
+            "claude",
+            "codex"
+          ],
+          "reason": null,
+          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "source_status": "passed",
+          "status": "passed"
+        }
+      ],
+      "id": "AC-05",
+      "reasons": [],
+      "tests": [
+        {
+          "path": "tests/test_forward_aggregation.py::test_two_fresh_equivalent_platform_reports_pass",
+          "reason": null,
+          "sha256": "0a656d145c240985e658d0a4ba8fca1fad650c5157342d18f50eedf9f04acef8",
+          "status": "passed"
+        },
+        {
+          "path": "tests/test_forward_aggregation.py::test_unrelated_boundary_strategy_addition_still_fails",
+          "reason": null,
+          "sha256": "0a656d145c240985e658d0a4ba8fca1fad650c5157342d18f50eedf9f04acef8",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "computed_status": "passed",
+      "contracts": [
+        {
+          "path": "contracts/schemas/governance-profile.schema.json",
+          "reason": null,
+          "sha256": "7fd9adacd7b9529d9bb7a1d9f26f708b29459c43100f2ad1e625bc5fb1ad5878",
+          "status": "passed"
+        },
+        {
+          "path": "skills/openapi-engineering/evals/profile-reuse.yaml",
+          "reason": null,
+          "sha256": "3ca3a7d68d1c083ce68989bceb1de92a6cd5defb1b4c5f4fbb4825f369fae548",
+          "status": "passed"
+        }
+      ],
+      "declared_status": "passed",
+      "evidence": [
+        {
+          "kind": "forward",
+          "path": "docs/verifications/p2-20260715/forward-eval-report.json",
+          "platforms": [
+            "claude",
+            "codex"
+          ],
+          "reason": null,
+          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "source_status": "passed",
+          "status": "passed"
+        }
+      ],
+      "id": "AC-06",
+      "reasons": [],
+      "tests": [
+        {
+          "path": "tests/test_profile_state.py::test_check_separates_observed_change_conflict_and_unknown",
+          "reason": null,
+          "sha256": "c0be68558798b491167bcfb3c96b940a7d17c6f05f5f5d62b15c1e872bd8025c",
+          "status": "passed"
+        },
+        {
+          "path": "tests/test_profile_state.py::test_check_reports_unchanged_without_writing",
+          "reason": null,
+          "sha256": "c0be68558798b491167bcfb3c96b940a7d17c6f05f5f5d62b15c1e872bd8025c",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "computed_status": "passed",
+      "contracts": [
+        {
+          "path": "contracts/schemas/empirical-gate.schema.json",
+          "reason": null,
+          "sha256": "87eeb8aa641a5c7001c109d3292118c8123ae5029b785072c61162d9d9ecf5f1",
+          "status": "passed"
+        },
+        {
+          "path": "docs/verifications/p2-20260715/real-smoke-manifest.json",
+          "reason": null,
+          "sha256": "cfcc72acfeb14cb94fe881458578154f32470a50e78b4333913a1eddee670dbc",
+          "status": "passed"
+        }
+      ],
+      "declared_status": "passed",
+      "evidence": [
+        {
+          "kind": "empirical",
+          "path": "docs/verifications/p2-20260715/real-smoke-report.json",
+          "platforms": [],
+          "reason": null,
+          "sha256": "94890979385d039dc552e06a473f2f29c4e164c18b6eff59c4a3d8bf72b2d2ee",
+          "source_status": "passed",
+          "status": "passed"
+        }
+      ],
+      "id": "AC-07",
+      "reasons": [],
+      "tests": [
+        {
+          "path": "tests/test_empirical_gate.py::test_fake_generator_passes_all_gates_without_touching_project_or_baseline",
+          "reason": null,
+          "sha256": "44197ad344cc588d91e44169a0276072f47d3bc8bb537f8fdd1d38e660571fec",
+          "status": "passed"
+        },
+        {
+          "path": "tests/test_contracts.py::test_empirical_manifest_requires_pins_and_examples_conform",
+          "reason": null,
+          "sha256": "e5c84d8a5e359bad4ec669e7e0b1b6281cde02123e201d64e7830b1448239331",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "computed_status": "passed",
+      "contracts": [
+        {
+          "path": "contracts/schemas/empirical-gate.schema.json",
+          "reason": null,
+          "sha256": "87eeb8aa641a5c7001c109d3292118c8123ae5029b785072c61162d9d9ecf5f1",
+          "status": "passed"
+        },
+        {
+          "path": "docs/verifications/p2-20260715/real-upgrade-manifest.json",
+          "reason": null,
+          "sha256": "d6a55531018a5bd03c70c7c2fe2463a3aaecb0dc4ea8bee656ef03403e4bf74c",
+          "status": "passed"
+        }
+      ],
+      "declared_status": "passed",
+      "evidence": [
+        {
+          "kind": "empirical",
+          "path": "docs/verifications/p2-20260715/real-upgrade-report.json",
+          "platforms": [],
+          "reason": null,
+          "sha256": "56cc860cd9213fecf32ea6c3db34dedc68883b22ac22a4d221fefdc5bcb1a084",
+          "source_status": "passed",
+          "status": "passed"
+        }
+      ],
+      "id": "AC-08",
+      "reasons": [],
+      "tests": [
+        {
+          "path": "tests/test_empirical_gate.py::test_upgrade_generates_both_versions_and_accepts_only_explained_diff",
+          "reason": null,
+          "sha256": "44197ad344cc588d91e44169a0276072f47d3bc8bb537f8fdd1d38e660571fec",
+          "status": "passed"
+        },
+        {
+          "path": "tests/test_empirical_gate.py::test_upgrade_rejects_an_unexplained_generated_diff",
+          "reason": null,
+          "sha256": "44197ad344cc588d91e44169a0276072f47d3bc8bb537f8fdd1d38e660571fec",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "computed_status": "passed",
+      "contracts": [
+        {
+          "path": "skills/openapi-engineering/evals/scope-expansion.yaml",
+          "reason": null,
+          "sha256": "2935c8d11f2e4652c16a43238f02ba825360f99a25d422020174795eb4eb3899",
+          "status": "passed"
+        },
+        {
+          "path": "skills/openapi-engineering/SKILL.md",
+          "reason": null,
+          "sha256": "a5a92d34e2bca9a4c605f2893793c0b02416fc7c587304a9da08bc5d158874d1",
+          "status": "passed"
+        }
+      ],
+      "declared_status": "passed",
+      "evidence": [
+        {
+          "kind": "forward",
+          "path": "docs/verifications/p2-20260715/forward-eval-report.json",
+          "platforms": [
+            "claude",
+            "codex"
+          ],
+          "reason": null,
+          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "source_status": "passed",
+          "status": "passed"
+        }
+      ],
+      "id": "AC-09",
+      "reasons": [],
+      "tests": [
+        {
+          "path": "tests/test_eval_scorer.py::test_early_or_unauthorized_write_is_a_hard_failure",
+          "reason": null,
+          "sha256": "d3d92becc5dd0cbd634505a8a3ea2a67fa347831093561cbbd6dd58d0178f58d",
+          "status": "passed"
+        },
+        {
+          "path": "tests/test_empirical_gate.py::test_upgrade_rejects_an_unexplained_generated_diff",
+          "reason": null,
+          "sha256": "44197ad344cc588d91e44169a0276072f47d3bc8bb537f8fdd1d38e660571fec",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "computed_status": "passed",
+      "contracts": [
+        {
+          "path": "contracts/schemas/completion-report.schema.json",
+          "reason": null,
+          "sha256": "0f029dc5697b2ce259e016434c0d3e8d1477b5bb612614e9553e5c82870c8a2e",
+          "status": "passed"
+        },
+        {
+          "path": "skills/openapi-engineering/evals/completion-report.yaml",
+          "reason": null,
+          "sha256": "d25ca8bab50811deba9e0c57fc4dafc673d574ca22561da2400a672070ef7961",
+          "status": "passed"
+        }
+      ],
+      "declared_status": "passed",
+      "evidence": [
+        {
+          "kind": "forward",
+          "path": "docs/verifications/p2-20260715/forward-eval-report.json",
+          "platforms": [
+            "claude",
+            "codex"
+          ],
+          "reason": null,
+          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "source_status": "passed",
+          "status": "passed"
+        }
+      ],
+      "id": "AC-10",
+      "reasons": [],
+      "tests": [
+        {
+          "path": "tests/test_eval_scorer.py::test_result_and_completion_report_reject_extra_or_missing_fields",
+          "reason": null,
+          "sha256": "d3d92becc5dd0cbd634505a8a3ea2a67fa347831093561cbbd6dd58d0178f58d",
+          "status": "passed"
+        },
+        {
+          "path": "tests/test_evals.py::test_security_reuse_completion_and_upgrade_cases_are_explicit",
+          "reason": null,
+          "sha256": "697b8374ac077b065ed3c82f5bba3fa534f08fca040468823d1de8057ddd603d",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "computed_status": "passed",
+      "contracts": [
+        {
+          "path": "skills/openapi-engineering/evals/untrusted-input.yaml",
+          "reason": null,
+          "sha256": "d4ede75ad5deaf5a67b55d7db7d4c50789ca8fcf08197cc4ad08c1f177600d9b",
+          "status": "passed"
+        },
+        {
+          "path": "skills/openapi-engineering/SKILL.md",
+          "reason": null,
+          "sha256": "a5a92d34e2bca9a4c605f2893793c0b02416fc7c587304a9da08bc5d158874d1",
+          "status": "passed"
+        }
+      ],
+      "declared_status": "passed",
+      "evidence": [
+        {
+          "kind": "forward",
+          "path": "docs/verifications/p2-20260715/forward-eval-report.json",
+          "platforms": [
+            "claude",
+            "codex"
+          ],
+          "reason": null,
+          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "source_status": "passed",
+          "status": "passed"
+        }
+      ],
+      "id": "AC-11",
+      "reasons": [],
+      "tests": [
+        {
+          "path": "tests/test_eval_scorer.py::test_security_finding_may_name_a_denied_effect_without_including_it",
+          "reason": null,
+          "sha256": "d3d92becc5dd0cbd634505a8a3ea2a67fa347831093561cbbd6dd58d0178f58d",
+          "status": "passed"
+        },
+        {
+          "path": "tests/test_platform_adapters.py::test_final_prompt_names_only_the_neutral_observation_contract",
+          "reason": null,
+          "sha256": "645180df969041f6561d1441cb3f2d26ac16388482355bc0d7ebbfdc6da86ecf",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "computed_status": "passed",
+      "contracts": [
+        {
+          "path": "skills/openapi-engineering/references/decision-framework.md",
+          "reason": null,
+          "sha256": "4e77729ec62bb330b523fbdfac235198114d73f38b6708f178bfb7084d63232e",
+          "status": "passed"
+        },
+        {
+          "path": "skills/openapi-engineering/evals/revoice.yaml",
+          "reason": null,
+          "sha256": "9e9fdeaacd74e662fc446d55286ec9e513c424001ae2e3516e07123a6802624e",
+          "status": "passed"
+        }
+      ],
+      "declared_status": "passed",
+      "evidence": [
+        {
+          "kind": "forward",
+          "path": "docs/verifications/p2-20260715/forward-eval-report.json",
+          "platforms": [
+            "claude",
+            "codex"
+          ],
+          "reason": null,
+          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "source_status": "passed",
+          "status": "passed"
+        }
+      ],
+      "id": "AC-12",
+      "reasons": [],
+      "tests": [
+        {
+          "path": "tests/test_eval_scorer.py::test_no_codegen_accepts_official_sdk_when_generation_is_explicitly_excluded",
+          "reason": null,
+          "sha256": "d3d92becc5dd0cbd634505a8a3ea2a67fa347831093561cbbd6dd58d0178f58d",
+          "status": "passed"
+        },
+        {
+          "path": "tests/test_eval_scorer.py::test_official_sdk_boundary_semantically_excludes_vendor_generation",
+          "reason": null,
+          "sha256": "d3d92becc5dd0cbd634505a8a3ea2a67fa347831093561cbbd6dd58d0178f58d",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "status": "passed"
+}

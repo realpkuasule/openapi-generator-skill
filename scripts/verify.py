@@ -9,6 +9,7 @@ import re
 import subprocess
 import sys
 import time
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -19,14 +20,9 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 SKILL_ROOT = REPO_ROOT / "skills" / "openapi-engineering"
 SKILL_SCRIPTS = SKILL_ROOT / "scripts"
 REPORT_SCHEMA = REPO_ROOT / "contracts" / "schemas" / "verification-report.schema.json"
+TRACEABILITY_MANIFEST = REPO_ROOT / "contracts" / "acceptance-traceability.yaml"
 DEFAULT_QUICK_VALIDATE = (
-    Path.home()
-    / ".codex"
-    / "skills"
-    / ".system"
-    / "skill-creator"
-    / "scripts"
-    / "quick_validate.py"
+    REPO_ROOT / "scripts" / "quick_validate.py"
 )
 PROTECTED_ROOTS = (REPO_ROOT / "contracts", SKILL_ROOT, REPO_ROOT / "scripts")
 IGNORED_PARTS = {"__pycache__", ".DS_Store"}
@@ -208,6 +204,14 @@ def deterministic_gates() -> list[Gate]:
             "compare-generation-help",
             [python, str(SKILL_SCRIPTS / "compare_generation.py"), "--help"],
         ),
+        Gate(
+            "empirical-gate-help",
+            [python, str(SKILL_SCRIPTS / "run_empirical_gate.py"), "--help"],
+        ),
+        Gate(
+            "scope-snapshot-help",
+            [python, str(SKILL_SCRIPTS / "scope_snapshot.py"), "--help"],
+        ),
         Gate("profile-state-help", [python, str(SKILL_SCRIPTS / "profile_state.py"), "--help"]),
         Gate(
             "eval-case-validation",
@@ -260,11 +264,12 @@ def blocked_tier_gate(tier: str, evidence_path: Path) -> dict[str, Any]:
         command = ["evidence:combined-forward-report"]
     else:
         content = (
-            "The full tier includes empirical generator execution and requires "
-            "Checkpoint C authorization.\n"
+            "The full tier requires fresh deterministic, forward, empirical, upgrade, "
+            "and traceability release evidence. It checks existing evidence and never "
+            "runs a generator or model platform implicitly.\n"
         )
-        risk = "Generator downloads and execution are outside the current authorization."
-        command = ["authorization:empirical-generator-checkpoint-c"]
+        risk = "Missing release evidence cannot be treated as a passing release gate."
+        command = ["evidence:complete-release-candidate"]
     digest = write_evidence(evidence_path, content)
     return {
         "name": f"{tier}-prerequisite",
@@ -291,6 +296,65 @@ def forward_gates(forward_report: Path) -> list[Gate]:
     ]
 
 
+def full_evidence_gates(
+    *,
+    forward_report: Path,
+    empirical_manifest: Path,
+    empirical_report: Path,
+    upgrade_manifest: Path,
+    upgrade_report: Path,
+    traceability_report: Path,
+) -> list[Gate]:
+    empirical = SKILL_SCRIPTS / "run_empirical_gate.py"
+    traceability = REPO_ROOT / "scripts" / "check_traceability.py"
+    return [
+        *forward_gates(forward_report),
+        Gate(
+            "empirical-adoption-report",
+            [
+                sys.executable,
+                str(empirical),
+                "--manifest",
+                str(empirical_manifest),
+                "--check-report",
+                str(empirical_report),
+            ],
+            required_paths=[empirical, empirical_manifest, empirical_report],
+            risk="The empirical adoption report is missing, stale, invalid, or failed.",
+        ),
+        Gate(
+            "empirical-upgrade-report",
+            [
+                sys.executable,
+                str(empirical),
+                "--manifest",
+                str(upgrade_manifest),
+                "--check-report",
+                str(upgrade_report),
+            ],
+            required_paths=[empirical, upgrade_manifest, upgrade_report],
+            risk="The empirical upgrade report is missing, stale, invalid, or failed.",
+        ),
+        Gate(
+            "acceptance-traceability-report",
+            [
+                sys.executable,
+                str(traceability),
+                "--manifest",
+                str(TRACEABILITY_MANIFEST),
+                "--check-report",
+                str(traceability_report),
+            ],
+            required_paths=[
+                traceability,
+                TRACEABILITY_MANIFEST,
+                traceability_report,
+            ],
+            risk="The acceptance traceability report is missing, stale, or failed.",
+        ),
+    ]
+
+
 def validate_report(report: dict[str, Any]) -> None:
     from jsonschema import Draft202012Validator, FormatChecker
 
@@ -312,12 +376,57 @@ def persist_report(report_path: Path, report: dict[str, Any]) -> None:
     temporary.replace(report_path)
 
 
+def persist_junit(path: Path, report: dict[str, Any]) -> None:
+    gates = report["gates"]
+    failures = sum(gate["status"] == "failed" for gate in gates)
+    errors = sum(gate["status"] in {"blocked", "unverified"} for gate in gates)
+    suite = ET.Element(
+        "testsuite",
+        {
+            "name": f"openapi-engineering-{report['tier']}",
+            "tests": str(len(gates)),
+            "failures": str(failures),
+            "errors": str(errors),
+        },
+    )
+    for gate in gates:
+        case = ET.SubElement(
+            suite,
+            "testcase",
+            {
+                "name": gate["name"],
+                "classname": f"openapi_engineering.{report['tier']}",
+                "time": f"{gate['duration_ms'] / 1000:.3f}",
+            },
+        )
+        if gate["status"] == "failed":
+            failure = ET.SubElement(case, "failure", {"message": "gate failed"})
+            failure.text = gate["risk"] or "Verification command returned a failure."
+        elif gate["status"] in {"blocked", "unverified"}:
+            error = ET.SubElement(case, "error", {"message": gate["status"]})
+            error.text = gate["risk"] or "Verification capability was unavailable."
+    ET.indent(suite)
+    path = path.expanduser().resolve()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    ET.ElementTree(suite).write(
+        temporary, encoding="utf-8", xml_declaration=True
+    )
+    temporary.replace(path)
+
+
 def run_verification(
     tier: str,
     report_path: Path,
     *,
     gates: Sequence[Gate] | None = None,
     forward_report: Path | None = None,
+    empirical_manifest: Path | None = None,
+    empirical_report: Path | None = None,
+    upgrade_manifest: Path | None = None,
+    upgrade_report: Path | None = None,
+    traceability_report: Path | None = None,
+    junit_path: Path | None = None,
 ) -> tuple[dict[str, Any], int]:
     report_path = report_path.expanduser().resolve()
     evidence_dir = report_path.parent / f"{report_path.stem}-evidence"
@@ -327,13 +436,34 @@ def run_verification(
 
     if gates is None and tier == "forward" and forward_report is None:
         results.append(blocked_tier_gate(tier, evidence_dir / "01-adapter-authorization.log"))
-    elif gates is None and tier == "full":
-        results.append(blocked_tier_gate(tier, evidence_dir / "01-checkpoint-c.log"))
+    elif gates is None and tier == "full" and not all(
+        (
+            forward_report,
+            empirical_manifest,
+            empirical_report,
+            upgrade_manifest,
+            upgrade_report,
+            traceability_report,
+        )
+    ):
+        results.append(blocked_tier_gate(tier, evidence_dir / "01-release-evidence.log"))
     else:
         if gates is not None:
             selected = list(gates)
         elif tier == "forward":
             selected = forward_gates(forward_report.expanduser().resolve())
+        elif tier == "full":
+            selected = [
+                *deterministic_gates(),
+                *full_evidence_gates(
+                    forward_report=forward_report.expanduser().resolve(),
+                    empirical_manifest=empirical_manifest.expanduser().resolve(),
+                    empirical_report=empirical_report.expanduser().resolve(),
+                    upgrade_manifest=upgrade_manifest.expanduser().resolve(),
+                    upgrade_report=upgrade_report.expanduser().resolve(),
+                    traceability_report=traceability_report.expanduser().resolve(),
+                ),
+            ]
         else:
             selected = deterministic_gates()
         before = source_digest()
@@ -357,6 +487,8 @@ def run_verification(
         "gates": results,
     }
     persist_report(report_path, report)
+    if junit_path:
+        persist_junit(junit_path, report)
     return report, exit_code
 
 
@@ -375,14 +507,28 @@ def main() -> int:
     parser.add_argument(
         "--forward-report",
         type=Path,
-        help="Existing combined forward report to validate for --tier forward.",
+        help="Existing combined forward report to validate.",
     )
+    parser.add_argument("--empirical-manifest", type=Path)
+    parser.add_argument("--empirical-report", type=Path)
+    parser.add_argument("--upgrade-manifest", type=Path)
+    parser.add_argument("--upgrade-report", type=Path)
+    parser.add_argument("--traceability-report", type=Path)
+    parser.add_argument("--junit", type=Path, help="Optional JUnit XML output path.")
     args = parser.parse_args()
     report_path = args.report or (
         REPO_ROOT / "docs" / "verifications" / "latest" / f"{args.tier}-report.json"
     )
     report, exit_code = run_verification(
-        args.tier, report_path, forward_report=args.forward_report
+        args.tier,
+        report_path,
+        forward_report=args.forward_report,
+        empirical_manifest=args.empirical_manifest,
+        empirical_report=args.empirical_report,
+        upgrade_manifest=args.upgrade_manifest,
+        upgrade_report=args.upgrade_report,
+        traceability_report=args.traceability_report,
+        junit_path=args.junit,
     )
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
     return exit_code

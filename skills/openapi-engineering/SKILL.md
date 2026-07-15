@@ -101,7 +101,9 @@ After approval:
 4. Read [generator evaluation](references/generator-evaluation.md) before adopting or upgrading a generator.
 5. Read [governance gates](references/governance-gates.md) before changing generation, CI, compatibility, or release policy.
 6. Use a temporary directory for empirical generation until the approved boundary allows project writes.
-7. Record actual commands and observed results. Never report an unrun gate as passed.
+7. For an approved generator spike, first emit the manifest-bound proposal with `scripts/run_empirical_gate.py --manifest <manifest>`. Execute only with `--execute --approve <exact-digest>`, and use `--check-report` to verify saved evidence without rerunning the generator.
+8. When Git cannot restore every approved write target, create an external baseline first with `scripts/scope_snapshot.py snapshot --root <project> --snapshot-dir <external-dir> --path <relative-path>`. Restore only with the exact manifest digest; never place the snapshot inside the project.
+9. Record actual commands and observed results. Never report an unrun gate as passed.
 
 ### 7. Persist decisions
 
@@ -122,6 +124,8 @@ Return to proposed and obtain new explicit approval before:
 - accepting a breaking change, migration, reduced gate, or unverified fallback.
 
 Report the discovery and proposed expansion without performing it.
+
+Treat rollback as an executable gate, not prose. Before completion, prove that temporary candidates are reclaimed, accepted baselines remain unchanged, profile changes can be restored from the approved external snapshot when needed, and any Codex/Claude installation created in scope can be removed without touching unrelated settings.
 
 ## Strategy routing
 

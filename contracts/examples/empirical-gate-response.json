@@ -1,0 +1,178 @@
+{
+  "approval_digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "baseline": {
+    "after_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "before_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "path": "/workspace/project/accepted",
+    "unchanged": true
+  },
+  "contract": {
+    "expected_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "observed_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "path": "/workspace/project/openapi.yaml",
+    "verified": true
+  },
+  "decision": "proposed",
+  "diff": null,
+  "finished_at": "2026-07-15T12:00:00Z",
+  "fixture": {
+    "expected_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "observed_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "path": "/workspace/project/fixtures/generated_client.py",
+    "verified": true
+  },
+  "gates": [
+    {
+      "command": [
+        "java",
+        "-jar",
+        "{artifact}",
+        "validate",
+        "-i",
+        "{contract}"
+      ],
+      "dependency_install": false,
+      "duration_ms": 0,
+      "exit_code": null,
+      "name": "validate",
+      "network": false,
+      "risk": "Execution requires exact approval.",
+      "rollback": null,
+      "status": "unverified",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Planned only."
+    },
+    {
+      "command": [
+        "java",
+        "-jar",
+        "{artifact}",
+        "generate",
+        "-i",
+        "{contract}",
+        "-g",
+        "python",
+        "-o",
+        "{output}"
+      ],
+      "dependency_install": false,
+      "duration_ms": 0,
+      "exit_code": null,
+      "name": "generate",
+      "network": false,
+      "risk": "Execution requires exact approval.",
+      "rollback": "Discard the temporary output.",
+      "status": "unverified",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Planned only."
+    },
+    {
+      "command": [],
+      "dependency_install": false,
+      "duration_ms": 0,
+      "exit_code": null,
+      "name": "inventory",
+      "network": false,
+      "risk": "Execution requires exact approval.",
+      "rollback": null,
+      "status": "unverified",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Planned only."
+    },
+    {
+      "command": [],
+      "dependency_install": false,
+      "duration_ms": 0,
+      "exit_code": null,
+      "name": "diff",
+      "network": false,
+      "risk": "Execution requires exact approval.",
+      "rollback": null,
+      "status": "unverified",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Planned only."
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "compileall",
+        "-q",
+        "{output}"
+      ],
+      "dependency_install": false,
+      "duration_ms": 0,
+      "exit_code": null,
+      "name": "compile",
+      "network": false,
+      "risk": "Execution requires exact approval.",
+      "rollback": null,
+      "status": "unverified",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Planned only."
+    },
+    {
+      "command": [
+        "python3",
+        "{fixture}",
+        "{output}"
+      ],
+      "dependency_install": false,
+      "duration_ms": 0,
+      "exit_code": null,
+      "name": "fixture",
+      "network": false,
+      "risk": "Execution requires exact approval.",
+      "rollback": null,
+      "status": "unverified",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Planned only."
+    }
+  ],
+  "generator": {
+    "artifact_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "maturity": "stable",
+    "name": "openapi-generator-cli",
+    "target": "python",
+    "version": "7.23.0"
+  },
+  "inventory": null,
+  "manifest_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "mode": "adoption",
+  "previous_generator": null,
+  "previous_inventory": null,
+  "project": {
+    "after_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "before_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "path": "/workspace/project",
+    "unchanged": true
+  },
+  "report_version": 1,
+  "risks": [
+    "Commands have not run; no generator claim is verified."
+  ],
+  "rollback": [
+    "Discard the temporary candidate directory; the accepted baseline is read-only."
+  ],
+  "started_at": "2026-07-15T12:00:00Z",
+  "status": "proposed",
+  "unverified": [
+    "validate",
+    "generate",
+    "inventory",
+    "diff",
+    "compile",
+    "fixture"
+  ],
+  "workspace": {
+    "created": false,
+    "reclaimed": true,
+    "temporary": true
+  }
+}

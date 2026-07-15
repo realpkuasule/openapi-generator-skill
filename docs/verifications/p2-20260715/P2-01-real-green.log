@@ -1,0 +1,16 @@
+command=.venv/bin/python skills/openapi-engineering/scripts/run_empirical_gate.py --manifest docs/verifications/p2-20260715/real-smoke-manifest.json --execute --approve 1c6a5eed76f6fef0200e3b036d97ea646a3df89199da22c81d1e1f722833fbda --report docs/verifications/p2-20260715/real-smoke-report.json
+exit_code=0
+result=GREEN
+generator=openapi-generator-cli 7.23.0
+artifact_sha256=cb087e40001e31eb08ef6140dd5de10938dbeb89016a1fe0481eaa25cd569026
+official_sha1_verified=true
+gates=validate,generate,inventory,diff,compile,fixture
+generated_files=23
+decision=adopt
+unverified=0
+project_unchanged=true
+baseline_unchanged=true
+workspace_reclaimed=true
+residual_processes=0
+residual_temp_directories=0
+resource_policy=Java heap limited to 512 MiB; one generator process at a time

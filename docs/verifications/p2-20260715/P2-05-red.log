@@ -1,0 +1,4 @@
+Command: .venv/bin/python -m unittest tests.test_security_boundaries tests.test_rollback
+Date: 2026-07-15
+Expected result: RED
+Observed result: 3 adversarial security tests passed, while rollback test loading failed because the dual-platform uninstall API and external scope snapshot implementation did not exist.

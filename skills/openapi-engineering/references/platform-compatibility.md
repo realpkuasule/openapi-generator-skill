@@ -80,6 +80,8 @@ Run `python3 scripts/install_skill.py --home <temporary-home>` first. It is dry-
 
 The installer must preflight every selected target before writing, reject divergent existing directories, compare complete Skill tree digests after link/copy, and leave unrelated Agent settings unchanged. Repeating an identical installation is `unchanged`; it must not create a second behavioral source.
 
+To roll back an installation created in the approved scope, first dry-run `python3 scripts/install_skill.py --home <home> --uninstall`, then add `--apply`. Removal is allowed only while each target still links to the canonical source or has the exact source tree digest; a divergent target blocks all removals. Unrelated Codex and Claude settings remain untouched.
+
 ## Script portability
 
 Invoke scripts with `python3` or the platform's configured Python 3 executable. Keep JSON stdout, stable sorting, and explicit exit codes. Never auto-install PyYAML: JSON profiles work without it, while YAML validation must report the missing optional parser clearly.

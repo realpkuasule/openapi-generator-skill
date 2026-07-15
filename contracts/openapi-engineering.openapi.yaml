@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: OpenAPI Engineering Control Plane
-  version: 0.7.0
+  version: 1.1.0
   description: >-
     Platform-neutral contracts for helpers bundled with the openapi-engineering
     skill. Discovery, comparison, and proposal operations are read-only; the
@@ -187,6 +187,55 @@ paths:
                   externalValue: './examples/generation-comparison-response.json'
         '400':
           $ref: '#/components/responses/InvalidRequest'
+  /v1/empirical-gates:
+    post:
+      operationId: runEmpiricalGeneratorGate
+      x-cli-command: >-
+        python3 scripts/run_empirical_gate.py --manifest <path> [--execute
+        --approve <manifest-sha256>] [--report <path>]
+      x-cli-arguments:
+        manifest: --manifest; approved declarative manifest
+        execute: --execute; omitted for the default proposed-only plan
+        approval_digest: --approve; exact canonical manifest SHA-256
+        report: --report; optional atomic report destination
+      x-cli-exit-codes:
+        '0': dry-run proposal emitted or every required empirical gate passed
+        '1': a required command, diff, integrity, compile, or fixture gate failed
+        '2': manifest, approval, digest, or execution prerequisite was blocked
+      tags: [Generation]
+      summary: Plan or run an approval-bound empirical generator gate
+      description: >-
+        Validates a declaration that pins the contract, baseline, generator
+        artifact, version, commands, feature gaps, and official sources. The
+        default is read-only planning. Execution requires the exact manifest
+        digest, uses argv without a shell, generates only in a fresh temporary
+        workspace, checks project and baseline integrity after every command,
+        and reclaims the workspace before returning.
+        Upgrade manifests additionally generate previous and candidate versions
+        from the same copied contract, require the previous output to match the
+        read-only accepted baseline, and reject every generated diff that lacks
+        an exact path/state explanation.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schemas/empirical-gate.schema.json#/$defs/manifest'
+            examples:
+              pythonClientAdoption:
+                externalValue: './examples/empirical-gate-request.json'
+      responses:
+        '200':
+          description: Empirical plan or execution completed; inspect status and gates.
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/empirical-gate.schema.json'
+              examples:
+                proposedGate:
+                  externalValue: './examples/empirical-gate-response.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
   /v1/evaluation-runs:
     post:
       operationId: runSkillEvaluation
@@ -229,6 +278,78 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EvaluationRunResponse'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/acceptance-traceability-checks:
+    post:
+      operationId: checkAcceptanceTraceability
+      x-cli-command: >-
+        python3 scripts/check_traceability.py --manifest <path> --report <path>
+      x-cli-arguments:
+        manifest: --manifest; AC-01 through AC-12 evidence bindings
+        report: --report; atomic machine-verifiable result
+      x-cli-exit-codes:
+        '0': all twelve requirements have live passing machine evidence
+        '1': one or more requirements are failed, stale, static-only, or incomplete
+        '2': the manifest, schema, or a required evidence capability is blocked
+      tags: [Governance]
+      summary: Verify AC-01 through AC-12 against machine evidence
+      description: >-
+        Resolves every contract and test selector, validates report status and
+        platform coverage, rejects blocked or static-only declarations, and
+        produces an embedded Completion Report. Missing or unverified evidence
+        can never be counted as passed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schemas/acceptance-traceability.schema.json#/$defs/manifest'
+      responses:
+        '200':
+          description: Traceability check completed; inspect requirement results.
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/acceptance-traceability.schema.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/scope-snapshots:
+    post:
+      operationId: manageScopeSnapshot
+      x-cli-command: >-
+        python3 scripts/scope_snapshot.py <snapshot|restore> --root <root>
+        --snapshot-dir <external-dir> [--path <relative-path>] [--approve <digest>]
+      x-cli-arguments:
+        operation: first positional argument; snapshot or restore
+        root: --root; protected project root
+        snapshot_dir: --snapshot-dir; must be outside the project root
+        selected_paths: repeatable --path for snapshot
+        approval_digest: --approve; exact snapshot manifest digest for restore
+      x-cli-exit-codes:
+        '0': external snapshot created or exact approved scope restored
+        '1': restore approval or current evidence did not match
+        '2': request, path, snapshot integrity, or schema prerequisite was blocked
+      tags: [Governance]
+      summary: Snapshot or restore an explicitly bounded project scope
+      description: >-
+        Creates a digest-bound baseline outside the project before approved work
+        when Git rollback is unavailable. Restore validates every snapshot file
+        before changing only the selected relative paths and requires the exact
+        approval digest. Symlinks, traversal, and in-project snapshots are rejected.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schemas/scope-snapshot.schema.json#/$defs/request'
+      responses:
+        '200':
+          description: Snapshot or restore completed; inspect status and digest.
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/scope-snapshot.schema.json'
         '400':
           $ref: '#/components/responses/InvalidRequest'
   /v1/evaluation-report-aggregations:
@@ -533,7 +654,14 @@ components:
     GenerationComparisonResponse:
       type: object
       additionalProperties: false
-      required: [status, baseline, candidate, summary, files]
+      required:
+        - status
+        - baseline
+        - candidate
+        - baseline_tree_sha256
+        - candidate_tree_sha256
+        - summary
+        - files
       properties:
         status:
           const: ok
@@ -541,6 +669,12 @@ components:
           type: string
         candidate:
           type: string
+        baseline_tree_sha256:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
+        candidate_tree_sha256:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
         summary:
           type: object
           additionalProperties: false
@@ -712,6 +846,14 @@ components:
       $ref: './schemas/eval-case.schema.json'
     EvaluationResult:
       $ref: './schemas/eval-result.schema.json'
+    EmpiricalGateManifest:
+      $ref: './schemas/empirical-gate.schema.json#/$defs/manifest'
+    EmpiricalGateReport:
+      $ref: './schemas/empirical-gate.schema.json'
+    AcceptanceTraceabilityManifest:
+      $ref: './schemas/acceptance-traceability.schema.json#/$defs/manifest'
+    AcceptanceTraceabilityReport:
+      $ref: './schemas/acceptance-traceability.schema.json'
     VerificationReport:
       $ref: './schemas/verification-report.schema.json'
     CompletionReport:

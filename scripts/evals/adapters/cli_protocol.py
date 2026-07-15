@@ -323,8 +323,8 @@ provided schema, using exactly this neutral top-level shape and no other keys:
 {{
   "observed_modes": [],
   "boundary_summary": {{"fields": [], "included": [], "excluded": []}},
-  "tool_decision": {{"primary_strategy": "governance-only", "boundaries": [
-    {{"boundary": "<project boundary>", "strategy": "governance-only"}}
+  "tool_decision": {{"primary_strategy": "<canonical strategy>", "boundaries": [
+    {{"boundary": "<project boundary>", "strategy": "<canonical strategy>"}}
   ]}},
   "scope_expansion_requires_reapproval": true,
   "completion_report": null,
@@ -337,11 +337,21 @@ actually selected. The excluded array must carry every non-goal, denied permissi
 authority limitation, and historical permission that is not current approval. Use these
 canonical strategy values:
 openapi-generator, language-native, official-sdk, governance-only, mcp, no-codegen.
+Lifecycle modes for a strategy assessment include Assess & Select; Audit & Drift or
+Governance Hardening may also apply. In boundary rows, preserve project-specific names,
+protocols, provider classes, and interface types from trusted facts; do not replace them
+with generic labels such as `project application` or `provider integration`.
+For canonical classification, hand-written adapters use language-native; reserve
+no-codegen for a boundary where the selected maintenance strategy excludes generation
+as a whole. Do not emit a speculative future candidate that the project facts and
+interview did not explicitly select. Merely observing an existing generator, config, or
+historical decision during an audit does not itself select openapi-generator; record it
+only when adoption, continued generation, or upgrade is a resolved boundary decision.
 Each boundary_summary object must contain only fields, included, and excluded. Each
 tool_decision.boundaries item must contain exactly two keys: boundary and strategy. Do
 not add tool, rationale, confidence, conditions, or boundary_strategies to those objects.
-Never emit the illustrative `<project boundary>` placeholder; name every actual boundary
-concretely from the project facts and interview.
+Never emit the illustrative `<project boundary>` or `<canonical strategy>` placeholders;
+name every actual boundary and choose its strategy from the project facts and interview.
 Make selected strategy implications visible in the summary: put an official SDK
 recommendation in included when official-sdk is selected, and put code generation
 explicitly in excluded when no-codegen is selected or vendor clients must remain owned

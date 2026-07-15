@@ -1,0 +1,406 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openapi-engineering.local/schemas/empirical-gate.schema.json",
+  "title": "OpenAPI Engineering Empirical Gate Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "report_version",
+    "status",
+    "mode",
+    "manifest_sha256",
+    "approval_digest",
+    "started_at",
+    "finished_at",
+    "workspace",
+    "contract",
+    "fixture",
+    "generator",
+    "previous_generator",
+    "baseline",
+    "project",
+    "gates",
+    "inventory",
+    "previous_inventory",
+    "diff",
+    "decision",
+    "unverified",
+    "risks",
+    "rollback"
+  ],
+  "properties": {
+    "report_version": { "const": 1 },
+    "status": { "enum": ["proposed", "passed", "failed", "blocked"] },
+    "mode": { "enum": ["adoption", "upgrade"] },
+    "manifest_sha256": { "$ref": "#/$defs/sha256" },
+    "approval_digest": { "$ref": "#/$defs/sha256" },
+    "started_at": { "type": "string", "format": "date-time" },
+    "finished_at": { "type": "string", "format": "date-time" },
+    "workspace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["created", "temporary", "reclaimed"],
+      "properties": {
+        "created": { "type": "boolean" },
+        "temporary": { "const": true },
+        "reclaimed": { "type": "boolean" }
+      }
+    },
+    "contract": { "$ref": "#/$defs/verified_file" },
+    "fixture": { "$ref": "#/$defs/verified_file" },
+    "generator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "target", "maturity", "artifact_sha256"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "$ref": "#/$defs/exact_version" },
+        "target": { "type": "string", "minLength": 1 },
+        "maturity": { "$ref": "#/$defs/maturity" },
+        "artifact_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "previous_generator": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "version", "target", "maturity", "artifact_sha256"],
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "version": { "$ref": "#/$defs/exact_version" },
+            "target": { "type": "string", "minLength": 1 },
+            "maturity": { "$ref": "#/$defs/maturity" },
+            "artifact_sha256": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        { "type": "null" }
+      ]
+    },
+    "baseline": { "$ref": "#/$defs/verified_tree" },
+    "project": { "$ref": "#/$defs/verified_tree" },
+    "gates": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 11,
+      "items": { "$ref": "#/$defs/gate_result" }
+    },
+    "inventory": {
+      "oneOf": [
+        { "$ref": "#/$defs/inventory" },
+        { "type": "null" }
+      ]
+    },
+    "previous_inventory": {
+      "oneOf": [
+        { "$ref": "#/$defs/inventory" },
+        { "type": "null" }
+      ]
+    },
+    "diff": {
+      "oneOf": [
+        { "$ref": "#/$defs/diff_result" },
+        { "type": "null" }
+      ]
+    },
+    "decision": {
+      "enum": ["proposed", "adopt", "adopt-upgrade", "conditionally-adopt", "reject", "blocked"]
+    },
+    "unverified": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "risks": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "rollback": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "exact_version": {
+      "type": "string",
+      "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "maturity": { "enum": ["stable", "beta", "experimental", "unknown"] },
+    "gate_name": {
+      "enum": [
+        "validate",
+        "generate-previous",
+        "baseline-match",
+        "generate",
+        "inventory-previous",
+        "inventory",
+        "diff",
+        "compile-previous",
+        "compile",
+        "fixture-previous",
+        "fixture"
+      ]
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "manifest_version",
+        "mode",
+        "project_root",
+        "contract",
+        "fixture",
+        "baseline",
+        "generator",
+        "commands",
+        "required_gates",
+        "diff_policy",
+        "rollback"
+      ],
+      "properties": {
+        "manifest_version": { "const": 1 },
+        "mode": { "enum": ["adoption", "upgrade"] },
+        "project_root": { "type": "string", "minLength": 1 },
+        "contract": { "$ref": "#/$defs/file_input" },
+        "fixture": { "$ref": "#/$defs/file_input" },
+        "baseline": { "$ref": "#/$defs/tree_input" },
+        "generator": { "$ref": "#/$defs/generator_input" },
+        "previous_generator": { "$ref": "#/$defs/generator_input" },
+        "commands": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 7,
+          "items": { "$ref": "#/$defs/command" }
+        },
+        "required_gates": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 11,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/gate_name" }
+        },
+        "diff_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["allow_initial_generation", "accepted_changes"],
+          "properties": {
+            "allow_initial_generation": { "type": "boolean" },
+            "accepted_changes": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/accepted_change" }
+            }
+          }
+        },
+        "rollback": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "mode": { "const": "adoption" } } },
+          "then": {
+            "properties": {
+              "commands": { "maxItems": 4 },
+              "required_gates": { "maxItems": 6 },
+              "diff_policy": {
+                "properties": {
+                  "allow_initial_generation": { "const": true },
+                  "accepted_changes": { "maxItems": 0 }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "mode": { "const": "upgrade" } } },
+          "then": {
+            "required": ["previous_generator"],
+            "properties": {
+              "commands": { "minItems": 7 },
+              "required_gates": { "minItems": 11 },
+              "diff_policy": {
+                "properties": {
+                  "allow_initial_generation": { "const": false }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "file_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "tree_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "tree_sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "tree_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "generator_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "distribution",
+        "target",
+        "maturity",
+        "artifact",
+        "feature_gaps",
+        "official_sources"
+      ],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "$ref": "#/$defs/exact_version" },
+        "distribution": { "enum": ["jar", "native", "fixture"] },
+        "target": { "type": "string", "minLength": 1 },
+        "maturity": { "$ref": "#/$defs/maturity" },
+        "artifact": { "$ref": "#/$defs/file_input" },
+        "feature_gaps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["feature", "status", "evidence"],
+            "properties": {
+              "feature": { "type": "string", "minLength": 1 },
+              "status": { "enum": ["supported", "partial", "unsupported", "unknown"] },
+              "evidence": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "official_sources": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gate", "argv", "timeout_seconds", "network", "dependency_install"],
+      "properties": {
+        "gate": {
+          "enum": [
+            "validate",
+            "generate-previous",
+            "generate",
+            "compile-previous",
+            "compile",
+            "fixture-previous",
+            "fixture"
+          ]
+        },
+        "argv": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "timeout_seconds": { "type": "integer", "minimum": 1, "maximum": 900 },
+        "network": { "type": "boolean" },
+        "dependency_install": { "type": "boolean" }
+      }
+    },
+    "verified_file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "expected_sha256", "observed_sha256", "verified"],
+      "properties": {
+        "path": { "type": "string" },
+        "expected_sha256": { "$ref": "#/$defs/sha256" },
+        "observed_sha256": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+        "verified": { "type": "boolean" }
+      }
+    },
+    "accepted_change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "state", "reason"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "state": { "enum": ["added", "removed", "changed"] },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "verified_tree": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "before_sha256", "after_sha256", "unchanged"],
+      "properties": {
+        "path": { "type": "string" },
+        "before_sha256": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+        "after_sha256": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+        "unchanged": { "type": "boolean" }
+      }
+    },
+    "gate_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "status",
+        "command",
+        "network",
+        "dependency_install",
+        "exit_code",
+        "duration_ms",
+        "stdout_sha256",
+        "stderr_sha256",
+        "summary",
+        "risk",
+        "rollback"
+      ],
+      "properties": {
+        "name": { "$ref": "#/$defs/gate_name" },
+        "status": { "enum": ["passed", "failed", "blocked", "unverified"] },
+        "command": { "type": "array", "items": { "type": "string" } },
+        "network": { "type": "boolean" },
+        "dependency_install": { "type": "boolean" },
+        "exit_code": { "type": ["integer", "null"] },
+        "duration_ms": { "type": "integer", "minimum": 0 },
+        "stdout_sha256": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+        "stderr_sha256": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+        "summary": { "type": "string" },
+        "risk": { "type": ["string", "null"] },
+        "rollback": { "type": ["string", "null"] }
+      }
+    },
+    "inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file_count", "tree_sha256", "files"],
+      "properties": {
+        "file_count": { "type": "integer", "minimum": 0 },
+        "tree_sha256": { "$ref": "#/$defs/sha256" },
+        "files": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }
+      }
+    },
+    "diff_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary", "unexplained"],
+      "properties": {
+        "summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["added", "removed", "changed", "unchanged"],
+          "properties": {
+            "added": { "type": "integer", "minimum": 0 },
+            "removed": { "type": "integer", "minimum": 0 },
+            "changed": { "type": "integer", "minimum": 0 },
+            "unchanged": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "unexplained": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+command=.venv/bin/python -m unittest tests.test_contracts tests.test_empirical_gate tests.test_example_conformance -v
+exit_code=0
+result=GREEN
+tests=16
+verified:
+- OpenAPI 0.8.0 and empirical manifest/report schemas validate locally.
+- Default planning is read-only and emits a schema-valid proposed report.
+- Execution requires the exact canonical manifest digest.
+- Fake validate, generate, inventory, diff, compile, and fixture gates pass in a reclaimed temporary workspace.
+- Failed generation leaves dependent gates unverified.
+- An out-of-scope project write fails integrity.
+- The checked empirical response example is captured from the real CLI.

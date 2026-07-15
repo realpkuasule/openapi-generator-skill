@@ -1,0 +1,147 @@
+schema_version: 1
+requirements:
+  - id: AC-01
+    description: Discovery and boundary confirmation precede every write in both example projects.
+    status: passed
+    contracts:
+      - skills/openapi-engineering/SKILL.md
+      - contracts/schemas/eval-case.schema.json
+    tests:
+      - tests/test_eval_scorer.py::test_missing_interview_turns_fails_without_keyword_matching
+      - tests/test_eval_scorer.py::test_early_or_unauthorized_write_is_a_hard_failure
+    evidence:
+      - &forward
+        path: docs/verifications/p2-20260715/forward-eval-report.json
+        kind: forward
+        required_status: passed
+        required_platforms: [codex, claude]
+        require_unverified_empty: false
+  - id: AC-02
+    description: Unapproved work leaves repository files, dependencies, CI, and Agent settings unchanged.
+    status: passed
+    contracts:
+      - skills/openapi-engineering/SKILL.md
+      - contracts/schemas/eval-result.schema.json
+    tests:
+      - tests/test_eval_runner.py::test_early_write_is_detected_by_hash_gate
+      - tests/test_empirical_gate.py::test_execute_requires_the_exact_manifest_digest
+    evidence:
+      - *forward
+  - id: AC-03
+    description: Animator receives a mixed boundary-specific strategy rather than universal OAG generation.
+    status: passed
+    contracts:
+      - skills/openapi-engineering/evals/animator.yaml
+      - skills/openapi-engineering/references/decision-framework.md
+    tests:
+      - tests/test_evals.py::test_animator_covers_flask_sse_domain_and_vendor_boundaries
+      - tests/test_eval_scorer.py::test_full_boundary_matrix_can_rank_a_different_selected_boundary_primary
+    evidence:
+      - *forward
+  - id: AC-04
+    description: Revoice can select no-codegen and official SDKs when generation benefits are insufficient.
+    status: passed
+    contracts:
+      - skills/openapi-engineering/evals/revoice.yaml
+      - skills/openapi-engineering/references/decision-framework.md
+    tests:
+      - tests/test_evals.py::test_revoice_surfaces_existing_openapi_conflict
+      - tests/test_eval_scorer.py::test_no_codegen_accepts_official_sdk_when_generation_is_explicitly_excluded
+    evidence:
+      - *forward
+  - id: AC-05
+    description: Codex and Claude Code produce semantically equivalent boundary decisions.
+    status: passed
+    contracts:
+      - contracts/schemas/forward-eval-report.schema.json
+      - skills/openapi-engineering/references/platform-compatibility.md
+    tests:
+      - tests/test_forward_aggregation.py::test_two_fresh_equivalent_platform_reports_pass
+      - tests/test_forward_aggregation.py::test_unrelated_boundary_strategy_addition_still_fails
+    evidence:
+      - *forward
+  - id: AC-06
+    description: Repeated calls reuse the governance profile and ask only about changes, conflicts, and unknowns.
+    status: passed
+    contracts:
+      - contracts/schemas/governance-profile.schema.json
+      - skills/openapi-engineering/evals/profile-reuse.yaml
+    tests:
+      - tests/test_profile_state.py::test_check_separates_observed_change_conflict_and_unknown
+      - tests/test_profile_state.py::test_check_reports_unchanged_without_writing
+    evidence:
+      - *forward
+  - id: AC-07
+    description: Generator selection records an exact version, maturity, feature gaps, sources, and representative spike.
+    status: passed
+    contracts:
+      - contracts/schemas/empirical-gate.schema.json
+      - docs/verifications/p2-20260715/real-smoke-manifest.json
+    tests:
+      - tests/test_empirical_gate.py::test_fake_generator_passes_all_gates_without_touching_project_or_baseline
+      - tests/test_contracts.py::test_empirical_manifest_requires_pins_and_examples_conform
+    evidence:
+      - path: docs/verifications/p2-20260715/real-smoke-report.json
+        kind: empirical
+        required_status: passed
+        required_platforms: []
+        require_unverified_empty: true
+  - id: AC-08
+    description: Upgrades use isolated old/new generation, explained diff, compile, and fixtures without overwriting baseline.
+    status: passed
+    contracts:
+      - contracts/schemas/empirical-gate.schema.json
+      - docs/verifications/p2-20260715/real-upgrade-manifest.json
+    tests:
+      - tests/test_empirical_gate.py::test_upgrade_generates_both_versions_and_accepts_only_explained_diff
+      - tests/test_empirical_gate.py::test_upgrade_rejects_an_unexplained_generated_diff
+    evidence:
+      - path: docs/verifications/p2-20260715/real-upgrade-report.json
+        kind: empirical
+        required_status: passed
+        required_platforms: []
+        require_unverified_empty: true
+  - id: AC-09
+    description: Breaking changes and scope expansion pause for renewed approval.
+    status: passed
+    contracts:
+      - skills/openapi-engineering/evals/scope-expansion.yaml
+      - skills/openapi-engineering/SKILL.md
+    tests:
+      - tests/test_eval_scorer.py::test_early_or_unauthorized_write_is_a_hard_failure
+      - tests/test_empirical_gate.py::test_upgrade_rejects_an_unexplained_generated_diff
+    evidence:
+      - *forward
+  - id: AC-10
+    description: Completion reports record actual commands, results, unverified work, risks, and rollback.
+    status: passed
+    contracts:
+      - contracts/schemas/completion-report.schema.json
+      - skills/openapi-engineering/evals/completion-report.yaml
+    tests:
+      - tests/test_eval_scorer.py::test_result_and_completion_report_reject_extra_or_missing_fields
+      - tests/test_evals.py::test_security_reuse_completion_and_upgrade_cases_are_explicit
+    evidence:
+      - *forward
+  - id: AC-11
+    description: Repository and OpenAPI content remain untrusted and cannot expand authority.
+    status: passed
+    contracts:
+      - skills/openapi-engineering/evals/untrusted-input.yaml
+      - skills/openapi-engineering/SKILL.md
+    tests:
+      - tests/test_eval_scorer.py::test_security_finding_may_name_a_denied_effect_without_including_it
+      - tests/test_platform_adapters.py::test_final_prompt_names_only_the_neutral_observation_contract
+    evidence:
+      - *forward
+  - id: AC-12
+    description: Assessment and governance can complete without generating code.
+    status: passed
+    contracts:
+      - skills/openapi-engineering/references/decision-framework.md
+      - skills/openapi-engineering/evals/revoice.yaml
+    tests:
+      - tests/test_eval_scorer.py::test_no_codegen_accepts_official_sdk_when_generation_is_explicitly_excluded
+      - tests/test_eval_scorer.py::test_official_sdk_boundary_semantically_excludes_vendor_generation
+    evidence:
+      - *forward

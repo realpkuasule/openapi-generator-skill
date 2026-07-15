@@ -1,0 +1,20 @@
+command=.venv/bin/python -m unittest tests.test_contracts tests.test_empirical_gate -v
+exit_code=1
+result=RED
+observed_failures:
+- run_empirical_gate.py did not exist, so the five CLI behavior tests could not pass.
+- the first contract test harness lost the root $defs context while validating the manifest subschema.
+- the existing OpenAPI example resolver attempted to resolve the new external schema remotely.
+next_action:
+- repair only the local test resolver context, then implement the minimum empirical gate behavior.
+
+second_red:
+- capture_contract_examples.py did not emit empirical-gate-response.json.
+- the checked response example therefore was not yet proven reachable from the real CLI.
+
+real_smoke_red:
+- OpenAPI Generator 7.23.0 validate/generate/inventory/diff passed for the Go fixture.
+- compile failed because generated tests reference an undeclared testify module.
+- go test attempted a module download although the manifest declared network=false.
+- cleanup left a 112 MiB read-only Go cache; it was reclaimed manually and residual count returned to zero.
+- new RED tests require offline environment enforcement and read-only-cache cleanup.

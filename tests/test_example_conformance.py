@@ -29,8 +29,16 @@ class ExampleCaptureTests(unittest.TestCase):
             comparison = json.loads(
                 (output / "generation-comparison-response.json").read_text()
             )
+            empirical = json.loads(
+                (output / "empirical-gate-response.json").read_text()
+            )
             self.assertEqual(inspection["root"], "/workspace/project")
             self.assertEqual(sum(comparison["summary"].values()), len(comparison["files"]))
+            self.assertEqual(empirical["status"], "proposed")
+            self.assertEqual(
+                empirical["unverified"],
+                [gate["name"] for gate in empirical["gates"]],
+            )
 
     def test_checked_in_examples_match_capture(self) -> None:
         result = subprocess.run(

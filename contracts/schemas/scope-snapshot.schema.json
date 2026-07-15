@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openapi-engineering.local/schemas/scope-snapshot.schema.json",
+  "title": "Approval-bound External Scope Snapshot",
+  "$ref": "#/$defs/report",
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "relative_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation", "root", "snapshot_dir", "selected_paths"],
+      "properties": {
+        "operation": { "enum": ["snapshot", "restore"] },
+        "root": { "type": "string", "minLength": 1 },
+        "snapshot_dir": { "type": "string", "minLength": 1 },
+        "selected_paths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/relative_path" }
+        },
+        "approval_digest": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "state"],
+      "properties": {
+        "path": { "$ref": "#/$defs/relative_path" },
+        "state": { "enum": ["file", "directory", "missing"] }
+      }
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/relative_path" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "report": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "report_version",
+        "status",
+        "operation",
+        "root",
+        "snapshot_dir",
+        "approval_digest",
+        "selected_paths",
+        "targets",
+        "inventory",
+        "scope_tree_sha256",
+        "unchanged"
+      ],
+      "properties": {
+        "report_version": { "const": 1 },
+        "status": { "enum": ["proposed", "restored", "blocked"] },
+        "operation": { "enum": ["snapshot", "restore"] },
+        "root": { "type": "string", "minLength": 1 },
+        "snapshot_dir": { "type": "string", "minLength": 1 },
+        "approval_digest": { "$ref": "#/$defs/sha256" },
+        "selected_paths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/relative_path" }
+        },
+        "targets": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/target" }
+        },
+        "inventory": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/file" }
+        },
+        "scope_tree_sha256": { "$ref": "#/$defs/sha256" },
+        "unchanged": { "type": "boolean" }
+      }
+    }
+  }
+}

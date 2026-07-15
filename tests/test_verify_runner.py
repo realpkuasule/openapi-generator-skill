@@ -4,6 +4,7 @@ import json
 import subprocess
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from unittest.mock import patch
 
@@ -124,6 +125,66 @@ class VerifyRunnerTests(unittest.TestCase):
             verify.run_verification("deterministic", report_path, gates=[gate])
 
             self.assertFalse(stale.exists())
+
+    def test_full_tier_is_blocked_until_every_release_evidence_path_is_supplied(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            report, exit_code = verify.run_verification(
+                "full", Path(directory) / "report.json"
+            )
+
+        self.assertEqual(exit_code, 2)
+        self.assertEqual(report["status"], "blocked")
+        self.assertIn("release evidence", report["gates"][0]["risk"])
+
+    def test_full_evidence_gates_only_check_existing_reports(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            paths = [root / f"evidence-{index}.json" for index in range(6)]
+            for path in paths:
+                path.write_text("{}", encoding="utf-8")
+
+            gates = verify.full_evidence_gates(
+                forward_report=paths[0],
+                empirical_manifest=paths[1],
+                empirical_report=paths[2],
+                upgrade_manifest=paths[3],
+                upgrade_report=paths[4],
+                traceability_report=paths[5],
+            )
+
+        self.assertEqual(
+            [gate.name for gate in gates],
+            [
+                "combined-forward-report",
+                "empirical-adoption-report",
+                "empirical-upgrade-report",
+                "acceptance-traceability-report",
+            ],
+        )
+        commands = "\n".join(" ".join(gate.command) for gate in gates)
+        self.assertEqual(commands.count("--check-report"), 4)
+        self.assertNotIn("run_skill_evals.py", commands)
+        self.assertNotIn("--execute", commands)
+
+    def test_junit_output_records_each_gate_without_command_output(self) -> None:
+        gate = verify.Gate("passing", ["fixture-command"])
+        completed = subprocess.CompletedProcess(gate.command, 0, "secret output", "")
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "scripts.verify.subprocess.run", return_value=completed
+        ):
+            root = Path(directory)
+            junit = root / "verification.xml"
+            report, exit_code = verify.run_verification(
+                "deterministic",
+                root / "report.json",
+                gates=[gate],
+                junit_path=junit,
+            )
+            suite = ET.parse(junit).getroot()
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(int(suite.attrib["tests"]), len(report["gates"]))
+        self.assertNotIn("secret output", ET.tostring(suite, encoding="unicode"))
 
 
 if __name__ == "__main__":

@@ -164,6 +164,68 @@ def install_skill(
     }, 0
 
 
+def uninstall_skill(
+    source: Path,
+    home: Path,
+    platforms: Sequence[str],
+    *,
+    apply: bool = False,
+) -> tuple[dict[str, Any], int]:
+    source = source.expanduser().resolve()
+    home = home.expanduser().resolve()
+    selected = tuple(dict.fromkeys(platforms))
+    if not source.is_dir() or not selected or any(
+        platform not in TARGETS for platform in selected
+    ):
+        return {
+            "status": "error",
+            "applied": False,
+            "error": "A valid source and at least one supported platform are required.",
+        }, 2
+    source_sha256 = tree_digest(source)
+    rows: list[dict[str, Any]] = []
+    conflicts: list[str] = []
+    for platform in selected:
+        target = home / TARGETS[platform]
+        state, current_digest = target_state(target, source, source_sha256)
+        if state == "conflict":
+            conflicts.append(str(target))
+            action = "conflict"
+        elif state == "missing":
+            action = "unchanged"
+        else:
+            action = "remove" if apply else "would-remove"
+        rows.append(
+            {
+                "platform": platform,
+                "target": str(target),
+                "action": action,
+                "target_digest": current_digest,
+            }
+        )
+    if conflicts:
+        return {
+            "status": "conflict",
+            "applied": False,
+            "source": str(source),
+            "source_digest": source_sha256,
+            "installations": rows,
+            "conflicts": conflicts,
+        }, 1
+    if apply:
+        for row in rows:
+            if row["action"] == "remove":
+                remove_created(Path(row["target"]))
+                row["target_digest"] = None
+    return {
+        "status": "ok",
+        "applied": apply,
+        "source": str(source),
+        "source_digest": source_sha256,
+        "installations": rows,
+    }, 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Safely install one OpenAPI engineering skill tree for Codex and Claude."
@@ -173,13 +235,19 @@ def main() -> int:
     parser.add_argument("--platform", action="append", choices=("codex", "claude"))
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--copy", action="store_true", dest="copy_mode")
+    parser.add_argument("--uninstall", action="store_true")
     args = parser.parse_args()
-    report, exit_code = install_skill(
+    if args.uninstall and args.copy_mode:
+        parser.error("--copy cannot be combined with --uninstall")
+    operation = uninstall_skill if args.uninstall else install_skill
+    keyword_arguments = {"apply": args.apply}
+    if not args.uninstall:
+        keyword_arguments["copy_mode"] = args.copy_mode
+    report, exit_code = operation(
         args.source,
         args.home,
         tuple(args.platform or ("codex", "claude")),
-        apply=args.apply,
-        copy_mode=args.copy_mode,
+        **keyword_arguments,
     )
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
     return exit_code

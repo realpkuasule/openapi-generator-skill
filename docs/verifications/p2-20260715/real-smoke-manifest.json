@@ -1,0 +1,79 @@
+{
+  "manifest_version": 1,
+  "mode": "adoption",
+  "project_root": "/tmp/openapi-empirical-real-project-20260715",
+  "contract": {
+    "path": "/tmp/openapi-empirical-real-project-20260715/openapi.yaml",
+    "sha256": "7d1e07b0c746ffdd36e8b607ebfd3469c18ead0ebfef4f09ca62641b6c18ea54"
+  },
+  "fixture": {
+    "path": "/tmp/openapi-empirical-real-project-20260715/fixtures/fixture.py",
+    "sha256": "bae2cc3d1f63a19bfcabeb4306ac81c87ba80c4935e1003642f1484cf528c137"
+  },
+  "baseline": {
+    "path": "/tmp/openapi-empirical-real-project-20260715/adoption-empty",
+    "tree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "generator": {
+    "name": "openapi-generator-cli",
+    "version": "7.23.0",
+    "distribution": "jar",
+    "target": "go",
+    "maturity": "stable",
+    "artifact": {
+      "path": "/tmp/openapi-generator-tools-7.23.0/openapi-generator-cli-7.23.0.jar",
+      "sha256": "cb087e40001e31eb08ef6140dd5de10938dbeb89016a1fe0481eaa25cd569026"
+    },
+    "feature_gaps": [
+      {
+        "feature": "OpenAPI 3.1",
+        "status": "partial",
+        "evidence": "The official project overview describes OpenAPI 3.1 support as beta; this smoke therefore uses OpenAPI 3.0.3."
+      }
+    ],
+    "official_sources": [
+      "https://repo.maven.apache.org/maven2/org/openapitools/openapi-generator-cli/7.23.0/",
+      "https://openapi-generator.tech/docs/generators/go/",
+      "https://github.com/OpenAPITools/openapi-generator/releases/tag/v7.23.0"
+    ]
+  },
+  "commands": [
+    {
+      "gate": "validate",
+      "argv": ["java", "-Xmx512m", "-jar", "{artifact}", "validate", "-i", "{contract}"],
+      "timeout_seconds": 120,
+      "network": false,
+      "dependency_install": false
+    },
+    {
+      "gate": "generate",
+      "argv": ["java", "-Xmx512m", "-jar", "{artifact}", "generate", "-i", "{contract}", "-g", "go", "-o", "{output}", "--additional-properties=packageName=openapi,packageVersion=1.0.0"],
+      "timeout_seconds": 300,
+      "network": false,
+      "dependency_install": false
+    },
+    {
+      "gate": "compile",
+      "argv": ["go", "-C", "{output}", "test", "-run", "^$", "."],
+      "timeout_seconds": 180,
+      "network": true,
+      "dependency_install": true
+    },
+    {
+      "gate": "fixture",
+      "argv": ["/Users/zhichao/codex/openapi-generator/.venv/bin/python", "{fixture}", "{output}"],
+      "timeout_seconds": 180,
+      "network": true,
+      "dependency_install": true
+    }
+  ],
+  "required_gates": ["validate", "generate", "inventory", "diff", "compile", "fixture"],
+  "diff_policy": {
+    "allow_initial_generation": true,
+    "accepted_changes": []
+  },
+  "rollback": [
+    "Discard the temporary candidate directory; the accepted baseline and project remain read-only.",
+    "Delete /tmp/openapi-generator-tools-7.23.0 to remove the downloaded generator artifact."
+  ]
+}

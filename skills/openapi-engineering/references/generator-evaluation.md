@@ -18,6 +18,16 @@ Build the smallest contract that contains the project's risky features: nullable
 
 Do not generate directly into the project until all applicable temporary-directory gates pass and the approved boundary permits that output path.
 
+Use a declarative manifest and preserve its proposal before execution:
+
+```text
+python3 scripts/run_empirical_gate.py --manifest <manifest>
+python3 scripts/run_empirical_gate.py --manifest <manifest> --execute --approve <exact-digest> --report <report>
+python3 scripts/run_empirical_gate.py --manifest <manifest> --check-report <report>
+```
+
+The check form is evidence-only: it must not rerun the generator. Treat a stale input digest, changed baseline, failed cleanup, non-empty `unverified`, or report/manifest mismatch as a release blocker.
+
 ## Interpret results
 
 - A `stable` label is supporting evidence, not proof for the project's feature set.
@@ -31,6 +41,8 @@ Do not generate directly into the project until all applicable temporary-directo
 ## Upgrade comparison
 
 Preserve the previous tool, config, contract digest, and generated baseline. Verify release notes from an official source, run both versions from clean directories, compare outputs, and test consumers. Never call an upgrade complete while generated diffs or target tests remain unexplained.
+
+Keep the old and new report evidence separate; verify both exact artifacts are still available before accepting the saved upgrade report.
 
 ## Result record
 
@@ -46,4 +58,3 @@ Capture:
 - required adapters/templates;
 - decision and rejected alternatives;
 - rollback and revisit triggers.
-

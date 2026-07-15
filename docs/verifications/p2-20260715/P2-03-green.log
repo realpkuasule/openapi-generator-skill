@@ -1,0 +1,7 @@
+Commands:
+- .venv/bin/python -m unittest tests.test_contracts tests.test_traceability
+- .venv/bin/python scripts/check_traceability.py --manifest contracts/acceptance-traceability.yaml --report docs/verifications/p2-20260715/traceability-report.json
+- .venv/bin/python scripts/check_traceability.py --manifest contracts/acceptance-traceability.yaml --check-report docs/verifications/p2-20260715/traceability-report.json
+Date: 2026-07-15
+Observed result: 13 tests passed. AC-01 through AC-12 passed with existing contract, test, and evidence bindings; the generated report passed a freshness/tamper check.
+Note: Ruff is not installed in the locked project environment, so repository-native deterministic checks remain the formatting authority.

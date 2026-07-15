@@ -1,0 +1,114 @@
+name: Verify
+
+"on":
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      run_forward:
+        description: Run paid/live Codex and Claude Code evaluations on the isolated runner
+        type: boolean
+        default: false
+      release_gate:
+        description: Check a fully provisioned release candidate and its existing evidence
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deterministic:
+    name: Deterministic (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: false
+      - name: Install locked environment
+        run: uv sync --locked
+      - name: Run deterministic verification
+        run: >-
+          uv run python scripts/verify.py --tier deterministic
+          --report docs/verifications/ci/deterministic-${{ runner.os }}.json
+          --junit docs/verifications/ci/deterministic-${{ runner.os }}.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: deterministic-${{ runner.os }}
+          path: docs/verifications/ci/
+
+  live-forward:
+    name: Manual isolated forward evaluation
+    if: github.event_name == 'workflow_dispatch' && inputs.run_forward
+    runs-on: [self-hosted, openapi-forward]
+    environment: live-evaluation
+    env:
+      CODEX_API_KEY: ${{ secrets.CODEX_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: false
+      - run: uv sync --locked
+      - name: Verify provisioned platform CLIs
+        run: codex --version && claude --version
+      - name: Run Codex samples first
+        run: >-
+          uv run python scripts/run_skill_evals.py --adapter codex --samples 2
+          --timeout 900 --report docs/verifications/ci/codex-forward.json
+      - name: Run Claude Code samples after Codex completes
+        run: >-
+          uv run python scripts/run_skill_evals.py --adapter claude --samples 2
+          --timeout 600 --report docs/verifications/ci/claude-forward.json
+      - name: Aggregate platform evidence
+        run: >-
+          uv run python scripts/aggregate_forward_evals.py
+          --codex-report docs/verifications/ci/codex-forward.json
+          --claude-report docs/verifications/ci/claude-forward.json
+          --report docs/verifications/ci/forward.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: manual-forward-evidence
+          path: docs/verifications/ci/
+
+  release-evidence:
+    name: Manual release evidence gate
+    if: github.event_name == 'workflow_dispatch' && inputs.release_gate
+    needs: deterministic
+    runs-on: [self-hosted, openapi-release]
+    environment: release-evidence
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: false
+      - run: uv sync --locked
+      - name: Check provisioned reports without running generators or models
+        run: >-
+          uv run python scripts/verify.py --tier full
+          --forward-report docs/verifications/p2-20260715/forward-eval-report.json
+          --empirical-manifest docs/verifications/p2-20260715/real-smoke-manifest.json
+          --empirical-report docs/verifications/p2-20260715/real-smoke-report.json
+          --upgrade-manifest docs/verifications/p2-20260715/real-upgrade-manifest.json
+          --upgrade-report docs/verifications/p2-20260715/real-upgrade-report.json
+          --traceability-report docs/verifications/p2-20260715/traceability-report.json
+          --report docs/verifications/ci/full-report.json
+          --junit docs/verifications/ci/full-report.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-evidence
+          path: docs/verifications/ci/

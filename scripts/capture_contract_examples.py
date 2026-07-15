@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
@@ -15,6 +16,7 @@ SKILL_SCRIPTS = REPO_ROOT / "skills" / "openapi-engineering" / "scripts"
 EXAMPLE_ROOT = REPO_ROOT / "contracts" / "examples"
 EXAMPLE_NAMES = (
     "error-response.json",
+    "empirical-gate-response.json",
     "generation-comparison-response.json",
     "inspect-response.json",
     "profile-state-response.json",
@@ -131,6 +133,70 @@ def capture_profile_state(root: Path) -> dict[str, Any]:
     )
 
 
+def capture_empirical(root: Path) -> dict[str, Any]:
+    project = root / "project"
+    baseline = project / "accepted"
+    baseline.mkdir(parents=True)
+    contract = project / "openapi.yaml"
+    fixture = project / "fixtures" / "generated_client.py"
+    artifact = root / "openapi-generator-cli-7.23.0.jar"
+    write_text(
+        contract,
+        "openapi: 3.0.3\ninfo:\n  title: Fixture\n  version: 1.0.0\npaths: {}\n",
+    )
+    write_text(fixture, "# deterministic fixture placeholder\n")
+    write_text(artifact, "deterministic generator artifact placeholder\n")
+    request = json.loads(
+        (EXAMPLE_ROOT / "empirical-gate-request.json").read_text(encoding="utf-8")
+    )
+    request["project_root"] = str(project)
+    request["contract"] = {
+        "path": str(contract),
+        "sha256": hashlib.sha256(contract.read_bytes()).hexdigest(),
+    }
+    request["fixture"] = {
+        "path": str(fixture),
+        "sha256": hashlib.sha256(fixture.read_bytes()).hexdigest(),
+    }
+    request["baseline"] = {
+        "path": str(baseline),
+        "tree_sha256": hashlib.sha256().hexdigest(),
+    }
+    request["generator"]["artifact"] = {
+        "path": str(artifact),
+        "sha256": hashlib.sha256(artifact.read_bytes()).hexdigest(),
+    }
+    manifest = root / "manifest.json"
+    write_text(manifest, json.dumps(request, sort_keys=True))
+    payload = run_json("run_empirical_gate.py", "--manifest", str(manifest), "--pretty")
+    payload["started_at"] = "2026-07-15T12:00:00Z"
+    payload["finished_at"] = "2026-07-15T12:00:00Z"
+    payload["manifest_sha256"] = "d" * 64
+    payload["approval_digest"] = "d" * 64
+    payload["contract"].update(
+        path="/workspace/project/openapi.yaml",
+        expected_sha256="a" * 64,
+        observed_sha256="a" * 64,
+    )
+    payload["fixture"].update(
+        path="/workspace/project/fixtures/generated_client.py",
+        expected_sha256="f" * 64,
+        observed_sha256="f" * 64,
+    )
+    payload["baseline"].update(
+        path="/workspace/project/accepted",
+        before_sha256="b" * 64,
+        after_sha256="b" * 64,
+    )
+    payload["project"].update(
+        path="/workspace/project",
+        before_sha256="e" * 64,
+        after_sha256="e" * 64,
+    )
+    payload["generator"]["artifact_sha256"] = "c" * 64
+    return payload
+
+
 def capture_examples(output: Path) -> None:
     output.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as directory:
@@ -138,6 +204,7 @@ def capture_examples(output: Path) -> None:
         examples = {
             "inspect-response.json": capture_inspection(root / "inspection"),
             "generation-comparison-response.json": capture_comparison(root / "comparison"),
+            "empirical-gate-response.json": capture_empirical(root / "empirical"),
             "profile-state-response.json": capture_profile_state(root / "profile-state"),
             "profile-validation-response.json": run_json(
                 "validate_profile.py",

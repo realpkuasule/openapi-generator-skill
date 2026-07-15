@@ -1,6 +1,8 @@
 {
   "baseline": "/tmp/baseline",
+  "baseline_tree_sha256": "7252234344cee7cf619bd29014e5b7d1b2ce753b6159a1993cccdba2f086aadd",
   "candidate": "/tmp/candidate",
+  "candidate_tree_sha256": "9acf672446116830ef35c02ddbd9abc87fa3de873a40260a59e4c0e21dd96a23",
   "files": [
     {
       "baseline_sha256": null,

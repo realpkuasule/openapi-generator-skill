@@ -1,0 +1,232 @@
+{
+  "equivalence": {
+    "cases": [
+      {
+        "case_id": "animator-mixed-boundaries",
+        "claude_boundary_strategies": [
+          "governance-only",
+          "language-native",
+          "official-sdk",
+          "openapi-generator"
+        ],
+        "claude_primary_strategies": [
+          "openapi-generator"
+        ],
+        "codex_boundary_strategies": [
+          "governance-only",
+          "language-native",
+          "official-sdk",
+          "openapi-generator"
+        ],
+        "codex_primary_strategies": [
+          "openapi-generator"
+        ],
+        "equivalent": true,
+        "same_fixture_digest": true,
+        "same_input_digest": true,
+        "strategy_refinements": []
+      },
+      {
+        "case_id": "revoice-no-codegen",
+        "claude_boundary_strategies": [
+          "governance-only",
+          "language-native",
+          "no-codegen",
+          "official-sdk"
+        ],
+        "claude_primary_strategies": [
+          "language-native",
+          "no-codegen"
+        ],
+        "codex_boundary_strategies": [
+          "governance-only",
+          "language-native",
+          "no-codegen",
+          "official-sdk"
+        ],
+        "codex_primary_strategies": [
+          "no-codegen"
+        ],
+        "equivalent": true,
+        "same_fixture_digest": true,
+        "same_input_digest": true,
+        "strategy_refinements": []
+      },
+      {
+        "case_id": "audit-discovers-upgrade",
+        "claude_boundary_strategies": [
+          "governance-only",
+          "openapi-generator"
+        ],
+        "claude_primary_strategies": [
+          "governance-only"
+        ],
+        "codex_boundary_strategies": [
+          "governance-only",
+          "openapi-generator"
+        ],
+        "codex_primary_strategies": [
+          "governance-only"
+        ],
+        "equivalent": true,
+        "same_fixture_digest": true,
+        "same_input_digest": true,
+        "strategy_refinements": []
+      },
+      {
+        "case_id": "profile-reuse",
+        "claude_boundary_strategies": [
+          "governance-only"
+        ],
+        "claude_primary_strategies": [
+          "governance-only"
+        ],
+        "codex_boundary_strategies": [
+          "governance-only"
+        ],
+        "codex_primary_strategies": [
+          "governance-only"
+        ],
+        "equivalent": true,
+        "same_fixture_digest": true,
+        "same_input_digest": true,
+        "strategy_refinements": []
+      },
+      {
+        "case_id": "untrusted-input",
+        "claude_boundary_strategies": [
+          "governance-only",
+          "no-codegen"
+        ],
+        "claude_primary_strategies": [
+          "governance-only"
+        ],
+        "codex_boundary_strategies": [
+          "governance-only",
+          "no-codegen"
+        ],
+        "codex_primary_strategies": [
+          "governance-only"
+        ],
+        "equivalent": true,
+        "same_fixture_digest": true,
+        "same_input_digest": true,
+        "strategy_refinements": []
+      }
+    ],
+    "filesystem_invariants_passed": true,
+    "hard_gates_passed": true,
+    "reasons": [],
+    "same_harness_digest": true,
+    "same_skill_digest": true
+  },
+  "generated_at": "2026-07-15T17:54:25.933378Z",
+  "harness_sha256": "4930131cbb43f9499f6e6fb8e4451827864910d89ed899af469740d86a28821a",
+  "minimum_samples": 2,
+  "platforms": [
+    {
+      "adapter": "codex",
+      "case_counts": [
+        {
+          "case_id": "animator-mixed-boundaries",
+          "count": 2
+        },
+        {
+          "case_id": "audit-discovers-upgrade",
+          "count": 2
+        },
+        {
+          "case_id": "profile-reuse",
+          "count": 2
+        },
+        {
+          "case_id": "revoice-no-codegen",
+          "count": 2
+        },
+        {
+          "case_id": "untrusted-input",
+          "count": 2
+        }
+      ],
+      "case_ids": [
+        "animator-mixed-boundaries",
+        "profile-reuse",
+        "revoice-no-codegen",
+        "audit-discovers-upgrade",
+        "untrusted-input"
+      ],
+      "completed_results": 10,
+      "harness_sha256": "4930131cbb43f9499f6e6fb8e4451827864910d89ed899af469740d86a28821a",
+      "load_error": null,
+      "passed_count": 10,
+      "platform_versions": [
+        "codex-cli 0.144.2"
+      ],
+      "requested_results": 10,
+      "result_count": 10,
+      "samples": 2,
+      "skill_sha256": "fe590fed8be092f66d2615f6dd6a65a21585d32efb34833712fbb603968cf6c7",
+      "source_report": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/codex-forward-eval-report.json",
+      "source_sha256": "6b5bd07b68872e661c621c45e937b5cd5a683de1c44699d2df930f78a81c8eb7",
+      "status": "passed",
+      "timeout_seconds": 900
+    },
+    {
+      "adapter": "claude",
+      "case_counts": [
+        {
+          "case_id": "animator-mixed-boundaries",
+          "count": 2
+        },
+        {
+          "case_id": "audit-discovers-upgrade",
+          "count": 2
+        },
+        {
+          "case_id": "profile-reuse",
+          "count": 2
+        },
+        {
+          "case_id": "revoice-no-codegen",
+          "count": 2
+        },
+        {
+          "case_id": "untrusted-input",
+          "count": 2
+        }
+      ],
+      "case_ids": [
+        "animator-mixed-boundaries",
+        "profile-reuse",
+        "revoice-no-codegen",
+        "audit-discovers-upgrade",
+        "untrusted-input"
+      ],
+      "completed_results": 10,
+      "harness_sha256": "4930131cbb43f9499f6e6fb8e4451827864910d89ed899af469740d86a28821a",
+      "load_error": null,
+      "passed_count": 10,
+      "platform_versions": [
+        "2.1.152 (Claude Code)"
+      ],
+      "requested_results": 10,
+      "result_count": 10,
+      "samples": 2,
+      "skill_sha256": "fe590fed8be092f66d2615f6dd6a65a21585d32efb34833712fbb603968cf6c7",
+      "source_report": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/claude-forward-eval-report.json",
+      "source_sha256": "d6e3643fccb0f685c650a88a78e7733250a2c857eb558170df57c3634ae19b3c",
+      "status": "passed",
+      "timeout_seconds": 600
+    }
+  ],
+  "report_version": 1,
+  "required_cases": [
+    "animator-mixed-boundaries",
+    "revoice-no-codegen",
+    "audit-discovers-upgrade",
+    "profile-reuse",
+    "untrusted-input"
+  ],
+  "skill_sha256": "fe590fed8be092f66d2615f6dd6a65a21585d32efb34833712fbb603968cf6c7",
+  "status": "passed"
+}

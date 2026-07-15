@@ -1,0 +1,5 @@
+Commands:
+- .venv/bin/python -m unittest tests.test_security_boundaries tests.test_rollback tests.test_install_skill tests.test_skill_package tests.test_contracts
+- .venv/bin/python -m py_compile scripts/check_traceability.py scripts/verify.py scripts/install_skill.py scripts/quick_validate.py skills/openapi-engineering/scripts/run_empirical_gate.py skills/openapi-engineering/scripts/scope_snapshot.py tests/test_security_boundaries.py tests/test_rollback.py
+Date: 2026-07-15
+Observed result: 29 focused tests passed. Malicious contract text and unsupported placeholders caused no side effects; secret-shaped values were absent from persisted evidence; external snapshots restored Profile/generated scope exactly; failed generation reclaimed its candidate and preserved baseline; exact dual-platform installations were removable without changing unrelated settings. Skill package validation passed at 149 lines.

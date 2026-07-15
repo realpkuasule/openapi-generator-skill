@@ -19,6 +19,7 @@ EXAMPLE_ROOT = CONTRACT_ROOT / "examples"
 OPENAPI_PATH = CONTRACT_ROOT / "openapi-engineering.openapi.yaml"
 PROFILE_SCHEMA_PATH = SCHEMA_ROOT / "governance-profile.schema.json"
 EVAL_SCHEMA_PATH = SCHEMA_ROOT / "eval-case.schema.json"
+EMPIRICAL_SCHEMA_PATH = SCHEMA_ROOT / "empirical-gate.schema.json"
 
 
 def walk(value: Any):
@@ -55,7 +56,10 @@ class ContractTests(unittest.TestCase):
             "/v1/profile-state-comparisons": "compareGovernanceProfileState",
             "/v1/profile-state-applications": "applyGovernanceProfileProposal",
             "/v1/generation-comparisons": "compareGeneration",
+            "/v1/empirical-gates": "runEmpiricalGeneratorGate",
             "/v1/evaluation-runs": "runSkillEvaluation",
+            "/v1/acceptance-traceability-checks": "checkAcceptanceTraceability",
+            "/v1/scope-snapshots": "manageScopeSnapshot",
             "/v1/evaluation-report-aggregations": "aggregateSkillEvaluations",
         }
         observed = {
@@ -81,12 +85,15 @@ class ContractTests(unittest.TestCase):
 
     def test_all_json_schemas_are_valid_draft_2020_12(self) -> None:
         expected = {
+            "acceptance-traceability.schema.json",
             "completion-report.schema.json",
+            "empirical-gate.schema.json",
             "eval-case.schema.json",
             "eval-result.schema.json",
             "forward-eval-report.schema.json",
             "forward-observation.schema.json",
             "governance-profile.schema.json",
+            "scope-snapshot.schema.json",
             "verification-report.schema.json",
         }
         self.assertEqual(set(self.schemas), expected)
@@ -159,12 +166,40 @@ class ContractTests(unittest.TestCase):
             }.issubset(evidence_required)
         )
 
+    def test_empirical_manifest_requires_pins_and_examples_conform(self) -> None:
+        schema = self.schemas[EMPIRICAL_SCHEMA_PATH.name]
+        manifest_schema = {
+            "$schema": schema["$schema"],
+            "$ref": "#/$defs/manifest",
+            "$defs": schema["$defs"],
+        }
+        validator = Draft202012Validator(
+            manifest_schema, format_checker=FormatChecker()
+        )
+        request = json.loads(
+            (EXAMPLE_ROOT / "empirical-gate-request.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(list(validator.iter_errors(request)), [])
+
+        unpinned = json.loads(json.dumps(request))
+        unpinned["generator"]["version"] = "latest"
+        self.assertTrue(list(validator.iter_errors(unpinned)))
+
+        report = json.loads(
+            (EXAMPLE_ROOT / "empirical-gate-response.json").read_text(encoding="utf-8")
+        )
+        report_errors = list(
+            Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(report)
+        )
+        self.assertEqual(report_errors, [], [error.message for error in report_errors])
+
     def test_response_examples_match_openapi_schemas(self) -> None:
         mapping = {
             "inspect-response.json": "InspectionResponse",
             "profile-validation-response.json": "ProfileValidationResponse",
             "profile-state-response.json": "ProfileStateComparisonResponse",
             "generation-comparison-response.json": "GenerationComparisonResponse",
+            "empirical-gate-response.json": "EmpiricalGateReport",
             "error-response.json": "ErrorResponse",
         }
         resolver = RefResolver(
@@ -173,12 +208,22 @@ class ContractTests(unittest.TestCase):
         for filename, schema_name in mapping.items():
             with self.subTest(filename=filename):
                 instance = json.loads((EXAMPLE_ROOT / filename).read_text(encoding="utf-8"))
-                schema = self.openapi["components"]["schemas"][schema_name]
-                with warnings.catch_warnings():
-                    warnings.simplefilter("ignore", DeprecationWarning)
+                if schema_name == "EmpiricalGateReport":
+                    schema = self.schemas[EMPIRICAL_SCHEMA_PATH.name]
                     errors = list(
-                        Draft202012Validator(schema, resolver=resolver).iter_errors(instance)
+                        Draft202012Validator(
+                            schema, format_checker=FormatChecker()
+                        ).iter_errors(instance)
                     )
+                else:
+                    schema = self.openapi["components"]["schemas"][schema_name]
+                    with warnings.catch_warnings():
+                        warnings.simplefilter("ignore", DeprecationWarning)
+                        errors = list(
+                            Draft202012Validator(
+                                schema, resolver=resolver
+                            ).iter_errors(instance)
+                        )
                 self.assertEqual(errors, [], [error.message for error in errors])
 
     def test_response_examples_are_reachable_outputs(self) -> None:
@@ -221,6 +266,8 @@ class ContractTests(unittest.TestCase):
             external_values,
             {
                 "./examples/error-response.json",
+                "./examples/empirical-gate-request.json",
+                "./examples/empirical-gate-response.json",
                 "./examples/inspect-response.json",
                 "./examples/profile-validation-response.json",
                 "./examples/profile-state-response.json",
