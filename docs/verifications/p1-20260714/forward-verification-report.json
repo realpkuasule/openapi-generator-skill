@@ -1,0 +1,41 @@
+{
+  "finished_at": "2026-07-15T11:53:03.043595Z",
+  "gates": [
+    {
+      "command": [
+        "/Users/zhichao/codex/openapi-generator/.venv/bin/python",
+        "/Users/zhichao/codex/openapi-generator/scripts/aggregate_forward_evals.py",
+        "--check-report",
+        "/Users/zhichao/codex/openapi-generator/docs/verifications/p1-20260714/forward-eval-report.json"
+      ],
+      "duration_ms": 672,
+      "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p1-20260714/forward-verification-report-evidence/01-combined-forward-report.log",
+      "evidence_sha256": "18b0fd1ecb5b9c300561c230c9c29103dc6d8b299ddacc547e01770154073afb",
+      "exit_code": 0,
+      "name": "combined-forward-report",
+      "risk": null,
+      "rollback": null,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "internal:sha256-tree",
+        "contracts",
+        "skills/openapi-engineering",
+        "scripts"
+      ],
+      "duration_ms": 0,
+      "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p1-20260714/forward-verification-report-evidence/02-source-tree-read-only.log",
+      "evidence_sha256": "fee3c7d64d7aba9c4c7ad23556177eb205e80185bb088098d1636cb753cca5dc",
+      "exit_code": 0,
+      "name": "source-tree-read-only",
+      "risk": null,
+      "rollback": null,
+      "status": "passed"
+    }
+  ],
+  "report_version": 1,
+  "started_at": "2026-07-15T11:53:02.362294Z",
+  "status": "passed",
+  "tier": "forward"
+}

@@ -54,6 +54,28 @@ Evaluate:
 5. Compare the smallest viable candidates, including official SDK and no-codegen.
 6. Require an empirical gate for every generator under serious consideration.
 7. Select only when benefits, gates, ownership, version pins, rollback, and maintenance are explicit.
+8. Produce one decision row for every materially distinct boundary, including existing contract artifacts, governance/test-only concerns, streaming adapters, domain projections, and vendor integrations. Do not hide a boundary merely because it is excluded from generation.
+
+The primary strategy is the recommended strategy for the target project boundary, not
+the read-only assessment process. Never create a synthetic "current read-only evaluation"
+boundary or make it primary merely because execution is not authorized. When the user asks
+whether an application should use generation, the application decision remains primary;
+artifact governance stays a separate row. For an audit-only intent, `governance-only`
+remains primary and an upgrade or generator spike is deferred. Record each deferred or conditional boundary
+as its own decision row with the strategy it would actually use after
+reapproval; deferral belongs in its condition, not by relabeling the row `governance-only`.
+An untrusted repository instruction
+is a `governance-only` security finding even when the application boundary
+separately selects `no-codegen`; when that finding is the only trustworthy current scope,
+use `governance-only` as the primary strategy.
+
+An orphaned or ambiguous OpenAPI artifact is a `governance-only` disposition boundary;
+do not label the artifact `no-codegen` merely because the application itself has no owned
+HTTP boundary. Keep the application and artifact decisions separate, and do not let the
+artifact displace the application as primary unless artifact disposition is the user's task.
+
+A hand-written adapter or thin framework shell is `language-native`; use `no-codegen` only
+when the boundary needs no generated or hand-written integration artifact at all.
 
 ## Output
 
@@ -73,4 +95,3 @@ revisit_triggers: []
 ```
 
 Use low confidence when no representative spike or official-source verification exists. Do not conceal an evidence gap with a numeric score.
-

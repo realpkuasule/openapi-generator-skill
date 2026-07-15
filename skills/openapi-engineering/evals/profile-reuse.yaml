@@ -9,6 +9,12 @@ input:
   project_facts:
     - A valid governance profile records settled user decisions and historical permissions.
     - Read-only inspection observes one changed contract path and no other drift.
+  interview_answers:
+    - content: The contract path change is intentional and may be proposed for the profile, while every other settled decision remains unchanged.
+      covers_questions: [0]
+    - content: Historical permissions are not current approval; check and propose must stay read-only and applying the exact digest would require a separate explicit approval.
+      covers_questions: [0]
+  approval: I approve exactly the immediately preceding complete read-only reassessment boundary summary; continue without applying a profile proposal or changing files.
 expected:
   modes: [Audit & Drift]
   read_only_evidence:

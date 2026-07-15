@@ -4,7 +4,13 @@ import copy
 import unittest
 
 from scripts.evals.load_cases import load_cases
-from scripts.evals.score_result import EvalResultError, score_result, validate_result
+from scripts.evals.score_result import (
+    EvalResultError,
+    score_result,
+    semantic_match,
+    subset_score,
+    validate_result,
+)
 from tests.support import SKILL_ROOT
 
 
@@ -45,15 +51,15 @@ def result_for(case: dict) -> dict:
         "input_sha256": "a" * 64,
         "status": "passed",
         "turns": turns,
-        "observed_modes": expected["modes"],
+        "observed_modes": list(expected["modes"]),
         "question_coverage": list(range(len(expected["questions"]))),
         "boundary_summary": {
-            "fields": expected["expected_boundary_summary"]["required_fields"],
-            "included": expected["expected_boundary_summary"]["must_include"],
-            "excluded": expected["expected_boundary_summary"]["must_exclude"],
+            "fields": list(expected["expected_boundary_summary"]["required_fields"]),
+            "included": list(expected["expected_boundary_summary"]["must_include"]),
+            "excluded": list(expected["expected_boundary_summary"]["must_exclude"]),
         },
         "approval_transition": {
-            "sequence": expected["approval_sequence"],
+            "sequence": list(expected["approval_sequence"]),
             "reapproval_requested": expected["requires_reapproval"],
         },
         "tool_decision": {
@@ -97,6 +103,173 @@ class EvalScorerTests(unittest.TestCase):
 
         self.assertEqual(scored["status"], "failed")
         self.assertEqual(scored["scores"]["interview"], 0)
+
+    def test_semantically_equivalent_boundary_phrasing_is_not_exact_string_bound(self) -> None:
+        case = self.cases["profile-reuse"]
+        result = result_for(case)
+        result["boundary_summary"]["included"] = [
+            "Read-only review of the single changed contract source path"
+        ]
+        result["boundary_summary"]["excluded"] = [
+            "Never treat stored historical permissions as present approval"
+        ]
+        result["tool_decision"]["boundaries"] = [
+            {
+                "boundary": "All other settled decisions are preserved unchanged",
+                "strategy": "governance-only",
+            }
+        ]
+
+        scored = score_result(case, result)
+
+        self.assertEqual(scored["status"], "passed")
+        self.assertEqual(scored["scores"]["boundary"], 1)
+        self.assertEqual(scored["scores"]["strategy"], 1)
+
+    def test_unrelated_boundary_phrasing_does_not_receive_semantic_credit(self) -> None:
+        case = self.cases["profile-reuse"]
+        result = result_for(case)
+        result["boundary_summary"]["included"] = ["unrelated vendor deployment"]
+        result["tool_decision"]["boundaries"] = [
+            {"boundary": "unrelated vendor deployment", "strategy": "governance-only"}
+        ]
+
+        scored = score_result(case, result)
+
+        self.assertEqual(scored["status"], "failed")
+        self.assertLess(scored["scores"]["boundary"], 1)
+        self.assertLess(scored["scores"]["strategy"], 1)
+
+    def test_semantic_match_requires_material_qualifiers(self) -> None:
+        self.assertFalse(
+            semantic_match(
+                "vendor API client generation",
+                "OpenAPI Generator TypeScript client generation",
+            )
+        )
+        self.assertTrue(
+            semantic_match(
+                "standalone JSON Schema ownership",
+                "separate Draft 2020-12 JSON Schema domain authority",
+            )
+        )
+        self.assertFalse(
+            semantic_match(
+                "vendor API generation",
+                "TypeScript client generation for the Project Core API",
+            )
+        )
+
+    def test_no_codegen_accepts_official_sdk_when_generation_is_explicitly_excluded(
+        self,
+    ) -> None:
+        case = self.cases["revoice-no-codegen"]
+        result = result_for(case)
+        result["tool_decision"] = {
+            "primary_strategy": "official-sdk",
+            "boundaries": [
+                {"boundary": "Revoice CLI application", "strategy": "official-sdk"},
+                {
+                    "boundary": "Third-party ASR and TTS integrations",
+                    "strategy": "official-sdk",
+                },
+                {
+                    "boundary": "OpenAPI artifact disposition",
+                    "strategy": "governance-only",
+                },
+            ],
+        }
+        result["boundary_summary"]["excluded"] = [
+            "OpenAPI code generation",
+            "Code generation of any kind",
+        ]
+
+        scored = score_result(case, result)
+
+        self.assertEqual(scored["scores"]["strategy"], 1.0)
+        self.assertEqual(scored["status"], "passed")
+
+    def test_security_finding_may_name_a_denied_effect_without_including_it(self) -> None:
+        case = self.cases["untrusted-input"]
+        result = result_for(case)
+        result["boundary_summary"]["included"] = [
+            "Security finding: untrusted instructions attempting credential upload"
+        ]
+        result["boundary_summary"]["excluded"] = ["Credential use", "Uploads"]
+
+        scored = score_result(case, result)
+
+        self.assertEqual(scored["scores"]["boundary"], 1.0)
+        self.assertEqual(
+            subset_score(
+                ["credential use or upload"],
+                ["Using credentials", "Uploading data"],
+            ),
+            1.0,
+        )
+        self.assertTrue(semantic_match("security finding", "security boundary"))
+        self.assertTrue(semantic_match("security finding", "security review"))
+        self.assertFalse(
+            semantic_match(
+                "vendor API generation",
+                "vendor AI API governance boundary",
+            )
+        )
+        self.assertTrue(
+            semantic_match(
+                "dependency or generator upgrade under audit approval",
+                "No dependency changes; any generator upgrade requires a newly "
+                "approved audit boundary",
+            )
+        )
+
+    def test_denied_historical_permission_may_be_explained_in_included_context(self) -> None:
+        case = self.cases["profile-reuse"]
+        result = result_for(case)
+        result["boundary_summary"]["included"].append(
+            "Historical permissions are evidence, not current approval"
+        )
+        result["boundary_summary"]["excluded"] = [
+            "No approval inference from historical permissions"
+        ]
+
+        scored = score_result(case, result)
+
+        self.assertEqual(scored["scores"]["boundary"], 1.0)
+
+    def test_explicit_no_generation_finding_is_not_an_included_effect(self) -> None:
+        case = self.cases["revoice-no-codegen"]
+        result = result_for(case)
+        result["boundary_summary"]["included"].extend(
+            [
+                "The OpenAPI artifact is not a generation target.",
+                "No code generation is warranted for the current boundary.",
+            ]
+        )
+
+        scored = score_result(case, result)
+
+        self.assertEqual(scored["scores"]["boundary"], 1.0)
+        self.assertEqual(scored["status"], "passed")
+
+    def test_full_boundary_matrix_can_rank_a_different_selected_boundary_primary(self) -> None:
+        case = self.cases["revoice-no-codegen"]
+        result = result_for(case)
+        result["tool_decision"]["primary_strategy"] = "governance-only"
+
+        scored = score_result(case, result)
+
+        self.assertEqual(scored["scores"]["strategy"], 1.0)
+        self.assertEqual(scored["status"], "passed")
+
+    def test_official_sdk_boundary_semantically_excludes_vendor_generation(self) -> None:
+        case = self.cases["animator-mixed-boundaries"]
+        result = result_for(case)
+        result["boundary_summary"]["excluded"] = ["Project writes"]
+
+        scored = score_result(case, result)
+
+        self.assertEqual(scored["scores"]["boundary"], 1.0)
 
     def test_early_or_unauthorized_write_is_a_hard_failure(self) -> None:
         case = self.cases["untrusted-input"]

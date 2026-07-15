@@ -1,0 +1,6 @@
+command=["/Users/zhichao/codex/openapi-generator/.venv/bin/python", "/Users/zhichao/codex/openapi-generator/scripts/install_skill.py", "--home", "/tmp/openapi-engineering-installer-dry-run"]
+exit_code=0
+stdout:
+{"applied": false, "installations": [{"action": "would-link", "platform": "codex", "target": "/private/tmp/openapi-engineering-installer-dry-run/.codex/skills/openapi-engineering", "target_digest": null}, {"action": "would-link", "platform": "claude", "target": "/private/tmp/openapi-engineering-installer-dry-run/.claude/skills/openapi-engineering", "target_digest": null}], "source": "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering", "source_digest": "7f03263e43f1d6f0ae5dc12d48bc27013811f93a7c42e0eef5df69e3c167e2b4", "status": "ok"}
+
+stderr:

@@ -11,7 +11,12 @@ from pathlib import Path
 from scripts.evals.adapters.base import AdapterCapability, EvalRequest
 from scripts.evals.load_cases import load_cases
 from scripts.evals.sandbox import tree_digest
-from scripts.run_skill_evals import run_evaluation, run_many
+from scripts.run_skill_evals import (
+    load_resume_results,
+    retry_nonpassing_results,
+    run_evaluation,
+    run_many,
+)
 from tests.support import REPO_ROOT, SKILL_ROOT
 from tests.test_eval_scorer import result_for
 
@@ -70,6 +75,8 @@ class EvalRunnerTests(unittest.TestCase):
         self.assertEqual(tree_digest(source), before)
         self.assertEqual(len(adapter.requests), 2)
         self.assertFalse(hasattr(adapter.requests[0], "expected"))
+        self.assertTrue(adapter.requests[0].interview_answers)
+        self.assertTrue(adapter.requests[0].approval)
         self.assertEqual(adapter.project_was_available, [True, True])
 
     def test_early_write_is_detected_by_hash_gate(self) -> None:
@@ -100,6 +107,13 @@ class EvalRunnerTests(unittest.TestCase):
             [self.case], RecordingAdapter(result_for(self.case)), timeout_seconds=5
         )
         self.assertEqual(passed_report["status"], "passed")
+        self.assertRegex(passed_report["skill_sha256"], r"^[a-f0-9]{64}$")
+        self.assertRegex(passed_report["harness_sha256"], r"^[a-f0-9]{64}$")
+        self.assertEqual(passed_report["timeout_seconds"], 5)
+        self.assertEqual(passed_report["report_version"], 2)
+        self.assertEqual(passed_report["case_ids"], ["profile-reuse"])
+        self.assertEqual(passed_report["requested_results"], 1)
+        self.assertEqual(passed_report["completed_results"], 1)
         self.assertEqual(passed_exit, 0)
 
         blocked_report, blocked_exit = run_many(
@@ -109,6 +123,114 @@ class EvalRunnerTests(unittest.TestCase):
         )
         self.assertEqual(blocked_report["status"], "blocked")
         self.assertEqual(blocked_exit, 2)
+
+    def test_run_many_checkpoints_each_result_and_resumes_the_exact_prefix(self) -> None:
+        checkpoints: list[dict] = []
+        adapter = RecordingAdapter(result_for(self.case))
+
+        report, exit_code = run_many(
+            [self.case],
+            adapter,
+            timeout_seconds=5,
+            samples=2,
+            checkpoint=lambda value: checkpoints.append(copy.deepcopy(value)),
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual([row["completed_results"] for row in checkpoints], [1, 2])
+        self.assertEqual([row["requested_results"] for row in checkpoints], [2, 2])
+        self.assertEqual(checkpoints[0]["status"], "blocked")
+        self.assertEqual(checkpoints[1], report)
+
+        resumed_checkpoints: list[dict] = []
+        resumed_adapter = RecordingAdapter(result_for(self.case))
+        resumed, resumed_exit = run_many(
+            [self.case],
+            resumed_adapter,
+            timeout_seconds=5,
+            samples=2,
+            initial_results=checkpoints[0]["results"],
+            checkpoint=lambda value: resumed_checkpoints.append(copy.deepcopy(value)),
+        )
+
+        self.assertEqual(resumed_exit, 0)
+        self.assertEqual(len(resumed_adapter.requests), 1)
+        self.assertEqual(resumed, report)
+        self.assertEqual(len(resumed_checkpoints), 1)
+
+    def test_resume_loader_rejects_a_stale_harness_digest(self) -> None:
+        checkpoints: list[dict] = []
+        adapter = RecordingAdapter(result_for(self.case))
+        run_many(
+            [self.case],
+            adapter,
+            timeout_seconds=5,
+            samples=2,
+            checkpoint=lambda value: checkpoints.append(copy.deepcopy(value)),
+        )
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "checkpoint.json"
+            path.write_text(json.dumps(checkpoints[0]), encoding="utf-8")
+            resumed = load_resume_results(
+                path,
+                [self.case],
+                RecordingAdapter(result_for(self.case)),
+                timeout_seconds=5,
+                samples=2,
+            )
+            self.assertEqual(resumed, checkpoints[0]["results"])
+
+            stale = copy.deepcopy(checkpoints[0])
+            stale["harness_sha256"] = "0" * 64
+            path.write_text(json.dumps(stale), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "harness_sha256"):
+                load_resume_results(
+                    path,
+                    [self.case],
+                    RecordingAdapter(result_for(self.case)),
+                    timeout_seconds=5,
+                    samples=2,
+                )
+
+            wrong_plan = copy.deepcopy(checkpoints[0])
+            wrong_plan["case_ids"] = ["untrusted-input"]
+            path.write_text(json.dumps(wrong_plan), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "case_ids"):
+                load_resume_results(
+                    path,
+                    [self.case],
+                    RecordingAdapter(result_for(self.case)),
+                    timeout_seconds=5,
+                    samples=2,
+                )
+
+    def test_retry_nonpassing_replaces_only_failed_or_blocked_slots(self) -> None:
+        passed, _exit_code = run_many(
+            [self.case],
+            RecordingAdapter(result_for(self.case)),
+            timeout_seconds=5,
+            samples=2,
+        )
+        existing = copy.deepcopy(passed["results"])
+        existing[0]["status"] = "failed"
+        retry_adapter = RecordingAdapter(result_for(self.case))
+        checkpoints: list[dict] = []
+
+        retried, retry_exit = retry_nonpassing_results(
+            [self.case],
+            retry_adapter,
+            timeout_seconds=5,
+            samples=2,
+            existing_results=existing,
+            checkpoint=lambda value: checkpoints.append(copy.deepcopy(value)),
+        )
+
+        self.assertEqual(retry_exit, 0)
+        self.assertEqual(retried["status"], "passed")
+        self.assertEqual(len(retry_adapter.requests), 1)
+        self.assertEqual(retried["results"][1], existing[1])
+        self.assertEqual(checkpoints, [retried])
 
     def test_dry_run_cli_writes_an_explicitly_blocked_report(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

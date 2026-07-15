@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openapi-engineering.local/schemas/forward-eval-report.schema.json",
+  "title": "Cross-platform Forward Evaluation Report",
+  "description": "Aggregates fresh Codex and Claude Code evaluation reports for one immutable Skill digest and evaluation-harness digest, and records semantic equivalence and hard-gate evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "report_version",
+    "status",
+    "generated_at",
+    "skill_sha256",
+    "harness_sha256",
+    "required_cases",
+    "minimum_samples",
+    "platforms",
+    "equivalence"
+  ],
+  "properties": {
+    "report_version": { "const": 1 },
+    "status": { "enum": ["passed", "failed", "blocked"] },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "skill_sha256": {
+      "type": ["string", "null"],
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "harness_sha256": {
+      "type": ["string", "null"],
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "required_cases": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+$" }
+    },
+    "minimum_samples": { "type": "integer", "minimum": 2 },
+    "platforms": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/platform" }
+    },
+    "equivalence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "same_skill_digest",
+        "same_harness_digest",
+        "hard_gates_passed",
+        "filesystem_invariants_passed",
+        "cases",
+        "reasons"
+      ],
+      "properties": {
+        "same_skill_digest": { "type": "boolean" },
+        "same_harness_digest": { "type": "boolean" },
+        "hard_gates_passed": { "type": "boolean" },
+        "filesystem_invariants_passed": { "type": "boolean" },
+        "cases": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/case_equivalence" }
+        },
+        "reasons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "platform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter",
+        "load_error",
+        "skill_sha256",
+        "harness_sha256",
+        "platform_versions",
+        "source_report",
+        "source_sha256",
+        "samples",
+        "timeout_seconds",
+        "case_ids",
+        "requested_results",
+        "completed_results",
+        "status",
+        "result_count",
+        "passed_count",
+        "case_counts"
+      ],
+      "properties": {
+        "adapter": { "enum": ["codex", "claude"] },
+        "load_error": { "type": ["string", "null"], "minLength": 1 },
+        "skill_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "harness_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "platform_versions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "source_report": { "type": "string", "minLength": 1 },
+        "source_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "samples": { "type": "integer", "minimum": 0 },
+        "timeout_seconds": { "type": "integer", "minimum": 0 },
+        "case_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9-]+$" }
+        },
+        "requested_results": { "type": "integer", "minimum": 0 },
+        "completed_results": { "type": "integer", "minimum": 0 },
+        "status": { "enum": ["passed", "failed", "blocked"] },
+        "result_count": { "type": "integer", "minimum": 0 },
+        "passed_count": { "type": "integer", "minimum": 0 },
+        "case_counts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["case_id", "count"],
+            "properties": {
+              "case_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+              "count": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "case_equivalence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "codex_primary_strategies",
+        "claude_primary_strategies",
+        "codex_boundary_strategies",
+        "claude_boundary_strategies",
+        "strategy_refinements",
+        "same_input_digest",
+        "same_fixture_digest",
+        "equivalent"
+      ],
+      "properties": {
+        "case_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "codex_primary_strategies": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "eval-case.schema.json#/$defs/strategy" }
+        },
+        "claude_primary_strategies": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "eval-case.schema.json#/$defs/strategy" }
+        },
+        "codex_boundary_strategies": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "eval-case.schema.json#/$defs/strategy" }
+        },
+        "claude_boundary_strategies": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "eval-case.schema.json#/$defs/strategy" }
+        },
+        "strategy_refinements": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "same_input_digest": { "type": "boolean" },
+        "same_fixture_digest": { "type": "boolean" },
+        "equivalent": { "type": "boolean" }
+      }
+    }
+  }
+}

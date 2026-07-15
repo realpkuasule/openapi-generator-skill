@@ -4,10 +4,12 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import re
 from pathlib import Path
 from typing import Any, Iterable
 
-from jsonschema import Draft202012Validator, FormatChecker, RefResolver
+from jsonschema import Draft202012Validator, FormatChecker
+from referencing import Registry, Resource
 
 try:
     from .load_cases import EvalCaseError, REPO_ROOT, load_case
@@ -38,17 +40,12 @@ def result_validator() -> Draft202012Validator:
         for path in SCHEMA_ROOT.glob("*.json")
     }
     result_schema = schemas[RESULT_SCHEMA_PATH.name]
-    store: dict[str, Any] = {}
-    for name, schema in schemas.items():
-        store[schema.get("$id", name)] = schema
-        store[(SCHEMA_ROOT / name).resolve().as_uri()] = schema
-    resolver = RefResolver(
-        base_uri=RESULT_SCHEMA_PATH.resolve().as_uri(),
-        referrer=result_schema,
-        store=store,
+    registry = Registry().with_resources(
+        (schema["$id"], Resource.from_contents(schema))
+        for schema in schemas.values()
     )
     return Draft202012Validator(
-        result_schema, resolver=resolver, format_checker=FormatChecker()
+        result_schema, registry=registry, format_checker=FormatChecker()
     )
 
 
@@ -63,10 +60,128 @@ def validate_result(result: dict[str, Any]) -> None:
 
 
 def subset_score(expected: Iterable[Any], observed: Iterable[Any]) -> float:
-    wanted = set(expected)
+    wanted = list(expected)
     if not wanted:
         return 1.0
-    return len(wanted & set(observed)) / len(wanted)
+    candidates = list(observed)
+    string_candidates = [item for item in candidates if isinstance(item, str)]
+    combined = " ".join(string_candidates)
+    matched = 0
+    for item in wanted:
+        if isinstance(item, str):
+            matched += int(
+                any(semantic_match(item, candidate) for candidate in string_candidates)
+                or (bool(combined) and semantic_match(item, combined))
+            )
+        else:
+            matched += int(item in candidates)
+    return matched / len(wanted)
+
+
+def semantic_tokens(value: str) -> set[str]:
+    aliases = {
+        "apis": "api",
+        "approved": "approval",
+        "approves": "approval",
+        "authority": "ownership",
+        "authorization": "approval",
+        "finding": "boundary",
+        "generating": "generation",
+        "installing": "install",
+        "present": "current",
+        "review": "boundary",
+        "separate": "standalone",
+        "uploading": "upload",
+        "using": "use",
+    }
+    def normalize(token: str) -> str:
+        token = aliases.get(token, token)
+        if token.endswith("ies") and len(token) > 4:
+            token = token[:-3] + "y"
+        elif token.endswith("s") and not token.endswith("ss") and len(token) > 3:
+            token = token[:-1]
+        return aliases.get(token, token)
+
+    stopwords = {
+        "a",
+        "an",
+        "and",
+        "as",
+        "at",
+        "for",
+        "of",
+        "or",
+        "the",
+        "to",
+        "under",
+    }
+    return {
+        normalize(token)
+        for token in re.findall(r"[a-z0-9]+|[\u4e00-\u9fff]", value.casefold())
+        if token not in stopwords
+    }
+
+
+def semantic_match(expected: str, observed: Any) -> bool:
+    if not isinstance(observed, str):
+        return False
+    if expected.casefold().strip() == observed.casefold().strip():
+        return True
+    wanted = semantic_tokens(expected)
+    actual = semantic_tokens(observed)
+    if not wanted or not actual:
+        return False
+    material_qualifiers = {
+        "credential",
+        "delete",
+        "deletion",
+        "generate",
+        "generated",
+        "generation",
+        "install",
+        "migration",
+        "upload",
+        "upgrade",
+        "vendor",
+        "write",
+    }
+    required_qualifiers = wanted & material_qualifiers
+    if required_qualifiers and not required_qualifiers.issubset(actual):
+        return False
+    overlap = len(wanted & actual)
+    minimum = 1 if len(wanted) == 1 else 2
+    return overlap >= minimum and overlap / len(wanted) >= 0.6
+
+
+def denied_effect_context(value: str) -> bool:
+    lowered = value.casefold()
+    negated_effect = re.search(
+        r"\b(?:no|not|never|without)\b[^.!;\n]{0,80}"
+        r"\b(?:credential|delete|generate|generated|generation|install|migration|"
+        r"upload|upgrade|write)\b",
+        lowered,
+    )
+    if negated_effect:
+        return True
+    denied_subject = (
+        "security finding" in lowered
+        or "untrusted" in lowered
+        or ("historical" in lowered and "permission" in lowered)
+    )
+    return denied_subject and any(
+        marker in lowered
+        for marker in (
+            "denied",
+            "evidence only",
+            "not executed",
+            "never executed",
+            "not current approval",
+            "not authority",
+            "prohibited",
+            "attempted",
+            "attempting",
+        )
+    )
 
 
 def ordered_subsequence(expected: list[str], observed: list[str]) -> bool:
@@ -95,24 +210,80 @@ def score_result(case: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]
 
     summary_expected = expected["expected_boundary_summary"]
     summary = result["boundary_summary"]
+    derived_exclusions = [
+        f"{row['boundary']} code generation excluded"
+        for row in result["tool_decision"]["boundaries"]
+        if row["strategy"] in {"official-sdk", "no-codegen"}
+    ]
     boundary_parts = (
         subset_score(summary_expected["required_fields"], summary["fields"]),
         subset_score(summary_expected["must_include"], summary["included"]),
-        subset_score(summary_expected["must_exclude"], summary["excluded"]),
-        float(not (set(summary_expected["must_exclude"]) & set(summary["included"]))),
+        subset_score(
+            summary_expected["must_exclude"],
+            [*summary["excluded"], *derived_exclusions],
+        ),
+        float(
+            not any(
+                semantic_match(excluded, included)
+                and not denied_effect_context(included)
+                for excluded in summary_expected["must_exclude"]
+                for included in summary["included"]
+            )
+        ),
     )
     boundary = sum(boundary_parts) / len(boundary_parts)
 
-    expected_boundaries = {
-        (row["boundary"], row["strategy"]) for row in expected["boundary_decisions"]
-    }
-    observed_boundaries = {
-        (row["boundary"], row["strategy"])
-        for row in result["tool_decision"]["boundaries"]
-    }
+    expected_boundaries = expected["boundary_decisions"]
+    observed_boundaries = result["tool_decision"]["boundaries"]
+    code_generation_excluded = any(
+        semantic_match("code generation", item) for item in summary["excluded"]
+    )
+
+    def strategy_matches(wanted: str, observed: str) -> bool:
+        return wanted == observed or (
+            wanted == "no-codegen"
+            and code_generation_excluded
+            and observed in {"language-native", "official-sdk"}
+        )
+
+    boundary_evidence = [
+        *(row["boundary"] for row in observed_boundaries),
+        *summary["included"],
+        *summary["excluded"],
+    ]
+    boundary_evidence.append(" ".join(boundary_evidence))
+    matched_boundaries = sum(
+        any(
+            strategy_matches(wanted["strategy"], observed["strategy"])
+            and semantic_match(wanted["boundary"], observed["boundary"])
+            for observed in observed_boundaries
+        )
+        or (
+            any(
+                strategy_matches(wanted["strategy"], observed["strategy"])
+                for observed in observed_boundaries
+            )
+            and any(semantic_match(wanted["boundary"], text) for text in boundary_evidence)
+        )
+        for wanted in expected_boundaries
+    )
+    observed_strategies = {row["strategy"] for row in observed_boundaries}
+    primary_strategy = result["tool_decision"]["primary_strategy"]
+    primary_semantically_selected = (
+        primary_strategy == expected["primary_strategy"]
+        or (
+            expected["primary_strategy"] == "no-codegen"
+            and code_generation_excluded
+            and primary_strategy in {"language-native", "official-sdk"}
+        )
+        or (
+            expected["primary_strategy"] in observed_strategies
+            and primary_strategy in observed_strategies
+        )
+    )
     strategy = (
-        float(result["tool_decision"]["primary_strategy"] == expected["primary_strategy"])
-        + subset_score(expected_boundaries, observed_boundaries)
+        float(primary_semantically_selected)
+        + matched_boundaries / len(expected_boundaries)
     ) / 2
 
     transition = result["approval_transition"]

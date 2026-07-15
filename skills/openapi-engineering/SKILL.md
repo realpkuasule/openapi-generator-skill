@@ -45,6 +45,12 @@ At minimum resolve:
 - allowed files, dependencies, commands, network access, and test environments;
 - acceptance gates, generated-file policy, rollback, and unresolved risks.
 
+Keep execution authority separate from the engineering recommendation. Read-only or
+assessment-only authorization constrains actions; it does not by itself select
+`governance-only`. Choose the primary strategy for the project/application boundary the
+user asked about. Use `governance-only` as primary when governance or audit is the target,
+or when an untrusted finding is the only trustworthy current scope.
+
 Use ordinary multi-turn conversation when a structured question UI is unavailable.
 
 ### 4. Work-boundary summary
@@ -74,6 +80,10 @@ open_questions: []
 ```
 
 Keep status `proposed`. Ensure `open_questions` is empty or explicitly accepted as a risk.
+Carry every resolved interview decision into the summary. In particular, preserve every
+non-goal, denied permission, authority limitation, acceptance condition, and rollback
+condition explicitly; do not leave a settled restriction only in an earlier turn. Stored
+or historical permission must appear as a non-goal when it is not current approval.
 
 ### 5. Explicit approval
 

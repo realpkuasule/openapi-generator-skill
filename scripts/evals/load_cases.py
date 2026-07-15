@@ -60,13 +60,24 @@ def load_case(path: Path) -> dict[str, Any]:
 def load_cases(root: Path, names: Iterable[str] = ()) -> list[dict[str, Any]]:
     selected = set(names)
     paths = sorted(root.glob("*.yaml"))
+    loaded = [(path, load_case(path)) for path in paths]
     if selected:
-        paths = [path for path in paths if path.stem in selected or path.name in selected]
-        found = {path.stem for path in paths} | {path.name for path in paths}
-        missing = [name for name in selected if name not in found]
+        missing = [
+            name
+            for name in selected
+            if not any(
+                name in {path.stem, path.name, case["id"]}
+                for path, case in loaded
+            )
+        ]
         if missing:
             raise EvalCaseError(f"Unknown eval cases: {', '.join(sorted(missing))}")
-    cases = [load_case(path) for path in paths]
+        loaded = [
+            (path, case)
+            for path, case in loaded
+            if selected & {path.stem, path.name, case["id"]}
+        ]
+    cases = [case for _path, case in loaded]
     ids = [case["id"] for case in cases]
     if len(ids) != len(set(ids)):
         raise EvalCaseError("Eval case ids must be unique.")

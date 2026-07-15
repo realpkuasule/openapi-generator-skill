@@ -196,9 +196,18 @@ def deterministic_gates() -> list[Gate]:
             required_paths=[quick_validate],
             risk="Skill packaging cannot be certified without the canonical validator.",
         ),
-        Gate("inspect-project-help", [python, str(SKILL_SCRIPTS / "inspect_project.py"), "--help"]),
-        Gate("validate-profile-help", [python, str(SKILL_SCRIPTS / "validate_profile.py"), "--help"]),
-        Gate("compare-generation-help", [python, str(SKILL_SCRIPTS / "compare_generation.py"), "--help"]),
+        Gate(
+            "inspect-project-help",
+            [python, str(SKILL_SCRIPTS / "inspect_project.py"), "--help"],
+        ),
+        Gate(
+            "validate-profile-help",
+            [python, str(SKILL_SCRIPTS / "validate_profile.py"), "--help"],
+        ),
+        Gate(
+            "compare-generation-help",
+            [python, str(SKILL_SCRIPTS / "compare_generation.py"), "--help"],
+        ),
         Gate("profile-state-help", [python, str(SKILL_SCRIPTS / "profile_state.py"), "--help"]),
         Gate(
             "eval-case-validation",
@@ -211,6 +220,10 @@ def deterministic_gates() -> list[Gate]:
         Gate(
             "eval-scorer-help",
             [python, str(REPO_ROOT / "scripts" / "evals" / "score_result.py"), "--help"],
+        ),
+        Gate(
+            "forward-eval-aggregator-help",
+            [python, str(REPO_ROOT / "scripts" / "aggregate_forward_evals.py"), "--help"],
         ),
         Gate(
             "skill-installer-dry-run",
@@ -238,22 +251,44 @@ def aggregate_status(gates: Sequence[dict[str, Any]]) -> tuple[str, int]:
 
 
 def blocked_tier_gate(tier: str, evidence_path: Path) -> dict[str, Any]:
-    content = (
-        f"The {tier} tier requires real Codex/Claude adapter execution, which is outside "
-        "the currently authorized deterministic checkpoint.\n"
-    )
+    if tier == "forward":
+        content = (
+            "The forward tier requires a fresh combined Codex/Claude report. "
+            "It never invokes either model platform implicitly.\n"
+        )
+        risk = "Missing forward evidence cannot be treated as a passing release gate."
+        command = ["evidence:combined-forward-report"]
+    else:
+        content = (
+            "The full tier includes empirical generator execution and requires "
+            "Checkpoint C authorization.\n"
+        )
+        risk = "Generator downloads and execution are outside the current authorization."
+        command = ["authorization:empirical-generator-checkpoint-c"]
     digest = write_evidence(evidence_path, content)
     return {
-        "name": f"{tier}-adapter-authorization",
-        "command": ["authorization:codex-claude-forward-test"],
+        "name": f"{tier}-prerequisite",
+        "command": command,
         "exit_code": None,
         "status": "blocked",
         "duration_ms": 0,
         "evidence": str(evidence_path.resolve()),
         "evidence_sha256": digest,
-        "risk": "Forward testing could consume model quota or invoke external tools.",
+        "risk": risk,
         "rollback": None,
     }
+
+
+def forward_gates(forward_report: Path) -> list[Gate]:
+    aggregator = REPO_ROOT / "scripts" / "aggregate_forward_evals.py"
+    return [
+        Gate(
+            "combined-forward-report",
+            [sys.executable, str(aggregator), "--check-report", str(forward_report)],
+            required_paths=[aggregator, forward_report],
+            risk="The combined forward report is missing, invalid, stale, or failed.",
+        )
+    ]
 
 
 def validate_report(report: dict[str, Any]) -> None:
@@ -282,6 +317,7 @@ def run_verification(
     report_path: Path,
     *,
     gates: Sequence[Gate] | None = None,
+    forward_report: Path | None = None,
 ) -> tuple[dict[str, Any], int]:
     report_path = report_path.expanduser().resolve()
     evidence_dir = report_path.parent / f"{report_path.stem}-evidence"
@@ -289,10 +325,17 @@ def run_verification(
     started_at = utc_now()
     results: list[dict[str, Any]] = []
 
-    if gates is None and tier != "deterministic":
+    if gates is None and tier == "forward" and forward_report is None:
         results.append(blocked_tier_gate(tier, evidence_dir / "01-adapter-authorization.log"))
+    elif gates is None and tier == "full":
+        results.append(blocked_tier_gate(tier, evidence_dir / "01-checkpoint-c.log"))
     else:
-        selected = list(gates) if gates is not None else deterministic_gates()
+        if gates is not None:
+            selected = list(gates)
+        elif tier == "forward":
+            selected = forward_gates(forward_report.expanduser().resolve())
+        else:
+            selected = deterministic_gates()
         before = source_digest()
         for index, gate in enumerate(selected, start=1):
             evidence_path = evidence_dir / f"{index:02d}-{safe_name(gate.name)}.log"
@@ -329,11 +372,18 @@ def main() -> int:
         type=Path,
         help="Report path (default: docs/verifications/latest/<tier>-report.json).",
     )
+    parser.add_argument(
+        "--forward-report",
+        type=Path,
+        help="Existing combined forward report to validate for --tier forward.",
+    )
     args = parser.parse_args()
     report_path = args.report or (
         REPO_ROOT / "docs" / "verifications" / "latest" / f"{args.tier}-report.json"
     )
-    report, exit_code = run_verification(args.tier, report_path)
+    report, exit_code = run_verification(
+        args.tier, report_path, forward_report=args.forward_report
+    )
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
     return exit_code
 

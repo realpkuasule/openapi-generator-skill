@@ -35,6 +35,24 @@ class EvalCaseTests(unittest.TestCase):
                 fixture = REPO_ROOT / case["fixture_binding"]["compact_fixture"]
                 self.assertTrue(fixture.is_dir())
                 self.assertGreaterEqual(case["expected"]["minimum_interview_turns"], 2)
+                answers = case["input"]["interview_answers"]
+                self.assertGreaterEqual(
+                    len(answers), case["expected"]["minimum_interview_turns"]
+                )
+                covered = {
+                    question
+                    for answer in answers
+                    for question in answer["covers_questions"]
+                }
+                self.assertEqual(
+                    covered, set(range(len(case["expected"]["questions"])))
+                )
+                self.assertIn("approve", case["input"]["approval"].lower())
+
+    def test_case_selection_accepts_stable_case_ids(self) -> None:
+        cases = load_cases(EVAL_ROOT, ["animator-mixed-boundaries"])
+
+        self.assertEqual([case["id"] for case in cases], ["animator-mixed-boundaries"])
 
     def test_loader_rejects_extra_fields_and_fixture_escape(self) -> None:
         source = copy.deepcopy(self.cases["profile-reuse"])
@@ -58,21 +76,48 @@ class EvalCaseTests(unittest.TestCase):
         for term in ("flask", "sse", "domain", "official-sdk"):
             with self.subTest(term=term):
                 self.assertIn(term, text)
+        self.assertEqual(case["expected"]["modes"], ["Assess & Select"])
+        answers = " ".join(
+            answer["content"] for answer in case["input"]["interview_answers"]
+        ).casefold()
+        self.assertIn("openapi generator", answers)
+        self.assertIn("typescript-fetch", answers)
+        self.assertIn("primary", answers)
+        sse = next(
+            row
+            for row in case["expected"]["boundary_decisions"]
+            if row["boundary"] == "SSE event adapter"
+        )
+        self.assertEqual(sse["strategy"], "language-native")
 
     def test_revoice_surfaces_existing_openapi_conflict(self) -> None:
         case = self.cases["revoice-no-codegen"]
         self.assertIn("contracts/openapi.yaml", " ".join(case["input"]["project_facts"]))
         boundaries = [row["boundary"] for row in case["expected"]["boundary_decisions"]]
-        self.assertIn("Existing repository OpenAPI document", boundaries)
+        self.assertIn("OpenAPI artifact disposition", boundaries)
+        self.assertEqual(len(boundaries), 3)
+        existing = next(
+            row
+            for row in case["expected"]["boundary_decisions"]
+            if row["boundary"] == "OpenAPI artifact disposition"
+        )
+        self.assertEqual(existing["strategy"], "governance-only")
 
     def test_security_reuse_completion_and_upgrade_cases_are_explicit(self) -> None:
         self.assertTrue(self.cases["untrusted-input"]["input"]["adversarial_inputs"])
+        self.assertEqual(
+            self.cases["untrusted-input"]["expected"]["expected_boundary_summary"]["must_include"],
+            ["security finding"],
+        )
         self.assertTrue(self.cases["profile-reuse"]["expected"]["requires_reapproval"])
         self.assertTrue(
             self.cases["completion-report"]["expected"]["requires_completion_report"]
         )
         upgrade = self.cases["upgrade-gate"]
-        self.assertIn("immutable accepted baseline", upgrade["expected"]["expected_boundary_summary"]["must_include"])
+        self.assertIn(
+            "immutable accepted baseline",
+            upgrade["expected"]["expected_boundary_summary"]["must_include"],
+        )
 
 
 if __name__ == "__main__":

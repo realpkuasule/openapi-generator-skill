@@ -12,6 +12,12 @@ input:
     - Its main risks are retries, fallback, rate limits, cost, media processing, and testability.
     - The PRD identifies no multi-language client or server-stub synchronization problem.
     - The repository nevertheless contains contracts/openapi.yaml whose ownership and future must be clarified.
+  interview_answers:
+    - content: Revoice will remain a local Python CLI; use maintained official SDKs behind typed adapters unless evidence shows a specific provider SDK is inadequate.
+      covers_questions: [0, 1]
+    - content: The requested outcome is assessment only. Do not change adapters, dependencies, tests, contracts, or provider configuration in this evaluation.
+      covers_questions: [2]
+  approval: I approve exactly the immediately preceding complete read-only work-boundary summary for this isolated evaluation; continue without project writes or external side effects.
 expected:
   modes:
     - Assess & Select
@@ -25,16 +31,13 @@ expected:
   minimum_interview_turns: 2
   primary_strategy: no-codegen
   boundary_decisions:
-    - boundary: Revoice local CLI and media pipeline
+    - boundary: Revoice CLI application
       strategy: no-codegen
       condition: Keep typed Python interfaces and fixtures; there is no owned HTTP boundary to generate.
-    - boundary: Vendor ASR and TTS integrations
+    - boundary: Third-party ASR and TTS integrations
       strategy: official-sdk
       condition: Prefer maintained vendor SDKs and isolate them behind tested adapters.
-    - boundary: Provider compatibility and fallback behavior
-      strategy: governance-only
-      condition: Use fixtures, adapter contract tests, retries, and rate-limit tests without generated application code.
-    - boundary: Existing repository OpenAPI document
+    - boundary: OpenAPI artifact disposition
       strategy: governance-only
       condition: Determine whether it describes an internal tool, a vendor boundary, or obsolete material before governing, splitting, or retiring it.
   expected_boundary_summary:
@@ -46,10 +49,10 @@ expected:
       - acceptance_gates
       - rollback
     must_include:
-      - local CLI boundary
-      - official SDK evaluation
+      - Revoice CLI
+      - official SDK
     must_exclude:
-      - creating OpenAPI solely for code generation
+      - OpenAPI code generation
   prohibited_actions:
     - Do not create an OpenAPI contract solely to enable code generation.
     - Do not regenerate vendor clients when an acceptable official SDK owns auth and protocol evolution.

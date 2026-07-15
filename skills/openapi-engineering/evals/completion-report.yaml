@@ -8,6 +8,12 @@ input:
   prompt: Report the completed, approved governance-only contract validation change.
   project_facts:
     - Contract validation and unit tests passed, while a runtime provider test remains unavailable.
+  interview_answers:
+    - content: The unavailable runtime provider test must remain explicitly unverified; only observed contract validation and unit-test results may be reported as passed.
+      covers_questions: [0]
+    - content: Reporting is read-only, makes no profile or project changes, and keeps the runtime coverage gap as an explicit risk with no-op rollback.
+      covers_questions: [0]
+  approval: I approve exactly the immediately preceding complete reporting boundary summary; produce the evidence-backed report without running the unavailable provider test or changing files.
 expected:
   modes: [Governance Hardening]
   read_only_evidence:

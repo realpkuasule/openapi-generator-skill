@@ -9,6 +9,12 @@ input:
   project_facts:
     - The accepted output and pinned generator configuration must remain read-only.
     - Network access, dependency changes, and generator execution are not approved.
+  interview_answers:
+    - content: Propose a pinned candidate version and disposable candidate directory only; do not download or run it, and keep the accepted baseline immutable.
+      covers_questions: [0]
+    - content: Network, dependency, generation, CI, and output changes are excluded; a later empirical gate would require explicit approval plus diff, compile or import, fixture, and rollback checks.
+      covers_questions: [0]
+  approval: I approve exactly the immediately preceding complete upgrade-planning boundary summary; continue without downloading or running a generator or changing the accepted baseline.
 expected:
   modes: [Upgrade & Migration]
   read_only_evidence:

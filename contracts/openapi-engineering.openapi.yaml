@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: OpenAPI Engineering Control Plane
-  version: 0.3.0
+  version: 0.7.0
   description: >-
     Platform-neutral contracts for helpers bundled with the openapi-engineering
     skill. Discovery, comparison, and proposal operations are read-only; the
@@ -13,6 +13,7 @@ tags:
   - name: Inspection
   - name: Governance
   - name: Generation
+  - name: Evaluation
 paths:
   /v1/inspections:
     post:
@@ -184,6 +185,93 @@ paths:
               examples:
                 generationDiff:
                   externalValue: './examples/generation-comparison-response.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/evaluation-runs:
+    post:
+      operationId: runSkillEvaluation
+      x-cli-command: >-
+        python3 scripts/run_skill_evals.py --adapter <adapter> --case <case>
+        --samples <samples> --timeout <seconds> --report <path> [--resume]
+        [--retry-nonpassing]
+      x-cli-arguments:
+        adapter: --adapter; fake, codex, or claude
+        case: repeatable --case
+        samples: --samples
+        timeout: --timeout
+        report: --report
+        resume: --resume; continue only from a digest- and plan-matched checkpoint
+        retry-nonpassing: --retry-nonpassing; replace only failed or blocked result slots
+      x-cli-exit-codes:
+        '0': every requested sample passed semantic and safety gates
+        '1': at least one requested sample failed
+        '2': a platform, contract, or execution prerequisite was blocked
+      tags: [Evaluation]
+      summary: Run isolated deterministic or real-platform skill evaluations
+      description: >-
+        Copies the compact fixture to a temporary project, performs a real
+        multi-turn boundary interview for Codex or Claude Code in read-only or
+        plan mode, and records transcripts, semantic observations, CLI
+        versions, and before/after file hashes. The runner atomically checkpoints
+        after every completed sample. Resume is accepted only when adapter,
+        evaluation plan, timeout, Skill digest, and harness digest still match.
+        Eval expected values are never sent to the tested platform.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvaluationRunRequest'
+      responses:
+        '200':
+          description: Evaluation samples completed; inspect each result status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationRunResponse'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/evaluation-report-aggregations:
+    post:
+      operationId: aggregateSkillEvaluations
+      x-cli-command: >-
+        python3 scripts/aggregate_forward_evals.py --codex-report <path>
+        --claude-report <path> --minimum-samples <minimum_samples>
+        --report <path>
+      x-cli-arguments:
+        codex-report: --codex-report; fresh Codex evaluation report
+        claude-report: --claude-report; fresh Claude Code evaluation report
+        minimum-samples: --minimum-samples; at least 2, defaults to 2
+        report: --report; atomic combined report destination
+      x-cli-exit-codes:
+        '0': both platforms passed on one Skill digest and are semantically equivalent
+        '1': a behavior, safety gate, or semantic strategy comparison failed
+        '2': evidence is missing, structurally invalid, stale, or not comparable
+      tags: [Evaluation]
+      summary: Aggregate and compare fresh Codex and Claude Code evaluations
+      description: >-
+        Validates every per-sample result, requires at least two samples for each
+        required case and platform, verifies identical immutable Skill and evaluation
+        harness digests plus file hashes, and compares required boundary-strategy matrices by case while
+        retaining primary-ranking differences as evidence. Equivalent reports may rank
+        different selected boundaries when both rankings are covered by the same
+        accepted matrix. A `language-native` hand-written adapter may refine a shared
+        `no-codegen` application decision; every other matrix difference remains a
+        failure. This operation only consumes existing reports; it never invokes either
+        model platform.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvaluationAggregationRequest'
+      responses:
+        '200':
+          description: Aggregation completed; inspect status and reasons.
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/forward-eval-report.schema.json'
         '400':
           $ref: '#/components/responses/InvalidRequest'
 components:
@@ -466,6 +554,91 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FileComparison'
+    EvaluationRunRequest:
+      type: object
+      additionalProperties: false
+      required: [adapter, cases, samples, timeout_seconds]
+      properties:
+        adapter:
+          enum: [fake, codex, claude]
+        cases:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items: { type: string, minLength: 1 }
+        samples:
+          type: integer
+          minimum: 1
+        timeout_seconds:
+          type: integer
+          minimum: 1
+        resume:
+          type: boolean
+          default: false
+          description: Continue from an exact existing checkpoint instead of replacing it.
+        retry_nonpassing:
+          type: boolean
+          default: false
+          description: Re-run only failed or blocked slots in a complete matched checkpoint.
+    EvaluationRunResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - report_version
+        - adapter
+        - skill_sha256
+        - harness_sha256
+        - samples
+        - timeout_seconds
+        - case_ids
+        - requested_results
+        - completed_results
+        - status
+        - results
+      properties:
+        report_version: { const: 2 }
+        adapter: { enum: [fake, codex, claude] }
+        skill_sha256:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
+        harness_sha256:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
+          description: >-
+            Digest of the runner, adapters, scorer, and evaluation JSON Schemas used
+            to produce every result in this report.
+        samples: { type: integer, minimum: 1 }
+        timeout_seconds:
+          type: integer
+          minimum: 1
+          description: Total wall-clock budget applied independently to each sample.
+        case_ids:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items: { type: string, pattern: '^[a-z0-9-]+$' }
+          description: Complete ordered case plan repeated for each sample.
+        requested_results:
+          type: integer
+          minimum: 1
+          description: Exact number of case/sample executions in the immutable run plan.
+        completed_results:
+          type: integer
+          minimum: 0
+          description: Number of atomically checkpointed results currently present.
+        status: { enum: [passed, failed, blocked] }
+        results:
+          type: array
+          items:
+            $ref: './schemas/eval-result.schema.json'
+    EvaluationAggregationRequest:
+      type: object
+      additionalProperties: false
+      required: [codex_report, claude_report]
+      properties:
+        codex_report: { type: string, minLength: 1 }
+        claude_report: { type: string, minLength: 1 }
+        minimum_samples: { type: integer, minimum: 2, default: 2 }
     FileComparison:
       type: object
       additionalProperties: false

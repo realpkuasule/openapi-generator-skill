@@ -78,7 +78,7 @@ class VerifyRunnerTests(unittest.TestCase):
         _, kwargs = run.call_args
         self.assertFalse(kwargs.get("shell", False))
 
-    def test_forward_tier_is_explicitly_blocked_until_adapter_work_is_authorized(self) -> None:
+    def test_forward_tier_is_blocked_without_combined_report(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             report, exit_code = verify.run_verification(
                 "forward", Path(directory) / "report.json"
@@ -87,6 +87,27 @@ class VerifyRunnerTests(unittest.TestCase):
         self.assertEqual(exit_code, 2)
         self.assertEqual(report["status"], "blocked")
         self.assertEqual(report["gates"][0]["status"], "blocked")
+
+    def test_forward_tier_validates_existing_report_without_invoking_models(self) -> None:
+        completed = subprocess.CompletedProcess(
+            ["fixture-forward-check"], 0, "passed\n", ""
+        )
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "scripts.verify.subprocess.run", return_value=completed
+        ) as run:
+            forward_report = Path(directory) / "forward.json"
+            forward_report.write_text("{}", encoding="utf-8")
+            report, exit_code = verify.run_verification(
+                "forward",
+                Path(directory) / "verification.json",
+                forward_report=forward_report,
+            )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(report["status"], "passed")
+        command = run.call_args.args[0]
+        self.assertIn("--check-report", command)
+        self.assertNotIn("run_skill_evals.py", " ".join(command))
 
     def test_previous_gate_logs_are_removed_before_a_new_run(self) -> None:
         gate = verify.Gate("passing", ["fixture-command"])

@@ -13,11 +13,19 @@ class AdapterCapability:
 
 
 @dataclass(frozen=True)
+class InterviewAnswer:
+    content: str
+    covers_questions: tuple[int, ...]
+
+
+@dataclass(frozen=True)
 class EvalRequest:
     case_id: str
     prompt: str
     project_facts: tuple[str, ...]
     adversarial_inputs: tuple[str, ...]
+    interview_answers: tuple[InterviewAnswer, ...]
+    approval: str
     project_root: Path
     skill_root: Path
 

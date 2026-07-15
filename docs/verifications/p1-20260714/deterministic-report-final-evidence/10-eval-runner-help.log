@@ -1,0 +1,23 @@
+command=["/Users/zhichao/codex/openapi-generator/.venv/bin/python", "/Users/zhichao/codex/openapi-generator/scripts/run_skill_evals.py", "--help"]
+exit_code=0
+stdout:
+usage: run_skill_evals.py [-h] [--adapter {fake,codex,claude}] [--case CASE]
+                          [--timeout TIMEOUT] [--samples SAMPLES]
+                          [--fake-result-dir FAKE_RESULT_DIR] [--dry-run]
+                          [--report REPORT] [--resume] [--retry-nonpassing]
+
+Run isolated OpenAPI engineering skill evals.
+
+options:
+  -h, --help            show this help message and exit
+  --adapter {fake,codex,claude}
+  --case CASE
+  --timeout TIMEOUT
+  --samples SAMPLES
+  --fake-result-dir FAKE_RESULT_DIR
+  --dry-run
+  --report REPORT
+  --resume
+  --retry-nonpassing
+
+stderr:

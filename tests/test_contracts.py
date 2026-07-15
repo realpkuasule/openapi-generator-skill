@@ -55,6 +55,8 @@ class ContractTests(unittest.TestCase):
             "/v1/profile-state-comparisons": "compareGovernanceProfileState",
             "/v1/profile-state-applications": "applyGovernanceProfileProposal",
             "/v1/generation-comparisons": "compareGeneration",
+            "/v1/evaluation-runs": "runSkillEvaluation",
+            "/v1/evaluation-report-aggregations": "aggregateSkillEvaluations",
         }
         observed = {
             path: item["post"]["operationId"]
@@ -65,12 +67,25 @@ class ContractTests(unittest.TestCase):
             operation = item["post"]
             self.assertIn("x-cli-command", operation)
             self.assertIn("x-cli-exit-codes", operation)
+        evaluation_response = self.openapi["components"]["schemas"]["EvaluationRunResponse"]
+        self.assertIn("skill_sha256", evaluation_response["required"])
+        self.assertIn("harness_sha256", evaluation_response["required"])
+        self.assertIn("timeout_seconds", evaluation_response["required"])
+        self.assertIn("case_ids", evaluation_response["required"])
+        self.assertIn("requested_results", evaluation_response["required"])
+        self.assertIn("completed_results", evaluation_response["required"])
+        self.assertEqual(evaluation_response["properties"]["report_version"]["const"], 2)
+        evaluation_request = self.openapi["components"]["schemas"]["EvaluationRunRequest"]
+        self.assertIn("resume", evaluation_request["properties"])
+        self.assertIn("retry_nonpassing", evaluation_request["properties"])
 
     def test_all_json_schemas_are_valid_draft_2020_12(self) -> None:
         expected = {
             "completion-report.schema.json",
             "eval-case.schema.json",
             "eval-result.schema.json",
+            "forward-eval-report.schema.json",
+            "forward-observation.schema.json",
             "governance-profile.schema.json",
             "verification-report.schema.json",
         }
