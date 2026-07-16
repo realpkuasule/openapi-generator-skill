@@ -1,0 +1,6 @@
+Command: uv run python scripts/run_deterministic_suite.py
+Date: 2026-07-16
+Result: RED
+
+The documented entry point did not exist. A release metadata assertion was added before correcting
+the README to use `scripts/verify.py --tier deterministic`.

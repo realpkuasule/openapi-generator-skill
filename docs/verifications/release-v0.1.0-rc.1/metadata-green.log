@@ -1,0 +1,10 @@
+Command: .venv/bin/python -m unittest tests.test_release_metadata -v
+Date: 2026-07-16
+Result: GREEN
+
+Tests run: 4
+Failures: 0
+Errors: 0
+
+Package and lock versions are 0.1.0rc1, and the README, changelog, and release plan satisfy the
+release metadata contract.
