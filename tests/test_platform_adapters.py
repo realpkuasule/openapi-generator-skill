@@ -112,13 +112,39 @@ else:
 '''
 
 
+def create_fake_cli(root: Path, *, platform: str = os.name) -> Path:
+    if platform == "nt":
+        script = root / "fake-cli.py"
+        script.write_text(FAKE_CLI, encoding="utf-8", newline="\n")
+        launcher = root / "fake-cli.cmd"
+        launcher.write_text(
+            f'@echo off\n"{sys.executable}" "{script}" %*\n',
+            encoding="utf-8",
+            newline="\r\n",
+        )
+        return launcher
+
+    launcher = root / "fake-cli"
+    launcher.write_text(FAKE_CLI, encoding="utf-8", newline="\n")
+    launcher.chmod(launcher.stat().st_mode | stat.S_IXUSR)
+    return launcher
+
+
 class PlatformAdapterTests(unittest.TestCase):
+    def test_fake_cli_fixture_has_a_windows_launcher(self) -> None:
+        windows_root = Path(self.temporary.name) / "windows-fixture"
+        windows_root.mkdir()
+
+        launcher = create_fake_cli(windows_root, platform="nt")
+
+        self.assertEqual(launcher.suffix, ".cmd")
+        self.assertTrue((windows_root / "fake-cli.py").is_file())
+        self.assertIn("%*", launcher.read_text(encoding="utf-8"))
+
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory()
         self.root = Path(self.temporary.name)
-        self.binary = self.root / "fake-cli"
-        self.binary.write_text(FAKE_CLI, encoding="utf-8")
-        self.binary.chmod(self.binary.stat().st_mode | stat.S_IXUSR)
+        self.binary = create_fake_cli(self.root)
         self.log = self.root / "argv.jsonl"
         self.previous_env = os.environ.copy()
         os.environ.update(
@@ -154,7 +180,6 @@ class PlatformAdapterTests(unittest.TestCase):
     def _argv(self) -> list[list[str]]:
         return [json.loads(line) for line in self.log.read_text(encoding="utf-8").splitlines()]
 
-    @unittest.skipIf(os.name == "nt", "fake CLI fixture uses a POSIX shebang")
     def test_codex_adapter_runs_a_resumable_read_only_interview(self) -> None:
         os.environ["FAKE_KIND"] = "codex"
         adapter = CodexCliAdapter(binary=str(self.binary))
@@ -191,7 +216,6 @@ class PlatformAdapterTests(unittest.TestCase):
         )
         self.assertNotIn("expected", " ".join(" ".join(call) for call in calls).lower())
 
-    @unittest.skipIf(os.name == "nt", "fake CLI fixture uses a POSIX shebang")
     def test_codex_adapter_accepts_fenced_json_without_cli_schema_decoding(self) -> None:
         os.environ["FAKE_KIND"] = "codex"
         os.environ["FAKE_CODEX_FENCED"] = "1"
@@ -202,7 +226,6 @@ class PlatformAdapterTests(unittest.TestCase):
 
         self.assertEqual(result["observed_modes"], ["Assess & Select"])
 
-    @unittest.skipIf(os.name == "nt", "fake CLI fixture uses a POSIX shebang")
     def test_claude_adapter_runs_a_resumable_plan_mode_interview(self) -> None:
         os.environ["FAKE_KIND"] = "claude"
         adapter = ClaudeCliAdapter(binary=str(self.binary))
@@ -219,7 +242,6 @@ class PlatformAdapterTests(unittest.TestCase):
         self.assertIn("--json-schema", calls[-1])
         self.assertNotIn("expected", " ".join(" ".join(call) for call in calls).lower())
 
-    @unittest.skipIf(os.name == "nt", "fake CLI fixture uses a POSIX shebang")
     def test_claude_adapter_accepts_fenced_json_when_cli_omits_structured_output(self) -> None:
         os.environ["FAKE_KIND"] = "claude"
         os.environ["FAKE_CLAUDE_FENCED"] = "1"
@@ -230,7 +252,6 @@ class PlatformAdapterTests(unittest.TestCase):
 
         self.assertEqual(result["observed_modes"], ["Assess & Select"])
 
-    @unittest.skipIf(os.name == "nt", "fake CLI fixture uses a POSIX shebang")
     def test_platform_credentials_are_copied_into_isolated_config_homes(self) -> None:
         auth_log = self.root / "auth.jsonl"
         os.environ["FAKE_AUTH_LOG"] = str(auth_log)
@@ -279,7 +300,6 @@ class PlatformAdapterTests(unittest.TestCase):
             {"codex-test-auth", "claude-test-auth"},
         )
 
-    @unittest.skipIf(os.name == "nt", "fake CLI fixture uses a POSIX shebang")
     def test_platform_mode_slugs_are_normalized_to_contract_enums(self) -> None:
         os.environ["FAKE_KIND"] = "claude"
         observation = dict(OBSERVATION)
@@ -323,7 +343,6 @@ class PlatformAdapterTests(unittest.TestCase):
             [{"boundary": "Owned API", "strategy": "governance-only"}],
         )
 
-    @unittest.skipIf(os.name == "nt", "fake CLI fixture uses a POSIX shebang")
     def test_missing_binary_is_blocked_and_timeout_is_not_misreported(self) -> None:
         missing = CodexCliAdapter(binary=str(self.root / "missing")).probe()
         self.assertFalse(missing.available)
