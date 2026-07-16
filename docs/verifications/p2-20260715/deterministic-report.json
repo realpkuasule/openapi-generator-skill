@@ -1,5 +1,5 @@
 {
-  "finished_at": "2026-07-15T18:00:53.968225Z",
+  "finished_at": "2026-07-16T00:12:09.566213Z",
   "gates": [
     {
       "command": [
@@ -10,9 +10,9 @@
         "tests.test_environment",
         "-v"
       ],
-      "duration_ms": 719,
+      "duration_ms": 932,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/deterministic-report-evidence/01-contract-validation.log",
-      "evidence_sha256": "0f005cd8d4617a0ee83d2d981389eaa4d267a7940e35a8660b10c370bb35491d",
+      "evidence_sha256": "2360454ea4bd5dc69be206eea1eb581ef5c5308d4ec6489678cedfbce5fba3fc",
       "exit_code": 0,
       "name": "contract-validation",
       "risk": null,
@@ -25,7 +25,7 @@
         "/Users/zhichao/codex/openapi-generator/scripts/capture_contract_examples.py",
         "--check"
       ],
-      "duration_ms": 1569,
+      "duration_ms": 1482,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/deterministic-report-evidence/02-captured-example-conformance.log",
       "evidence_sha256": "6de9ae518e0dedc187c3c7226e4410fc6ec2e67d87426363fdc6c342a0748127",
       "exit_code": 0,
@@ -44,9 +44,9 @@
         "tests",
         "-v"
       ],
-      "duration_ms": 34606,
+      "duration_ms": 35209,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/deterministic-report-evidence/03-unit-test-suite.log",
-      "evidence_sha256": "9a86e85218c3900d67ae53e11713a2240f45b79892beb0cf7c16c4da3c4cad47",
+      "evidence_sha256": "bf16f877230ed74332ff5151675bb75181092321ef000ed3a5581e669d39d0da",
       "exit_code": 0,
       "name": "unit-test-suite",
       "risk": null,
@@ -59,7 +59,7 @@
         "/Users/zhichao/codex/openapi-generator/scripts/quick_validate.py",
         "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering"
       ],
-      "duration_ms": 21,
+      "duration_ms": 24,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/deterministic-report-evidence/04-skill-quick-validation.log",
       "evidence_sha256": "b9bfa71573b30dcd0744157127762f24435d943fda65fd5265c441c40a9683f4",
       "exit_code": 0,
@@ -89,7 +89,7 @@
         "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/validate_profile.py",
         "--help"
       ],
-      "duration_ms": 19,
+      "duration_ms": 21,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/deterministic-report-evidence/06-validate-profile-help.log",
       "evidence_sha256": "8e8b103fa2595a3d3a5c4c133d4b5b701dc60991f0d9035f2af6072297276b3c",
       "exit_code": 0,
@@ -104,7 +104,7 @@
         "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/compare_generation.py",
         "--help"
       ],
-      "duration_ms": 19,
+      "duration_ms": 20,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/deterministic-report-evidence/07-compare-generation-help.log",
       "evidence_sha256": "95e55555810103c68de3398b2d0d3d831e1108b3fd8e9b6f7123965d50474540",
       "exit_code": 0,
@@ -163,7 +163,7 @@
         "/Users/zhichao/codex/openapi-generator/.venv/bin/python",
         "/Users/zhichao/codex/openapi-generator/scripts/evals/load_cases.py"
       ],
-      "duration_ms": 500,
+      "duration_ms": 505,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/deterministic-report-evidence/11-eval-case-validation.log",
       "evidence_sha256": "37657728ec0a0c9b51fc45c6436e4251db95d4e8aaf03d617fb2a3e28683527a",
       "exit_code": 0,
@@ -178,7 +178,7 @@
         "/Users/zhichao/codex/openapi-generator/scripts/run_skill_evals.py",
         "--help"
       ],
-      "duration_ms": 452,
+      "duration_ms": 479,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/deterministic-report-evidence/12-eval-runner-help.log",
       "evidence_sha256": "a8be79df7df900619abba575de4ca93bdfdbebe3795705abb10ed785bd4c6a56",
       "exit_code": 0,
@@ -193,7 +193,7 @@
         "/Users/zhichao/codex/openapi-generator/scripts/evals/score_result.py",
         "--help"
       ],
-      "duration_ms": 460,
+      "duration_ms": 471,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/deterministic-report-evidence/13-eval-scorer-help.log",
       "evidence_sha256": "9f14e8e7cfce6c573a8440ff0e0b0d02fd5eea2c001e5b6f07c595940ac2a0ca",
       "exit_code": 0,
@@ -208,7 +208,7 @@
         "/Users/zhichao/codex/openapi-generator/scripts/aggregate_forward_evals.py",
         "--help"
       ],
-      "duration_ms": 455,
+      "duration_ms": 464,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/deterministic-report-evidence/14-forward-eval-aggregator-help.log",
       "evidence_sha256": "a8a845f6bd493cbea34701fadd02774348cbd2a4449ed9ab924906613304640a",
       "exit_code": 0,
@@ -257,7 +257,7 @@
       ],
       "duration_ms": 0,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/deterministic-report-evidence/17-source-tree-read-only.log",
-      "evidence_sha256": "b8421a4ae2b9b2183b08b00164a9db443dc0b3c7d912c7bb0b6cb59357fc00df",
+      "evidence_sha256": "22a218aa3a1aed1b1b0402a6fff79cb87ee966e3f7f98e6b951741deb9faefd7",
       "exit_code": 0,
       "name": "source-tree-read-only",
       "risk": null,
@@ -266,7 +266,7 @@
     }
   ],
   "report_version": 1,
-  "started_at": "2026-07-15T18:00:14.573535Z",
+  "started_at": "2026-07-16T00:11:29.373728Z",
   "status": "passed",
   "tier": "deterministic"
 }

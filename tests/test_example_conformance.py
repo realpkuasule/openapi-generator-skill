@@ -7,6 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from scripts.capture_contract_examples import write_text
 from tests.support import REPO_ROOT
 
 
@@ -14,6 +15,14 @@ CAPTURE_SCRIPT = REPO_ROOT / "scripts" / "capture_contract_examples.py"
 
 
 class ExampleCaptureTests(unittest.TestCase):
+    def test_fixture_writer_uses_platform_independent_lf_bytes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "fixture.txt"
+
+            write_text(target, "first\nsecond\n")
+
+            self.assertEqual(target.read_bytes(), b"first\nsecond\n")
+
     def test_capture_generates_reachable_examples(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             result = subprocess.run(

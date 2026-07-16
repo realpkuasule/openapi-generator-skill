@@ -60,6 +60,7 @@ test_revoice_surfaces_existing_openapi_conflict (test_evals.EvalCaseTests.test_r
 test_security_reuse_completion_and_upgrade_cases_are_explicit (test_evals.EvalCaseTests.test_security_reuse_completion_and_upgrade_cases_are_explicit) ... ok
 test_capture_generates_reachable_examples (test_example_conformance.ExampleCaptureTests.test_capture_generates_reachable_examples) ... ok
 test_checked_in_examples_match_capture (test_example_conformance.ExampleCaptureTests.test_checked_in_examples_match_capture) ... ok
+test_fixture_writer_uses_platform_independent_lf_bytes (test_example_conformance.ExampleCaptureTests.test_fixture_writer_uses_platform_independent_lf_bytes) ... ok
 test_check_accepts_passed_report_for_current_digest (test_forward_aggregation.ForwardAggregationTests.test_check_accepts_passed_report_for_current_digest) ... ok
 test_check_blocks_stale_skill_digest (test_forward_aggregation.ForwardAggregationTests.test_check_blocks_stale_skill_digest) ... ok
 test_check_rejects_a_tampered_combined_conclusion (test_forward_aggregation.ForwardAggregationTests.test_check_rejects_a_tampered_combined_conclusion) ... ok
@@ -149,6 +150,6 @@ test_passed_report_conforms_to_schema_and_records_evidence_digest (test_verify_r
 test_previous_gate_logs_are_removed_before_a_new_run (test_verify_runner.VerifyRunnerTests.test_previous_gate_logs_are_removed_before_a_new_run) ... ok
 
 ----------------------------------------------------------------------
-Ran 144 tests in 34.057s
+Ran 145 tests in 34.655s
 
 OK

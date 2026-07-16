@@ -63,6 +63,11 @@
       "sha256": "254ef110c154f805642ddd5176c44585a3b0c0e9b99c0b54941bdeb272dc1b1b"
     },
     {
+      "bytes": 542,
+      "path": "docs/verifications/p2-20260715/P2-04-windows-red.log",
+      "sha256": "ea152a87204511bf57f31957494aae5374aed4e7390c057f95ec73471d0f291d"
+    },
+    {
       "bytes": 915,
       "path": "docs/verifications/p2-20260715/P2-05-green.log",
       "sha256": "1b508e0dceeb96ab3087ac858f21abf7bd0950397a504b1075f3aff47a46f3be"
@@ -150,7 +155,7 @@
     {
       "bytes": 1975,
       "path": "docs/verifications/p2-20260715/deterministic-report-evidence/01-contract-validation.log",
-      "sha256": "0f005cd8d4617a0ee83d2d981389eaa4d267a7940e35a8660b10c370bb35491d"
+      "sha256": "2360454ea4bd5dc69be206eea1eb581ef5c5308d4ec6489678cedfbce5fba3fc"
     },
     {
       "bytes": 403,
@@ -158,9 +163,9 @@
       "sha256": "6de9ae518e0dedc187c3c7226e4410fc6ec2e67d87426363fdc6c342a0748127"
     },
     {
-      "bytes": 22835,
+      "bytes": 22999,
       "path": "docs/verifications/p2-20260715/deterministic-report-evidence/03-unit-test-suite.log",
-      "sha256": "9a86e85218c3900d67ae53e11713a2240f45b79892beb0cf7c16c4da3c4cad47"
+      "sha256": "bf16f877230ed74332ff5151675bb75181092321ef000ed3a5581e669d39d0da"
     },
     {
       "bytes": 250,
@@ -230,17 +235,17 @@
     {
       "bytes": 156,
       "path": "docs/verifications/p2-20260715/deterministic-report-evidence/17-source-tree-read-only.log",
-      "sha256": "b8421a4ae2b9b2183b08b00164a9db443dc0b3c7d912c7bb0b6cb59357fc00df"
+      "sha256": "22a218aa3a1aed1b1b0402a6fff79cb87ee966e3f7f98e6b951741deb9faefd7"
     },
     {
       "bytes": 10622,
       "path": "docs/verifications/p2-20260715/deterministic-report.json",
-      "sha256": "07bb465af62bb06172cffaf98b876c359b23f621cd8fcb0bf001907243b3fcfe"
+      "sha256": "fc483ef6be9d0a681818bb247e2735a92305a2a443a692819f612cb81c0e67aa"
     },
     {
       "bytes": 1879,
       "path": "docs/verifications/p2-20260715/deterministic-report.xml",
-      "sha256": "3338e4970cc9ba9221e3c28f47fb7e322581e35831cbfd43892e34ab1c965957"
+      "sha256": "af31d1761af2312c84b1ec1c8f12837e380b7f57107de217458d218c711e8916"
     },
     {
       "bytes": 6398,
@@ -410,7 +415,7 @@
     {
       "bytes": 20092,
       "path": "docs/verifications/p2-20260715/traceability-report.json",
-      "sha256": "9bbc69767907ccf541844c82de3e261f1d9b7ab234945ac84ea6307128244538"
+      "sha256": "bb5729f59864c44b02e3c3b5be82c5ffd9c7b37d53cd476f441c09b1b4c6644f"
     }
   ],
   "cleanup": {

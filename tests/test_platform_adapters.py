@@ -154,6 +154,7 @@ class PlatformAdapterTests(unittest.TestCase):
     def _argv(self) -> list[list[str]]:
         return [json.loads(line) for line in self.log.read_text(encoding="utf-8").splitlines()]
 
+    @unittest.skipIf(os.name == "nt", "fake CLI fixture uses a POSIX shebang")
     def test_codex_adapter_runs_a_resumable_read_only_interview(self) -> None:
         os.environ["FAKE_KIND"] = "codex"
         adapter = CodexCliAdapter(binary=str(self.binary))
@@ -190,6 +191,7 @@ class PlatformAdapterTests(unittest.TestCase):
         )
         self.assertNotIn("expected", " ".join(" ".join(call) for call in calls).lower())
 
+    @unittest.skipIf(os.name == "nt", "fake CLI fixture uses a POSIX shebang")
     def test_codex_adapter_accepts_fenced_json_without_cli_schema_decoding(self) -> None:
         os.environ["FAKE_KIND"] = "codex"
         os.environ["FAKE_CODEX_FENCED"] = "1"
@@ -200,6 +202,7 @@ class PlatformAdapterTests(unittest.TestCase):
 
         self.assertEqual(result["observed_modes"], ["Assess & Select"])
 
+    @unittest.skipIf(os.name == "nt", "fake CLI fixture uses a POSIX shebang")
     def test_claude_adapter_runs_a_resumable_plan_mode_interview(self) -> None:
         os.environ["FAKE_KIND"] = "claude"
         adapter = ClaudeCliAdapter(binary=str(self.binary))
@@ -216,6 +219,7 @@ class PlatformAdapterTests(unittest.TestCase):
         self.assertIn("--json-schema", calls[-1])
         self.assertNotIn("expected", " ".join(" ".join(call) for call in calls).lower())
 
+    @unittest.skipIf(os.name == "nt", "fake CLI fixture uses a POSIX shebang")
     def test_claude_adapter_accepts_fenced_json_when_cli_omits_structured_output(self) -> None:
         os.environ["FAKE_KIND"] = "claude"
         os.environ["FAKE_CLAUDE_FENCED"] = "1"
@@ -226,6 +230,7 @@ class PlatformAdapterTests(unittest.TestCase):
 
         self.assertEqual(result["observed_modes"], ["Assess & Select"])
 
+    @unittest.skipIf(os.name == "nt", "fake CLI fixture uses a POSIX shebang")
     def test_platform_credentials_are_copied_into_isolated_config_homes(self) -> None:
         auth_log = self.root / "auth.jsonl"
         os.environ["FAKE_AUTH_LOG"] = str(auth_log)
@@ -274,6 +279,7 @@ class PlatformAdapterTests(unittest.TestCase):
             {"codex-test-auth", "claude-test-auth"},
         )
 
+    @unittest.skipIf(os.name == "nt", "fake CLI fixture uses a POSIX shebang")
     def test_platform_mode_slugs_are_normalized_to_contract_enums(self) -> None:
         os.environ["FAKE_KIND"] = "claude"
         observation = dict(OBSERVATION)
@@ -317,6 +323,7 @@ class PlatformAdapterTests(unittest.TestCase):
             [{"boundary": "Owned API", "strategy": "governance-only"}],
         )
 
+    @unittest.skipIf(os.name == "nt", "fake CLI fixture uses a POSIX shebang")
     def test_missing_binary_is_blocked_and_timeout_is_not_misreported(self) -> None:
         missing = CodexCliAdapter(binary=str(self.root / "missing")).probe()
         self.assertFalse(missing.available)

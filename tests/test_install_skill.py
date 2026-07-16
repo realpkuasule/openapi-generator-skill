@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -22,8 +23,10 @@ class InstallSkillTests(unittest.TestCase):
             self.assertEqual(exit_code, 0)
             self.assertFalse(report["applied"])
             self.assertEqual(snapshot_tree(home), before)
+            expected_action = "would-copy" if os.name == "nt" else "would-link"
             self.assertEqual(
-                {row["action"] for row in report["installations"]}, {"would-link"}
+                {row["action"] for row in report["installations"]},
+                {expected_action},
             )
 
     def test_apply_links_both_platforms_to_one_core_tree_and_is_idempotent(self) -> None:

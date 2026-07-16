@@ -26,7 +26,7 @@
     ],
     "unverified": []
   },
-  "generated_at": "2026-07-15T17:54:52.052047Z",
+  "generated_at": "2026-07-16T00:11:11.919579Z",
   "manifest_sha256": "3da79ae3ae3194016795995e6e2bb5d66ef9bd50efa821dec99602f80dfa332a",
   "report_version": 1,
   "requirements": [
@@ -547,7 +547,7 @@
         {
           "path": "tests/test_platform_adapters.py::test_final_prompt_names_only_the_neutral_observation_contract",
           "reason": null,
-          "sha256": "645180df969041f6561d1441cb3f2d26ac16388482355bc0d7ebbfdc6da86ecf",
+          "sha256": "5836e6eb2056d532ab3dbb3f1a10a26571c893ee9492f8e592d4d94b39fd60c3",
           "status": "passed"
         }
       ]
