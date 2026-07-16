@@ -1,6 +1,6 @@
 [project]
 name = "openapi-engineering-skill"
-version = "0.2.0"
+version = "0.1.0rc1"
 description = "Contracts, deterministic helpers, and evaluations for the openapi-engineering skill"
 requires-python = ">=3.11"
 dependencies = [

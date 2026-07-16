@@ -1,0 +1,12 @@
+Command: .venv/bin/python -m unittest tests.test_release_metadata -v
+Date: 2026-07-16
+Result: RED (expected before implementation)
+
+Tests run: 4
+Failures: 1
+Errors: 3
+
+- project version was 0.2.0 instead of 0.1.0rc1
+- README.md did not exist
+- CHANGELOG.md did not exist
+- docs/plans/release-v0.1.0-rc.1.md did not exist
