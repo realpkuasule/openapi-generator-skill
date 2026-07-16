@@ -36,6 +36,17 @@ CLAUDE_ENVIRONMENT_KEYS = (
 )
 
 
+def structured_output_arguments(
+    binary: str, *, platform: str = os.name
+) -> list[str]:
+    if platform == "nt" and Path(binary).suffix.casefold() in {".bat", ".cmd"}:
+        return []
+    return [
+        "--json-schema",
+        json.dumps(bundled_forward_schema(), ensure_ascii=False),
+    ]
+
+
 class ClaudeCliAdapter:
     name = "claude"
 
@@ -140,8 +151,7 @@ class ClaudeCliAdapter:
                         *common,
                         "--resume",
                         session_id,
-                        "--json-schema",
-                        json.dumps(bundled_forward_schema(), ensure_ascii=False),
+                        *structured_output_arguments(binary),
                     ],
                     cwd=request.project_root,
                     input_text=final_observation_prompt(request.approval),

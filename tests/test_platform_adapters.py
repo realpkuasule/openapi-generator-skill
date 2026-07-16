@@ -12,7 +12,7 @@ from pathlib import Path
 from unittest import mock
 
 from scripts.evals.adapters.base import EvalRequest, InterviewAnswer
-from scripts.evals.adapters.claude_cli import ClaudeCliAdapter
+from scripts.evals.adapters.claude_cli import ClaudeCliAdapter, structured_output_arguments
 from scripts.evals.adapters.cli_protocol import (
     DeadlineRunner,
     clean_environment,
@@ -98,7 +98,8 @@ if os.environ["FAKE_KIND"] == "codex":
         }))
     print(json.dumps({"type": "turn.completed"}))
 else:
-    final = "--json-schema" in args
+    has_schema = "--json-schema" in args
+    final = has_schema or "scope_expansion_requires_reapproval" in stdin
     rendered = json.dumps(observation)
     if final and os.environ.get("FAKE_CLAUDE_FENCED"):
         rendered = "```json\\n" + rendered + "\\n```"
@@ -106,7 +107,7 @@ else:
         "session_id": "22222222-2222-4222-8222-222222222222",
         "result": rendered if final else "One project-specific boundary question?",
     }
-    if final and not os.environ.get("FAKE_CLAUDE_FENCED"):
+    if final and has_schema and not os.environ.get("FAKE_CLAUDE_FENCED"):
         payload["structured_output"] = observation
     print(json.dumps(payload))
 '''
@@ -131,6 +132,20 @@ def create_fake_cli(root: Path, *, platform: str = os.name) -> Path:
 
 
 class PlatformAdapterTests(unittest.TestCase):
+    def test_claude_batch_launcher_avoids_inline_json_schema(self) -> None:
+        self.assertEqual(
+            structured_output_arguments("claude.cmd", platform="nt"),
+            [],
+        )
+        self.assertEqual(
+            structured_output_arguments("claude.bat", platform="nt"),
+            [],
+        )
+        self.assertEqual(
+            structured_output_arguments("claude.exe", platform="nt")[0],
+            "--json-schema",
+        )
+
     def test_fake_cli_fixture_has_a_windows_launcher(self) -> None:
         windows_root = Path(self.temporary.name) / "windows-fixture"
         windows_root.mkdir()
@@ -239,7 +254,10 @@ class PlatformAdapterTests(unittest.TestCase):
         self.assertEqual(len(calls), 4)
         self.assertIn("plan", calls[0])
         self.assertIn("--resume", calls[-1])
-        self.assertIn("--json-schema", calls[-1])
+        if os.name == "nt":
+            self.assertNotIn("--json-schema", calls[-1])
+        else:
+            self.assertIn("--json-schema", calls[-1])
         self.assertNotIn("expected", " ".join(" ".join(call) for call in calls).lower())
 
     def test_claude_adapter_accepts_fenced_json_when_cli_omits_structured_output(self) -> None:
