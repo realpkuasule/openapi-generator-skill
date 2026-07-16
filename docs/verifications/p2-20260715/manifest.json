@@ -63,6 +63,11 @@
       "sha256": "254ef110c154f805642ddd5176c44585a3b0c0e9b99c0b54941bdeb272dc1b1b"
     },
     {
+      "bytes": 846,
+      "path": "docs/verifications/p2-20260715/P2-04-windows-green.log",
+      "sha256": "9aa62a7316c7c6dbb41e7449a937a299872ef4e10b3fabd38c2bee2c9faae3e7"
+    },
+    {
       "bytes": 542,
       "path": "docs/verifications/p2-20260715/P2-04-windows-red.log",
       "sha256": "ea152a87204511bf57f31957494aae5374aed4e7390c057f95ec73471d0f291d"
