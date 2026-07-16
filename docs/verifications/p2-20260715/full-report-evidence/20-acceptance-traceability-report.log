@@ -29,7 +29,7 @@ stdout:
     ],
     "unverified": []
   },
-  "generated_at": "2026-07-15T17:54:52.052047Z",
+  "generated_at": "2026-07-16T07:41:29.443952Z",
   "manifest_sha256": "3da79ae3ae3194016795995e6e2bb5d66ef9bd50efa821dec99602f80dfa332a",
   "report_version": 1,
   "requirements": [
@@ -59,7 +59,7 @@ stdout:
             "codex"
           ],
           "reason": null,
-          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "sha256": "c12fe3abca2121b3a1472d294d8d16396420701c247456fa311ca98f1427bb0e",
           "source_status": "passed",
           "status": "passed"
         }
@@ -107,7 +107,7 @@ stdout:
             "codex"
           ],
           "reason": null,
-          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "sha256": "c12fe3abca2121b3a1472d294d8d16396420701c247456fa311ca98f1427bb0e",
           "source_status": "passed",
           "status": "passed"
         }
@@ -155,7 +155,7 @@ stdout:
             "codex"
           ],
           "reason": null,
-          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "sha256": "c12fe3abca2121b3a1472d294d8d16396420701c247456fa311ca98f1427bb0e",
           "source_status": "passed",
           "status": "passed"
         }
@@ -203,7 +203,7 @@ stdout:
             "codex"
           ],
           "reason": null,
-          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "sha256": "c12fe3abca2121b3a1472d294d8d16396420701c247456fa311ca98f1427bb0e",
           "source_status": "passed",
           "status": "passed"
         }
@@ -251,7 +251,7 @@ stdout:
             "codex"
           ],
           "reason": null,
-          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "sha256": "c12fe3abca2121b3a1472d294d8d16396420701c247456fa311ca98f1427bb0e",
           "source_status": "passed",
           "status": "passed"
         }
@@ -299,7 +299,7 @@ stdout:
             "codex"
           ],
           "reason": null,
-          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "sha256": "c12fe3abca2121b3a1472d294d8d16396420701c247456fa311ca98f1427bb0e",
           "source_status": "passed",
           "status": "passed"
         }
@@ -437,7 +437,7 @@ stdout:
             "codex"
           ],
           "reason": null,
-          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "sha256": "c12fe3abca2121b3a1472d294d8d16396420701c247456fa311ca98f1427bb0e",
           "source_status": "passed",
           "status": "passed"
         }
@@ -485,7 +485,7 @@ stdout:
             "codex"
           ],
           "reason": null,
-          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "sha256": "c12fe3abca2121b3a1472d294d8d16396420701c247456fa311ca98f1427bb0e",
           "source_status": "passed",
           "status": "passed"
         }
@@ -533,7 +533,7 @@ stdout:
             "codex"
           ],
           "reason": null,
-          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "sha256": "c12fe3abca2121b3a1472d294d8d16396420701c247456fa311ca98f1427bb0e",
           "source_status": "passed",
           "status": "passed"
         }
@@ -550,7 +550,7 @@ stdout:
         {
           "path": "tests/test_platform_adapters.py::test_final_prompt_names_only_the_neutral_observation_contract",
           "reason": null,
-          "sha256": "645180df969041f6561d1441cb3f2d26ac16388482355bc0d7ebbfdc6da86ecf",
+          "sha256": "1fdcfc8705d9c5e8fceefc5d02f3772a63dd5f104ff5ba260fde037c6062112a",
           "status": "passed"
         }
       ]
@@ -581,7 +581,7 @@ stdout:
             "codex"
           ],
           "reason": null,
-          "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99",
+          "sha256": "c12fe3abca2121b3a1472d294d8d16396420701c247456fa311ca98f1427bb0e",
           "source_status": "passed",
           "status": "passed"
         }

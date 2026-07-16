@@ -1,5 +1,5 @@
 {
-  "finished_at": "2026-07-15T18:02:00.937952Z",
+  "finished_at": "2026-07-16T08:27:33.357742Z",
   "gates": [
     {
       "command": [
@@ -10,9 +10,9 @@
         "tests.test_environment",
         "-v"
       ],
-      "duration_ms": 723,
+      "duration_ms": 816,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/01-contract-validation.log",
-      "evidence_sha256": "3c122ce1637d3018bef04391f9cf3b67956ec9e36ca724d330a15cc8e46b15b3",
+      "evidence_sha256": "99609cf8f887bb88ccf951b0f2f68b84e3dd7ae042e75c63e3ae1549a667402e",
       "exit_code": 0,
       "name": "contract-validation",
       "risk": null,
@@ -25,7 +25,7 @@
         "/Users/zhichao/codex/openapi-generator/scripts/capture_contract_examples.py",
         "--check"
       ],
-      "duration_ms": 1543,
+      "duration_ms": 1459,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/02-captured-example-conformance.log",
       "evidence_sha256": "6de9ae518e0dedc187c3c7226e4410fc6ec2e67d87426363fdc6c342a0748127",
       "exit_code": 0,
@@ -44,9 +44,9 @@
         "tests",
         "-v"
       ],
-      "duration_ms": 36227,
+      "duration_ms": 33987,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/03-unit-test-suite.log",
-      "evidence_sha256": "5f4633049febbb2425ea0a848bc45efb58717e68aa4613e4c3e6b091ae0075c9",
+      "evidence_sha256": "4a12dffb44bba81dc891332307aab5b4790feda97519ffbfdee44cc94f6eb197",
       "exit_code": 0,
       "name": "unit-test-suite",
       "risk": null,
@@ -59,7 +59,7 @@
         "/Users/zhichao/codex/openapi-generator/scripts/quick_validate.py",
         "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering"
       ],
-      "duration_ms": 22,
+      "duration_ms": 21,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/04-skill-quick-validation.log",
       "evidence_sha256": "b9bfa71573b30dcd0744157127762f24435d943fda65fd5265c441c40a9683f4",
       "exit_code": 0,
@@ -74,7 +74,7 @@
         "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/inspect_project.py",
         "--help"
       ],
-      "duration_ms": 20,
+      "duration_ms": 19,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/05-inspect-project-help.log",
       "evidence_sha256": "4137ee9b1cabd193ed93f2b7f3a78564920a82e3d35c1ab393b126a94bf0a5ee",
       "exit_code": 0,
@@ -89,7 +89,7 @@
         "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/validate_profile.py",
         "--help"
       ],
-      "duration_ms": 19,
+      "duration_ms": 20,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/06-validate-profile-help.log",
       "evidence_sha256": "8e8b103fa2595a3d3a5c4c133d4b5b701dc60991f0d9035f2af6072297276b3c",
       "exit_code": 0,
@@ -104,7 +104,7 @@
         "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/compare_generation.py",
         "--help"
       ],
-      "duration_ms": 19,
+      "duration_ms": 20,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/07-compare-generation-help.log",
       "evidence_sha256": "95e55555810103c68de3398b2d0d3d831e1108b3fd8e9b6f7123965d50474540",
       "exit_code": 0,
@@ -134,7 +134,7 @@
         "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/scope_snapshot.py",
         "--help"
       ],
-      "duration_ms": 453,
+      "duration_ms": 433,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/09-scope-snapshot-help.log",
       "evidence_sha256": "165c699314121cb290ac54fbfcdf9760169349c8c4c745a50d1b37f6a32c701d",
       "exit_code": 0,
@@ -163,7 +163,7 @@
         "/Users/zhichao/codex/openapi-generator/.venv/bin/python",
         "/Users/zhichao/codex/openapi-generator/scripts/evals/load_cases.py"
       ],
-      "duration_ms": 507,
+      "duration_ms": 495,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/11-eval-case-validation.log",
       "evidence_sha256": "37657728ec0a0c9b51fc45c6436e4251db95d4e8aaf03d617fb2a3e28683527a",
       "exit_code": 0,
@@ -178,7 +178,7 @@
         "/Users/zhichao/codex/openapi-generator/scripts/run_skill_evals.py",
         "--help"
       ],
-      "duration_ms": 468,
+      "duration_ms": 447,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/12-eval-runner-help.log",
       "evidence_sha256": "a8be79df7df900619abba575de4ca93bdfdbebe3795705abb10ed785bd4c6a56",
       "exit_code": 0,
@@ -193,7 +193,7 @@
         "/Users/zhichao/codex/openapi-generator/scripts/evals/score_result.py",
         "--help"
       ],
-      "duration_ms": 453,
+      "duration_ms": 445,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/13-eval-scorer-help.log",
       "evidence_sha256": "9f14e8e7cfce6c573a8440ff0e0b0d02fd5eea2c001e5b6f07c595940ac2a0ca",
       "exit_code": 0,
@@ -208,7 +208,7 @@
         "/Users/zhichao/codex/openapi-generator/scripts/aggregate_forward_evals.py",
         "--help"
       ],
-      "duration_ms": 452,
+      "duration_ms": 439,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/14-forward-eval-aggregator-help.log",
       "evidence_sha256": "a8a845f6bd493cbea34701fadd02774348cbd2a4449ed9ab924906613304640a",
       "exit_code": 0,
@@ -255,7 +255,7 @@
         "--check-report",
         "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/forward-eval-report.json"
       ],
-      "duration_ms": 526,
+      "duration_ms": 461,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/17-combined-forward-report.log",
       "evidence_sha256": "28c53d2c525b97a0532b4c8d50d0fb12012ef9c1b54eb4e1368d712e687471a0",
       "exit_code": 0,
@@ -273,7 +273,7 @@
         "--check-report",
         "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/real-smoke-report.json"
       ],
-      "duration_ms": 513,
+      "duration_ms": 457,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/18-empirical-adoption-report.log",
       "evidence_sha256": "99b673d85178dd97ac5ce3e706b4c402e860587821e38f5489d65454aa4effcf",
       "exit_code": 0,
@@ -291,7 +291,7 @@
         "--check-report",
         "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/real-upgrade-report.json"
       ],
-      "duration_ms": 568,
+      "duration_ms": 467,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/19-empirical-upgrade-report.log",
       "evidence_sha256": "57a36a50fb27dbbc0748dff1a1982405f9bd3cafce10aef64f58fdb564a1703a",
       "exit_code": 0,
@@ -309,9 +309,9 @@
         "--check-report",
         "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/traceability-report.json"
       ],
-      "duration_ms": 533,
+      "duration_ms": 467,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/20-acceptance-traceability-report.log",
-      "evidence_sha256": "2e46a45506cbcfb3c4db2c8141f22ceab7057f75966a99d01344d8b0dc69139e",
+      "evidence_sha256": "cf5a24f78214fd628f0d846ba827b20068bfdb15389c654068a8628940fcd3bb",
       "exit_code": 0,
       "name": "acceptance-traceability-report",
       "risk": null,
@@ -327,7 +327,7 @@
       ],
       "duration_ms": 0,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/full-report-evidence/21-source-tree-read-only.log",
-      "evidence_sha256": "b8421a4ae2b9b2183b08b00164a9db443dc0b3c7d912c7bb0b6cb59357fc00df",
+      "evidence_sha256": "1f1f2b18aa02672465a748aea110b7b7878a69da56bbacb26ed4f7ed0f9e847b",
       "exit_code": 0,
       "name": "source-tree-read-only",
       "risk": null,
@@ -336,7 +336,7 @@
     }
   ],
   "report_version": 1,
-  "started_at": "2026-07-15T18:01:17.779523Z",
+  "started_at": "2026-07-16T08:26:52.786793Z",
   "status": "passed",
   "tier": "full"
 }

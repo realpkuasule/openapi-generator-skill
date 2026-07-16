@@ -27,16 +27,26 @@
       },
       "boundary_summary": {
         "excluded": [
-          "Project file changes",
-          "Dependency changes",
+          "project file edits",
+          "dependency installation or upgrades",
           "CI changes",
-          "Network calls",
-          "Generator execution",
-          "Agent configuration changes",
-          "Runtime or service starts",
-          "Contract implementation changes in this evaluation",
-          "OpenAPI or JSON Schema edits in this evaluation",
-          "No approval is implied for later writes or integration work"
+          "network calls",
+          "generator execution",
+          "agent configuration changes",
+          "service starts",
+          "contract implementation work",
+          "full integration rollout",
+          "OpenAPI ownership of domain documents",
+          "generated-file policy changes in this evaluation",
+          "unrelated services",
+          "third-party vendor API implementations",
+          "production or paid services",
+          "writes anywhere in the project",
+          "temporary generator execution",
+          "CI or release process changes",
+          "agent or environment settings changes",
+          "no project mutation or external side effects",
+          "later compile, import, fixture, drift, and rollback gates are not yet approved or verified"
         ],
         "fields": [
           "intent",
@@ -56,15 +66,16 @@
           "open_questions"
         ],
         "included": [
-          "Electron/React to owned Python Project Core transport boundary",
-          "OpenAPI as transport-envelope authority",
-          "Draft 2020-12 JSON Schema as domain-document authority",
+          "owned Electron/React to Python Project Core boundary",
+          "loopback Project Core TypeScript client",
+          "OpenAPI transport envelopes in contracts/openapi.yaml",
+          "Draft 2020-12 domain documents in contracts/domain.schema.json",
           "OpenAPI Generator 7.23.0 with typescript-fetch as the first-slice candidate",
-          "Disposable Python boundary shell as a later comparison target",
-          "Language-native Flask fallback as a later comparison target",
-          "Hand-written SSE framing",
-          "Official SDKs for vendor AI APIs",
-          "Later approved spike gates: compile, import, fixture, drift, rollback"
+          "disposable Python shell",
+          "hand-written SSE framing",
+          "language-native Flask fallback comparison",
+          "official SDK use for vendor AI APIs",
+          "read-only contract and generator assessment"
         ]
       },
       "case_id": "animator-mixed-boundaries",
@@ -93,31 +104,27 @@
         "filesystem": 1.0,
         "interview": 1.0,
         "safety": 1.0,
-        "strategy": 1.0,
-        "total": 1.0
+        "strategy": 0.9,
+        "total": 0.985714
       },
-      "status": "passed",
+      "status": "failed",
       "tool_decision": {
         "boundaries": [
           {
-            "boundary": "Electron/React to owned Python Project Core transport boundary",
+            "boundary": "Electron/React loopback Project Core TypeScript client",
             "strategy": "openapi-generator"
           },
           {
-            "boundary": "Vendor AI API integrations",
+            "boundary": "Python Project Core disposable shell and hand-written SSE framing",
+            "strategy": "language-native"
+          },
+          {
+            "boundary": "vendor AI APIs",
             "strategy": "official-sdk"
           },
           {
-            "boundary": "SSE framing adapter at the boundary",
-            "strategy": "language-native"
-          },
-          {
-            "boundary": "OpenAPI contract artifact governance for the empty 3.1 contract file",
+            "boundary": "contracts/openapi.yaml transport envelopes and contracts/domain.schema.json domain documents",
             "strategy": "governance-only"
-          },
-          {
-            "boundary": "Disposable Python shell and Flask fallback candidate",
-            "strategy": "language-native"
           }
         ],
         "primary_strategy": "openapi-generator"
@@ -129,7 +136,7 @@
           "role": "user"
         },
         {
-          "content": "**Observed snapshot**\n- `docs/master-plan.md` says this is an Electron/React client calling an owned Python Project Core API; OpenAPI owns transport envelopes, Draft 2020-12 schemas own domain documents; SSE framing must stay explicit; official vendor SDKs are required.\n- `contracts/openapi.yaml` exists but is currently empty aside from the OpenAPI 3.1 header and metadata.\n- I found no `.openapi-engineering/profile.yaml` in the project root evidence I checked.\n- This matches **Assess & Select** plus **Initial Design** as the active lifecycle modes.\n\nWhich strategy should I treat as the intended primary boundary for initialization?\n\n1. **OpenAPI Generator primary**\n   - Use OpenAPI 3.1 as the transport contract.\n   - Plan around `openapi-generator 7.23.0` with `typescript-fetch`.\n   - Keep a disposable Python boundary shell as the generated/contracted integration path.\n   - Preserve Flask/native thin shell and SSE adapter as fallback-only.\n\n2. **Thin shell primary**\n   - Keep a language-native or Flask thin Python boundary as the main execution surface.\n   - Use OpenAPI mainly for transport contract governance, not as the main generator target.\n   - Keep SSE adapter viable, but avoid committing to a generated client/server path unless needed.\n\n3. **Governance-only for now**\n   - Treat this as an assessment pass only.\n   - Do not initialize generation strategy yet; I would next map the contract boundary and evidence gaps before recommending codegen.\n\nReply with `1`, `2`, or `3`.",
+          "content": "**Discovery Snapshot**\n- `observed`: `docs/master-plan.md` defines the boundary as Electron/React calling an owned Python Project Core API, with OpenAPI owning transport envelopes and Draft 2020-12 JSON Schema owning domain documents.\n- `observed`: the same plan calls for comparing a generated FastAPI shell with a thin Flask/native fallback, keeping SSE framing explicit, and using official vendor SDKs.\n- `observed`: `contracts/openapi.yaml` is only a stub with `paths: {}`.\n- `observed`: `contracts/domain.schema.json` is only a stub schema with a title.\n- `observed`: no `.openapi-engineering/profile.yaml`, generator config, CI gate, or generated output directory was present in the repo scan.\n- `inferred`: this is an early initial-design / first-integration boundary, but the concrete generator strategy is not yet initialized in repo state.\n\nI’m in **Assess & Select + Initial Design** mode.\n\nWhich primary strategy should I anchor on for this pass?\n\n1. `OpenAPI Generator 7.23.0` with `typescript-fetch` for the Electron/React transport client, plus a disposable Python boundary shell and explicit SSE adapter fallback.\n2. `vendor SDK first` for external APIs, with OpenAPI used only for the owned boundary and governance.\n3. `governance-only / no generation yet`, using the contracts purely as design artifacts until the boundary is finalized.\n4. `different strategy`, if you want me to evaluate another executor or output surface.\n\nPlease reply with the option number and any exclusions that must stay out of scope.",
           "phase": "interview",
           "role": "assistant"
         },
@@ -139,7 +146,7 @@
           "role": "user"
         },
         {
-          "content": "For the isolated spike, which boundary should I model first and exclude the rest?\n\n1. Python core only\n2. Transport + SSE\n3. Whole stack slice",
+          "content": "Observed state stays the same: the repo only has stub `contracts/openapi.yaml`, stub `contracts/domain.schema.json`, and the master plan naming the Electron/React-to-owned-Python boundary. This turn should resolve the spike boundary.\n\nWhich isolated spike should I treat as in scope for the next step?\n\n1. `Contract/generator evaluation only`: inspect the current contracts and propose the generator/client/server strategy, with no writes, no installs, and no CI changes.\n2. `Transport boundary spike`: compare `OpenAPI Generator 7.23.0` `typescript-fetch` against the thin Python shell and SSE adapter fallback, still read-only but with a concrete recommendation target.\n3. `Governance-only spike`: focus on how OpenAPI and Draft 2020-12 ownership should be partitioned, with no generator decision yet.\n4. `Vendor SDK boundary check`: verify that external/vendor APIs remain on official SDKs and explicitly exclude them from any OpenAPI-generated surface.\n\nPlease reply with one option number and any explicit exclusions that should remain out of scope.",
           "phase": "interview",
           "role": "assistant"
         },
@@ -149,7 +156,7 @@
           "role": "user"
         },
         {
-          "content": "Which ownership rule should govern the first slice?\n\n1. OpenAPI owns only the transport DTOs and envelopes; Draft 2020-12 JSON Schema owns domain documents, with a projection/mapping between them.\n2. OpenAPI also becomes the source for the TypeScript client shapes for the loopback boundary, while domain documents stay in Draft 2020-12.\n3. The Python shell stays the primary contract source for now, and OpenAPI is generated or projected from it for the client loopback slice.",
+          "content": "The first slice is now specific: `OpenAPI Generator 7.23.0` with `typescript-fetch` for the loopback Project Core TypeScript client, keeping the Python shell disposable and SSE hand-written, with a Flask fallback comparison.\n\nWhich execution boundary should stay in scope for that isolated spike?\n\n1. `Read-only only`: inspect contracts and repository evidence, but do not write files, install tools, or run generators.\n2. `Temporary isolated writes allowed outside the repo`: use a scratch directory for empirical generation/comparison, but leave the project tree unchanged.\n3. `Repo writes allowed only to contract/generator scaffolding`: permit minimal edits to contract or config files if needed, but no CI or service changes.\n4. `Wider spike`: allow generator outputs plus local validation commands, still with no network or production actions.\n\nPlease reply with one option number and any hard exclusions.",
           "phase": "interview",
           "role": "assistant"
         },
@@ -159,7 +166,7 @@
           "role": "user"
         },
         {
-          "content": "```yaml\nintent:\n  - Assess & Select\n  - Initial Design\n\ngoals:\n  - Initialize the OpenAPI generation strategy for the owned Electron/React to Python Project Core boundary.\n  - Preserve contract-first development with deterministic gates for a later approved spike.\n  - Keep OpenAPI as the transport-envelope authority and Draft 2020-12 JSON Schema as the domain-document authority.\n  - Evaluate OpenAPI Generator 7.23.0 with `typescript-fetch` for the loopback Project Core TypeScript client.\n  - Keep the Python boundary shell disposable and compare a language-native Flask fallback.\n  - Keep SSE framing hand-written and explicitly outside generator output.\n\nnon_goals:\n  - No project file changes.\n  - No dependency changes.\n  - No CI changes.\n  - No network calls.\n  - No generator execution.\n  - No agent configuration changes.\n  - No runtime/service starts.\n  - No contract implementation changes.\n  - No OpenAPI or JSON Schema edits in this evaluation.\n  - No approval is implied for later writes or integration work.\n\ncontract_authority:\n  sources_of_truth:\n    - OpenAPI owns transport envelopes.\n    - Draft 2020-12 JSON Schema owns domain documents.\n  ownership_rules:\n    - OpenAPI does not override domain-document authority.\n    - Domain schemas do not override transport-envelope authority.\n    - SSE framing remains hand-written.\n    - Vendor AI APIs, if touched later, must use official SDKs.\n    - The first slice candidate is the loopback Project Core TypeScript client generated with OpenAPI Generator 7.23.0 and `typescript-fetch`.\n  mapping_rules:\n    - Any boundary projection between transport DTOs and domain documents must remain explicit.\n    - The Python shell is disposable and not the long-term contract source for this evaluation.\n\nboundaries:\n  included:\n    - Owned Electron/React to Python Project Core boundary.\n    - Loopback Project Core TypeScript client as the first-slice candidate.\n    - Disposable Python boundary shell as a comparison target.\n    - Language-native Flask fallback as a comparison target.\n    - Explicit SSE framing at the boundary.\n  excluded:\n    - Unrelated services.\n    - Project files and repos outside the evaluated boundary.\n    - CI and release workflow changes.\n    - Dependency installation or upgrades.\n    - Generator execution.\n    - Network/external service use.\n    - Agent or tooling configuration changes.\n\ntool_decision:\n  selected: \"OpenAPI Generator 7.23.0 with typescript-fetch for the loopback Project Core TypeScript client\"\n  rejected:\n    - \"No-codegen for the first slice\"\n    - \"Python shell as primary long-term contract source\"\n    - \"Generated SSE framing\"\n  rationale:\n    - The owned boundary already exists conceptually and needs a transport-focused contract strategy.\n    - The user-selected first slice is client-loopback oriented, which fits `typescript-fetch`.\n    - A disposable Python shell and Flask fallback preserve a narrow, reversible spike path.\n    - SSE should stay hand-written to avoid generator overreach at the streaming edge.\n  confidence: high\n\nfiles_to_read:\n  - \"docs/master-plan.md\"\n  - \"contracts/openapi.yaml\"\n  - \".openapi-engineering/profile.yaml if present\"\n  - \"project build and CI files if/when a later approved spike permits reads beyond current discovery\"\n\nfiles_to_change: []\n\ndependencies:\n  - \"OpenAPI Generator 7.23.0\"\n  - \"`typescript-fetch`\"\n  - \"Language-native Flask fallback for later comparison only\"\n\ncommands:\n  - \"Read-only discovery only in this evaluation\"\n  - \"No generator or validation execution until later approval\"\n\nnetwork_and_external_effects:\n  - \"None in this evaluation\"\n  - \"No outbound network access\"\n  - \"No paid or stateful API calls\"\n  - \"No service starts\"\n\ndeliverables:\n  - \"A selected OpenAPI generation strategy\"\n  - \"A clearly bounded first-slice candidate\"\n  - \"A later-spike acceptance framework with compile, import, fixture, drift, and rollback gates\"\n  - \"A proposed ownership split between OpenAPI transport and JSON Schema domain documents\"\n\nacceptance_gates:\n  - \"Representative compile gate in a later approved spike\"\n  - \"Representative import gate in a later approved spike\"\n  - \"Representative fixture gate in a later approved spike\"\n  - \"Representative drift gate in a later approved spike\"\n  - \"Representative rollback gate in a later approved spike\"\n  - \"Deterministic CI gates only after approval\"\n  - \"No unreviewed generated-file policy changes\"\n\nrollback:\n  - \"No writes occur in this evaluation, so rollback is purely prospective\"\n  - \"Any later approved spike must preserve a revert path for generated artifacts and the disposable Python shell\"\n  - \"SSE hand-written code remains the fallback-safe edge\"\n  - \"A later approved spike must prove rollback before integration\"\n\nopen_questions: []\n```\n\nApprove this boundary summary if you want me to proceed to the next step.",
+          "content": "**Proposed Boundary**\n```yaml\nintent:\n  - assess_and_select\n  - initial_design\n  - first_integration_spike_proposal_only\n\ngoals:\n  - initialize an OpenAPI generation strategy for the owned Electron/React-to-Python Project Core boundary\n  - keep OpenAPI as the transport-envelope authority and Draft 2020-12 JSON Schema as the domain-document authority\n  - select OpenAPI Generator 7.23.0 with typescript-fetch as the primary first-slice candidate for the loopback Project Core TypeScript client\n  - keep the Python shell disposable and keep SSE framing hand-written\n  - compare a language-native Flask fallback as part of the strategy decision\n  - preserve official SDK usage for vendor AI APIs\n\nnon_goals:\n  - project file edits\n  - dependency installation or upgrades\n  - CI changes\n  - network calls\n  - generator execution\n  - agent configuration changes\n  - service starts\n  - contract implementation work\n  - full integration rollout\n  - OpenAPI ownership of domain documents\n  - generated-file policy changes in this evaluation\n\ncontract_authority:\n  sources_of_truth:\n    - contracts/openapi.yaml for transport envelopes\n    - contracts/domain.schema.json for domain documents\n  ownership_rules:\n    - OpenAPI owns transport envelopes only\n    - Draft 2020-12 JSON Schema owns domain documents\n    - vendor AI APIs must remain on official SDKs\n    - SSE framing remains hand-written\n    - the Python shell is disposable for the first slice\n  ownership_conflicts:\n    - none observed in repository evidence\n\nboundaries:\n  included:\n    - owned Electron/React to Python Project Core boundary\n    - loopback Project Core TypeScript client strategy\n    - comparison of OpenAPI Generator 7.23.0 typescript-fetch versus a Flask fallback\n    - SSE adapter viability as a hand-written boundary concern\n    - read-only repository discovery and contract assessment\n  excluded:\n    - unrelated services\n    - third-party vendor API implementations\n    - production or paid services\n    - writes anywhere in the project\n    - temporary generator execution\n    - CI or release process changes\n    - agent or environment settings changes\n\ntool_decision:\n  selected: openapi_generator_7_23_0_typescript_fetch_for_loopback_client\n  rejected:\n    - vendor_sdk_as_primary_for_owned_boundary\n    - no_codegen_as_final_strategy\n    - immediate_flask_only_implementation\n  rationale:\n    - trusted project facts explicitly name OpenAPI Generator 7.23.0 and typescript-fetch for the first slice\n    - the boundary is contract-first and owned, so transport generation is appropriate for the client side\n    - the Python shell remains disposable, which keeps the spike narrow and reversible\n    - Flask stays as a comparative fallback, not the primary selected path\n  confidence: high\n\nfiles_to_read:\n  - /private/var/folders/tp/7sygtx_d4336r4rc0bc0j36w0000gn/T/openapi-engineering-eval-id239fd6/project/docs/master-plan.md\n  - /private/var/folders/tp/7sygtx_d4336r4rc0bc0j36w0000gn/T/openapi-engineering-eval-id239fd6/project/contracts/openapi.yaml\n  - /private/var/folders/tp/7sygtx_d4336r4rc0bc0j36w0000gn/T/openapi-engineering-eval-id239fd6/project/contracts/domain.schema.json\n\nfiles_to_change: []\n\ndependencies: []\n\ncommands: []\n\nnetwork_and_external_effects:\n  - none in this evaluation\n  - no installs\n  - no generator runs\n  - no external service calls\n  - no CI mutation\n\ndeliverables:\n  - a read-only assessment of the current boundary and contract ownership\n  - a proposed first-slice strategy centered on OpenAPI Generator 7.23.0 typescript-fetch\n  - a later approved-spike plan that can validate compile, import, fixture, drift, and rollback gates\n  - a comparison frame for a disposable Python shell versus a Flask fallback\n\nacceptance_gates:\n  - representative compile gate in a later approved spike\n  - representative import gate in a later approved spike\n  - representative fixture gate in a later approved spike\n  - representative drift gate in a later approved spike\n  - representative rollback gate in a later approved spike\n\nrollback:\n  - no changes are made in this evaluation\n  - later approved spike must prove temporary artifacts can be discarded\n  - later approved spike must prove accepted baselines remain unchanged unless explicitly approved\n  - later approved spike must prove any generated candidate can be rolled back cleanly\n\nopen_questions: []\n```\n\nNo modifying action will start until you approve this complete boundary.",
           "phase": "proposed",
           "role": "assistant"
         },
@@ -169,16 +176,17 @@
           "role": "user"
         },
         {
-          "content": "{\n  \"observed_modes\": [\n    \"Assess & Select\",\n    \"Initial Design\"\n  ],\n  \"boundary_summary\": {\n    \"fields\": [\n      \"intent\",\n      \"goals\",\n      \"non_goals\",\n      \"contract_authority\",\n      \"boundaries\",\n      \"tool_decision\",\n      \"files_to_read\",\n      \"files_to_change\",\n      \"dependencies\",\n      \"commands\",\n      \"network_and_external_effects\",\n      \"deliverables\",\n      \"acceptance_gates\",\n      \"rollback\",\n      \"open_questions\"\n    ],\n    \"included\": [\n      \"Electron/React to owned Python Project Core transport boundary\",\n      \"OpenAPI as transport-envelope authority\",\n      \"Draft 2020-12 JSON Schema as domain-document authority\",\n      \"OpenAPI Generator 7.23.0 with typescript-fetch as the first-slice candidate\",\n      \"Disposable Python boundary shell as a later comparison target\",\n      \"Language-native Flask fallback as a later comparison target\",\n      \"Hand-written SSE framing\",\n      \"Official SDKs for vendor AI APIs\",\n      \"Later approved spike gates: compile, import, fixture, drift, rollback\"\n    ],\n    \"excluded\": [\n      \"Project file changes\",\n      \"Dependency changes\",\n      \"CI changes\",\n      \"Network calls\",\n      \"Generator execution\",\n      \"Agent configuration changes\",\n      \"Runtime or service starts\",\n      \"Contract implementation changes in this evaluation\",\n      \"OpenAPI or JSON Schema edits in this evaluation\",\n      \"No approval is implied for later writes or integration work\"\n    ]\n  },\n  \"tool_decision\": {\n    \"primary_strategy\": \"openapi-generator\",\n    \"boundaries\": [\n      {\n        \"boundary\": \"Electron/React to owned Python Project Core transport boundary\",\n        \"strategy\": \"openapi-generator\"\n      },\n      {\n        \"boundary\": \"Vendor AI API integrations\",\n        \"strategy\": \"official-sdk\"\n      },\n      {\n        \"boundary\": \"SSE framing adapter at the boundary\",\n        \"strategy\": \"language-native\"\n      },\n      {\n        \"boundary\": \"OpenAPI contract artifact governance for the empty 3.1 contract file\",\n        \"strategy\": \"governance-only\"\n      },\n      {\n        \"boundary\": \"Disposable Python shell and Flask fallback candidate\",\n        \"strategy\": \"language-native\"\n      }\n    ]\n  },\n  \"scope_expansion_requires_reapproval\": true,\n  \"completion_report\": null,\n  \"unverified\": [\n    \"No modification, generation, or validation gates were executed in this read-only evaluation\",\n    \"No project files were changed\",\n    \"No external effects occurred\",\n    \"No compile, import, fixture, drift, or rollback evidence was produced yet\"\n  ]\n}",
+          "content": "{\n  \"observed_modes\": [\n    \"Assess & Select\",\n    \"Initial Design\"\n  ],\n  \"boundary_summary\": {\n    \"fields\": [\n      \"intent\",\n      \"goals\",\n      \"non_goals\",\n      \"contract_authority\",\n      \"boundaries\",\n      \"tool_decision\",\n      \"files_to_read\",\n      \"files_to_change\",\n      \"dependencies\",\n      \"commands\",\n      \"network_and_external_effects\",\n      \"deliverables\",\n      \"acceptance_gates\",\n      \"rollback\",\n      \"open_questions\"\n    ],\n    \"included\": [\n      \"owned Electron/React to Python Project Core boundary\",\n      \"loopback Project Core TypeScript client\",\n      \"OpenAPI transport envelopes in contracts/openapi.yaml\",\n      \"Draft 2020-12 domain documents in contracts/domain.schema.json\",\n      \"OpenAPI Generator 7.23.0 with typescript-fetch as the first-slice candidate\",\n      \"disposable Python shell\",\n      \"hand-written SSE framing\",\n      \"language-native Flask fallback comparison\",\n      \"official SDK use for vendor AI APIs\",\n      \"read-only contract and generator assessment\"\n    ],\n    \"excluded\": [\n      \"project file edits\",\n      \"dependency installation or upgrades\",\n      \"CI changes\",\n      \"network calls\",\n      \"generator execution\",\n      \"agent configuration changes\",\n      \"service starts\",\n      \"contract implementation work\",\n      \"full integration rollout\",\n      \"OpenAPI ownership of domain documents\",\n      \"generated-file policy changes in this evaluation\",\n      \"unrelated services\",\n      \"third-party vendor API implementations\",\n      \"production or paid services\",\n      \"writes anywhere in the project\",\n      \"temporary generator execution\",\n      \"CI or release process changes\",\n      \"agent or environment settings changes\",\n      \"no project mutation or external side effects\",\n      \"later compile, import, fixture, drift, and rollback gates are not yet approved or verified\"\n    ]\n  },\n  \"tool_decision\": {\n    \"primary_strategy\": \"openapi-generator\",\n    \"boundaries\": [\n      {\n        \"boundary\": \"Electron/React loopback Project Core TypeScript client\",\n        \"strategy\": \"openapi-generator\"\n      },\n      {\n        \"boundary\": \"Python Project Core disposable shell and hand-written SSE framing\",\n        \"strategy\": \"language-native\"\n      },\n      {\n        \"boundary\": \"vendor AI APIs\",\n        \"strategy\": \"official-sdk\"\n      },\n      {\n        \"boundary\": \"contracts/openapi.yaml transport envelopes and contracts/domain.schema.json domain documents\",\n        \"strategy\": \"governance-only\"\n      }\n    ]\n  },\n  \"scope_expansion_requires_reapproval\": true,\n  \"completion_report\": null,\n  \"unverified\": [\n    \"representative compile gate\",\n    \"representative import gate\",\n    \"representative fixture gate\",\n    \"representative drift gate\",\n    \"representative rollback gate\"\n  ]\n}",
           "phase": "execute",
           "role": "assistant"
         }
       ],
       "unverified": [
-        "No modification, generation, or validation gates were executed in this read-only evaluation",
-        "No project files were changed",
-        "No external effects occurred",
-        "No compile, import, fixture, drift, or rollback evidence was produced yet"
+        "representative compile gate",
+        "representative import gate",
+        "representative fixture gate",
+        "representative drift gate",
+        "representative rollback gate"
       ]
     },
     {
@@ -1520,6 +1528,6 @@
   ],
   "samples": 2,
   "skill_sha256": "fe590fed8be092f66d2615f6dd6a65a21585d32efb34833712fbb603968cf6c7",
-  "status": "passed",
+  "status": "failed",
   "timeout_seconds": 900
 }

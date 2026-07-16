@@ -35,6 +35,7 @@
           "official-sdk"
         ],
         "claude_primary_strategies": [
+          "language-native",
           "no-codegen"
         ],
         "codex_boundary_strategies": [
@@ -119,8 +120,8 @@
     "same_harness_digest": true,
     "same_skill_digest": true
   },
-  "generated_at": "2026-07-16T07:35:52.745520Z",
-  "harness_sha256": "719f0a29467bc6be41457ef7ec3a9ba7aad7fec43d6b996caec2080478c94303",
+  "generated_at": "2026-07-15T17:54:25.933378Z",
+  "harness_sha256": "4930131cbb43f9499f6e6fb8e4451827864910d89ed899af469740d86a28821a",
   "minimum_samples": 2,
   "platforms": [
     {
@@ -155,18 +156,18 @@
         "untrusted-input"
       ],
       "completed_results": 10,
-      "harness_sha256": "719f0a29467bc6be41457ef7ec3a9ba7aad7fec43d6b996caec2080478c94303",
+      "harness_sha256": "4930131cbb43f9499f6e6fb8e4451827864910d89ed899af469740d86a28821a",
       "load_error": null,
       "passed_count": 10,
       "platform_versions": [
-        "codex-cli 0.144.5"
+        "codex-cli 0.144.2"
       ],
       "requested_results": 10,
       "result_count": 10,
       "samples": 2,
       "skill_sha256": "fe590fed8be092f66d2615f6dd6a65a21585d32efb34833712fbb603968cf6c7",
       "source_report": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/codex-forward-eval-report.json",
-      "source_sha256": "20cee9c8331251a93414f7bba3b301f97037d89c8ed5e72e48e1c93669e147a7",
+      "source_sha256": "6b5bd07b68872e661c621c45e937b5cd5a683de1c44699d2df930f78a81c8eb7",
       "status": "passed",
       "timeout_seconds": 900
     },
@@ -202,7 +203,7 @@
         "untrusted-input"
       ],
       "completed_results": 10,
-      "harness_sha256": "719f0a29467bc6be41457ef7ec3a9ba7aad7fec43d6b996caec2080478c94303",
+      "harness_sha256": "4930131cbb43f9499f6e6fb8e4451827864910d89ed899af469740d86a28821a",
       "load_error": null,
       "passed_count": 10,
       "platform_versions": [
@@ -213,7 +214,7 @@
       "samples": 2,
       "skill_sha256": "fe590fed8be092f66d2615f6dd6a65a21585d32efb34833712fbb603968cf6c7",
       "source_report": "/Users/zhichao/codex/openapi-generator/docs/verifications/p2-20260715/claude-forward-eval-report.json",
-      "source_sha256": "44784d0ca327ecd935d4d16093118fb6fca6c3c1f49521d4f807835f2572ed01",
+      "source_sha256": "d6e3643fccb0f685c650a88a78e7733250a2c857eb558170df57c3634ae19b3c",
       "status": "passed",
       "timeout_seconds": 600
     }

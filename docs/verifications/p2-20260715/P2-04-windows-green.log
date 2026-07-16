@@ -1,12 +1,13 @@
 task=P2-04-windows-hosted
 phase=GREEN
-run=https://github.com/realpkuasule/openapi-generator-skill/actions/runs/29460839222
-head=8fa7332865d8c439c23621c7f69f3411233f602d
+run=https://github.com/realpkuasule/openapi-generator-skill/actions/runs/29465256770
+head=11209828628e2ba6367ebab93dac5dcf5c4b7fc6
 result=passed
-windows=https://github.com/realpkuasule/openapi-generator-skill/actions/runs/29460839222/job/87503733538 status=passed
-macos=https://github.com/realpkuasule/openapi-generator-skill/actions/runs/29460839222/job/87503733545 status=passed
-ubuntu=https://github.com/realpkuasule/openapi-generator-skill/actions/runs/29460839222/job/87503733567 status=passed
+windows=https://github.com/realpkuasule/openapi-generator-skill/actions/runs/29465256770/job/87516956271 status=passed
+macos=https://github.com/realpkuasule/openapi-generator-skill/actions/runs/29465256770/job/87516956265 status=passed
+ubuntu=https://github.com/realpkuasule/openapi-generator-skill/actions/runs/29465256770/job/87516956260 status=passed
 manual_forward=skipped-by-design
 manual_release=skipped-by-design
-windows_test_scope=platform-neutral adapter tests executed; POSIX-shebang fake CLI integration fixtures skipped on Windows
+windows_test_scope=147 tests passed; Codex and Claude adapter integration fixtures executed with native .cmd launchers; only the POSIX-only process-group cleanup test was skipped
+fix=Windows .cmd/.bat Claude launchers omit the fragile inline --json-schema argument while preserving strict post-parse schema validation
 annotation=GitHub hosted runners forced deprecated Node.js 20 actions to Node.js 24; deterministic jobs were unaffected

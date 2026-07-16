@@ -1,20 +1,20 @@
 <?xml version='1.0' encoding='utf-8'?>
 <testsuite name="openapi-engineering-deterministic" tests="17" failures="0" errors="0">
-  <testcase name="contract-validation" classname="openapi_engineering.deterministic" time="0.932" />
-  <testcase name="captured-example-conformance" classname="openapi_engineering.deterministic" time="1.482" />
-  <testcase name="unit-test-suite" classname="openapi_engineering.deterministic" time="35.209" />
-  <testcase name="skill-quick-validation" classname="openapi_engineering.deterministic" time="0.024" />
-  <testcase name="inspect-project-help" classname="openapi_engineering.deterministic" time="0.020" />
-  <testcase name="validate-profile-help" classname="openapi_engineering.deterministic" time="0.021" />
-  <testcase name="compare-generation-help" classname="openapi_engineering.deterministic" time="0.020" />
-  <testcase name="empirical-gate-help" classname="openapi_engineering.deterministic" time="0.025" />
-  <testcase name="scope-snapshot-help" classname="openapi_engineering.deterministic" time="0.447" />
-  <testcase name="profile-state-help" classname="openapi_engineering.deterministic" time="0.022" />
-  <testcase name="eval-case-validation" classname="openapi_engineering.deterministic" time="0.505" />
-  <testcase name="eval-runner-help" classname="openapi_engineering.deterministic" time="0.479" />
-  <testcase name="eval-scorer-help" classname="openapi_engineering.deterministic" time="0.471" />
-  <testcase name="forward-eval-aggregator-help" classname="openapi_engineering.deterministic" time="0.464" />
-  <testcase name="skill-installer-dry-run" classname="openapi_engineering.deterministic" time="0.021" />
-  <testcase name="tdd-evidence-help" classname="openapi_engineering.deterministic" time="0.020" />
+  <testcase name="contract-validation" classname="openapi_engineering.deterministic" time="0.779" />
+  <testcase name="captured-example-conformance" classname="openapi_engineering.deterministic" time="1.377" />
+  <testcase name="unit-test-suite" classname="openapi_engineering.deterministic" time="33.141" />
+  <testcase name="skill-quick-validation" classname="openapi_engineering.deterministic" time="0.020" />
+  <testcase name="inspect-project-help" classname="openapi_engineering.deterministic" time="0.017" />
+  <testcase name="validate-profile-help" classname="openapi_engineering.deterministic" time="0.017" />
+  <testcase name="compare-generation-help" classname="openapi_engineering.deterministic" time="0.018" />
+  <testcase name="empirical-gate-help" classname="openapi_engineering.deterministic" time="0.022" />
+  <testcase name="scope-snapshot-help" classname="openapi_engineering.deterministic" time="0.417" />
+  <testcase name="profile-state-help" classname="openapi_engineering.deterministic" time="0.020" />
+  <testcase name="eval-case-validation" classname="openapi_engineering.deterministic" time="0.482" />
+  <testcase name="eval-runner-help" classname="openapi_engineering.deterministic" time="0.430" />
+  <testcase name="eval-scorer-help" classname="openapi_engineering.deterministic" time="0.448" />
+  <testcase name="forward-eval-aggregator-help" classname="openapi_engineering.deterministic" time="0.454" />
+  <testcase name="skill-installer-dry-run" classname="openapi_engineering.deterministic" time="0.019" />
+  <testcase name="tdd-evidence-help" classname="openapi_engineering.deterministic" time="0.017" />
   <testcase name="source-tree-read-only" classname="openapi_engineering.deterministic" time="0.000" />
 </testsuite>

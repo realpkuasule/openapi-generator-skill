@@ -1,0 +1,12 @@
+task=P2-04-windows-adapter-integration
+phase=RED
+run=https://github.com/realpkuasule/openapi-generator-skill/actions/runs/29464978934
+head=c2d8fa0
+result=failed
+windows=https://github.com/realpkuasule/openapi-generator-skill/actions/runs/29464978934/job/87516121621 status=failed
+macos=status=passed
+ubuntu=status=passed
+failure_scope=4 Claude adapter integration errors on Windows
+root_cause=cmd.exe batch parsing corrupted the inline JSON Schema passed through the fake Claude .cmd launcher
+safety_invariant=No output-schema, safety, approval, or filesystem gate was weakened; final adapter output remained subject to strict post-parse schema validation
+green_evidence=docs/verifications/p2-20260715/P2-04-windows-green.log

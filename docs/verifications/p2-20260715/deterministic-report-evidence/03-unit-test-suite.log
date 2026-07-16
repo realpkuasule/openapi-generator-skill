@@ -91,10 +91,12 @@ test_default_dry_run_plans_both_platforms_without_writing (test_install_skill.In
 test_divergent_existing_target_blocks_all_writes (test_install_skill.InstallSkillTests.test_divergent_existing_target_blocks_all_writes) ... ok
 test_claude_adapter_accepts_fenced_json_when_cli_omits_structured_output (test_platform_adapters.PlatformAdapterTests.test_claude_adapter_accepts_fenced_json_when_cli_omits_structured_output) ... ok
 test_claude_adapter_runs_a_resumable_plan_mode_interview (test_platform_adapters.PlatformAdapterTests.test_claude_adapter_runs_a_resumable_plan_mode_interview) ... ok
+test_claude_batch_launcher_avoids_inline_json_schema (test_platform_adapters.PlatformAdapterTests.test_claude_batch_launcher_avoids_inline_json_schema) ... ok
 test_codex_adapter_accepts_fenced_json_without_cli_schema_decoding (test_platform_adapters.PlatformAdapterTests.test_codex_adapter_accepts_fenced_json_without_cli_schema_decoding) ... ok
 test_codex_adapter_runs_a_resumable_read_only_interview (test_platform_adapters.PlatformAdapterTests.test_codex_adapter_runs_a_resumable_read_only_interview) ... ok
 test_deadline_runner_reclaims_the_process_group_when_interrupted (test_platform_adapters.PlatformAdapterTests.test_deadline_runner_reclaims_the_process_group_when_interrupted) ... ok
 test_deadline_runner_terminates_the_process_group_on_timeout (test_platform_adapters.PlatformAdapterTests.test_deadline_runner_terminates_the_process_group_on_timeout) ... ok
+test_fake_cli_fixture_has_a_windows_launcher (test_platform_adapters.PlatformAdapterTests.test_fake_cli_fixture_has_a_windows_launcher) ... ok
 test_final_prompt_names_only_the_neutral_observation_contract (test_platform_adapters.PlatformAdapterTests.test_final_prompt_names_only_the_neutral_observation_contract) ... ok
 test_missing_binary_is_blocked_and_timeout_is_not_misreported (test_platform_adapters.PlatformAdapterTests.test_missing_binary_is_blocked_and_timeout_is_not_misreported) ... ok
 test_platform_credentials_are_copied_into_isolated_config_homes (test_platform_adapters.PlatformAdapterTests.test_platform_credentials_are_copied_into_isolated_config_homes) ... ok
@@ -150,6 +152,6 @@ test_passed_report_conforms_to_schema_and_records_evidence_digest (test_verify_r
 test_previous_gate_logs_are_removed_before_a_new_run (test_verify_runner.VerifyRunnerTests.test_previous_gate_logs_are_removed_before_a_new_run) ... ok
 
 ----------------------------------------------------------------------
-Ran 145 tests in 34.655s
+Ran 147 tests in 32.647s
 
 OK
