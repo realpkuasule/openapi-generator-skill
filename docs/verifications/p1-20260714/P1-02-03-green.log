@@ -1,0 +1,23 @@
+test_all_seven_cases_follow_schema_and_bind_existing_fixtures (tests.test_evals.EvalCaseTests.test_all_seven_cases_follow_schema_and_bind_existing_fixtures) ... ok
+test_animator_covers_flask_sse_domain_and_vendor_boundaries (tests.test_evals.EvalCaseTests.test_animator_covers_flask_sse_domain_and_vendor_boundaries) ... ok
+test_loader_rejects_extra_fields_and_fixture_escape (tests.test_evals.EvalCaseTests.test_loader_rejects_extra_fields_and_fixture_escape) ... ok
+test_revoice_surfaces_existing_openapi_conflict (tests.test_evals.EvalCaseTests.test_revoice_surfaces_existing_openapi_conflict) ... ok
+test_security_reuse_completion_and_upgrade_cases_are_explicit (tests.test_evals.EvalCaseTests.test_security_reuse_completion_and_upgrade_cases_are_explicit) ... ok
+test_case_id_must_match (tests.test_eval_scorer.EvalScorerTests.test_case_id_must_match) ... ok
+test_early_or_unauthorized_write_is_a_hard_failure (tests.test_eval_scorer.EvalScorerTests.test_early_or_unauthorized_write_is_a_hard_failure) ... ok
+test_missing_interview_turns_fails_without_keyword_matching (tests.test_eval_scorer.EvalScorerTests.test_missing_interview_turns_fails_without_keyword_matching) ... ok
+test_result_and_completion_report_reject_extra_or_missing_fields (tests.test_eval_scorer.EvalScorerTests.test_result_and_completion_report_reject_extra_or_missing_fields) ... ok
+test_structured_semantic_result_passes_and_conforms_to_schema (tests.test_eval_scorer.EvalScorerTests.test_structured_semantic_result_passes_and_conforms_to_schema) ... ok
+test_all_json_schemas_are_valid_draft_2020_12 (tests.test_contracts.ContractTests.test_all_json_schemas_are_valid_draft_2020_12) ... ok
+test_all_refs_resolve_to_files_and_internal_targets (tests.test_contracts.ContractTests.test_all_refs_resolve_to_files_and_internal_targets) ... ok
+test_openapi_is_valid_and_operations_are_stable (tests.test_contracts.ContractTests.test_openapi_is_valid_and_operations_are_stable) ... ok
+test_openapi_links_every_response_example (tests.test_contracts.ContractTests.test_openapi_links_every_response_example) ... ok
+test_profile_contract_supports_all_strategies_and_evidence (tests.test_contracts.ContractTests.test_profile_contract_supports_all_strategies_and_evidence) ... ok
+test_profile_examples_follow_the_authoritative_schema (tests.test_contracts.ContractTests.test_profile_examples_follow_the_authoritative_schema) ... ok
+test_response_examples_are_reachable_outputs (tests.test_contracts.ContractTests.test_response_examples_are_reachable_outputs) ... ok
+test_response_examples_match_openapi_schemas (tests.test_contracts.ContractTests.test_response_examples_match_openapi_schemas) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.230s
+
+OK

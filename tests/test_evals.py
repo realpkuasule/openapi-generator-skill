@@ -1,92 +1,123 @@
 from __future__ import annotations
 
-import json
+import copy
+import tempfile
 import unittest
 from pathlib import Path
-from typing import Any
 
 import yaml
 
+from scripts.evals.load_cases import EvalCaseError, load_case, load_cases
 from tests.support import REPO_ROOT, SKILL_ROOT
 
 
 EVAL_ROOT = SKILL_ROOT / "evals"
-SCHEMA_PATH = REPO_ROOT / "contracts" / "schemas" / "eval-case.schema.json"
-EXPECTED_CASES = {"animator.yaml", "revoice.yaml", "scope-expansion.yaml"}
-
-
-def require_fields(value: dict[str, Any], required: list[str], context: str) -> None:
-    missing = set(required) - set(value)
-    if missing:
-        raise AssertionError(f"{context} missing fields: {sorted(missing)}")
+EXPECTED_CASES = {
+    "animator-mixed-boundaries",
+    "revoice-no-codegen",
+    "audit-discovers-upgrade",
+    "profile-reuse",
+    "untrusted-input",
+    "completion-report",
+    "upgrade-gate",
+}
 
 
 class EvalCaseTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
-        cls.cases: dict[str, dict[str, Any]] = {}
-        if EVAL_ROOT.is_dir():
-            for path in sorted(EVAL_ROOT.glob("*.yaml")):
-                cls.cases[path.name] = yaml.safe_load(path.read_text(encoding="utf-8"))
+        cls.cases = {case["id"]: case for case in load_cases(EVAL_ROOT)}
 
-    def test_expected_eval_cases_exist(self) -> None:
+    def test_all_seven_cases_follow_schema_and_bind_existing_fixtures(self) -> None:
         self.assertEqual(set(self.cases), EXPECTED_CASES)
+        for case in self.cases.values():
+            with self.subTest(case=case["id"]):
+                fixture = REPO_ROOT / case["fixture_binding"]["compact_fixture"]
+                self.assertTrue(fixture.is_dir())
+                self.assertGreaterEqual(case["expected"]["minimum_interview_turns"], 2)
+                answers = case["input"]["interview_answers"]
+                self.assertGreaterEqual(
+                    len(answers), case["expected"]["minimum_interview_turns"]
+                )
+                covered = {
+                    question
+                    for answer in answers
+                    for question in answer["covers_questions"]
+                }
+                self.assertEqual(
+                    covered, set(range(len(case["expected"]["questions"])))
+                )
+                self.assertIn("approve", case["input"]["approval"].lower())
 
-    def test_cases_follow_contract_shape(self) -> None:
-        required_top = self.schema["required"]
-        required_expected = self.schema["properties"]["expected"]["required"]
-        valid_modes = set(self.schema["$defs"]["mode"]["enum"])
-        valid_strategies = set(self.schema["$defs"]["strategy"]["enum"])
-        for name, case in self.cases.items():
-            with self.subTest(case=name):
-                require_fields(case, required_top, name)
-                self.assertEqual(case["case_version"], 1)
-                require_fields(case["input"], ["prompt", "project_facts"], f"{name}.input")
-                require_fields(case["expected"], required_expected, f"{name}.expected")
-                expected = case["expected"]
-                self.assertTrue(expected["read_only_evidence"])
-                self.assertTrue(expected["questions"])
-                self.assertTrue(expected["prohibited_actions"])
-                self.assertTrue(expected["wait_points"])
-                self.assertTrue(set(expected["modes"]) <= valid_modes)
-                self.assertIn(expected["primary_strategy"], valid_strategies)
-                for decision in expected["boundary_decisions"]:
-                    require_fields(
-                        decision,
-                        ["boundary", "strategy", "condition"],
-                        f"{name}.boundary_decisions",
-                    )
-                    self.assertIn(decision["strategy"], valid_strategies)
+    def test_case_selection_accepts_stable_case_ids(self) -> None:
+        cases = load_cases(EVAL_ROOT, ["animator-mixed-boundaries"])
 
-    def test_animator_requires_a_mixed_strategy(self) -> None:
-        decisions = self.cases["animator.yaml"]["expected"]["boundary_decisions"]
-        strategies = {item["strategy"] for item in decisions}
-        self.assertTrue(
-            {"openapi-generator", "official-sdk", "governance-only"}.issubset(strategies)
+        self.assertEqual([case["id"] for case in cases], ["animator-mixed-boundaries"])
+
+    def test_loader_rejects_extra_fields_and_fixture_escape(self) -> None:
+        source = copy.deepcopy(self.cases["profile-reuse"])
+        with tempfile.TemporaryDirectory(dir=REPO_ROOT) as directory:
+            root = Path(directory)
+            invalid = root / "invalid.yaml"
+            source["unexpected"] = True
+            invalid.write_text(yaml.safe_dump(source, sort_keys=False), encoding="utf-8")
+            with self.assertRaises(EvalCaseError):
+                load_case(invalid)
+
+            del source["unexpected"]
+            source["fixture_binding"]["compact_fixture"] = "../outside"
+            invalid.write_text(yaml.safe_dump(source, sort_keys=False), encoding="utf-8")
+            with self.assertRaises(EvalCaseError):
+                load_case(invalid)
+
+    def test_animator_covers_flask_sse_domain_and_vendor_boundaries(self) -> None:
+        case = self.cases["animator-mixed-boundaries"]
+        text = yaml.safe_dump(case).lower()
+        for term in ("flask", "sse", "domain", "official-sdk"):
+            with self.subTest(term=term):
+                self.assertIn(term, text)
+        self.assertEqual(case["expected"]["modes"], ["Assess & Select"])
+        answers = " ".join(
+            answer["content"] for answer in case["input"]["interview_answers"]
+        ).casefold()
+        self.assertIn("openapi generator", answers)
+        self.assertIn("typescript-fetch", answers)
+        self.assertIn("primary", answers)
+        sse = next(
+            row
+            for row in case["expected"]["boundary_decisions"]
+            if row["boundary"] == "SSE event adapter"
         )
-        prohibited = " ".join(
-            self.cases["animator.yaml"]["expected"]["prohibited_actions"]
-        ).lower()
-        self.assertIn("all", prohibited)
-        self.assertIn("openapi generator", prohibited)
+        self.assertEqual(sse["strategy"], "language-native")
 
-    def test_revoice_prefers_no_codegen_or_official_sdk(self) -> None:
-        expected = self.cases["revoice.yaml"]["expected"]
-        self.assertIn(expected["primary_strategy"], {"no-codegen", "official-sdk"})
-        strategies = {item["strategy"] for item in expected["boundary_decisions"]}
-        self.assertTrue(strategies <= {"no-codegen", "official-sdk", "governance-only"})
-        prohibited = " ".join(expected["prohibited_actions"]).lower()
-        self.assertIn("create an openapi", prohibited)
+    def test_revoice_surfaces_existing_openapi_conflict(self) -> None:
+        case = self.cases["revoice-no-codegen"]
+        self.assertIn("contracts/openapi.yaml", " ".join(case["input"]["project_facts"]))
+        boundaries = [row["boundary"] for row in case["expected"]["boundary_decisions"]]
+        self.assertIn("OpenAPI artifact disposition", boundaries)
+        self.assertEqual(len(boundaries), 3)
+        existing = next(
+            row
+            for row in case["expected"]["boundary_decisions"]
+            if row["boundary"] == "OpenAPI artifact disposition"
+        )
+        self.assertEqual(existing["strategy"], "governance-only")
 
-    def test_scope_expansion_stops_for_reapproval(self) -> None:
-        expected = self.cases["scope-expansion.yaml"]["expected"]
-        self.assertTrue(expected["requires_reapproval"])
-        self.assertTrue(expected.get("scope_expansion_triggers"))
-        wait_points = " ".join(expected["wait_points"]).lower()
-        self.assertIn("second approval", wait_points)
-        prohibited = " ".join(expected["prohibited_actions"]).lower()
-        self.assertIn("upgrade", prohibited)
+    def test_security_reuse_completion_and_upgrade_cases_are_explicit(self) -> None:
+        self.assertTrue(self.cases["untrusted-input"]["input"]["adversarial_inputs"])
+        self.assertEqual(
+            self.cases["untrusted-input"]["expected"]["expected_boundary_summary"]["must_include"],
+            ["security finding"],
+        )
+        self.assertTrue(self.cases["profile-reuse"]["expected"]["requires_reapproval"])
+        self.assertTrue(
+            self.cases["completion-report"]["expected"]["requires_completion_report"]
+        )
+        upgrade = self.cases["upgrade-gate"]
+        self.assertIn(
+            "immutable accepted baseline",
+            upgrade["expected"]["expected_boundary_summary"]["must_include"],
+        )
 
 
 if __name__ == "__main__":

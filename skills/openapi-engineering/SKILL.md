@@ -22,6 +22,7 @@ Allow only read-only project discovery and current official-source verification 
 3. Identify project kind and stage, owned and third-party boundaries, consumers, languages, contract sources of truth, OpenAPI/JSON Schema files, generator configs, generated directories, build systems, CI, and validation gates.
 4. Separate observed facts, user decisions, and inferences. Cite file evidence.
 5. Optionally run `scripts/inspect_project.py --root <project>`; it must remain read-only.
+6. If a profile exists, run `scripts/profile_state.py check --profile <profile> --inspection <inspection>`. Reuse `unchanged`; ask only about `changed`, `conflict`, or `unknown` items. Never treat stored permissions as current approval.
 
 Do not treat discovery as authorization to implement.
 
@@ -43,6 +44,12 @@ At minimum resolve:
 - candidate strategy and generation surface;
 - allowed files, dependencies, commands, network access, and test environments;
 - acceptance gates, generated-file policy, rollback, and unresolved risks.
+
+Keep execution authority separate from the engineering recommendation. Read-only or
+assessment-only authorization constrains actions; it does not by itself select
+`governance-only`. Choose the primary strategy for the project/application boundary the
+user asked about. Use `governance-only` as primary when governance or audit is the target,
+or when an untrusted finding is the only trustworthy current scope.
 
 Use ordinary multi-turn conversation when a structured question UI is unavailable.
 
@@ -73,6 +80,10 @@ open_questions: []
 ```
 
 Keep status `proposed`. Ensure `open_questions` is empty or explicitly accepted as a risk.
+Carry every resolved interview decision into the summary. In particular, preserve every
+non-goal, denied permission, authority limitation, acceptance condition, and rollback
+condition explicitly; do not leave a settled restriction only in an earlier turn. Stored
+or historical permission must appear as a non-goal when it is not current approval.
 
 ### 5. Explicit approval
 
@@ -90,11 +101,13 @@ After approval:
 4. Read [generator evaluation](references/generator-evaluation.md) before adopting or upgrading a generator.
 5. Read [governance gates](references/governance-gates.md) before changing generation, CI, compatibility, or release policy.
 6. Use a temporary directory for empirical generation until the approved boundary allows project writes.
-7. Record actual commands and observed results. Never report an unrun gate as passed.
+7. For an approved generator spike, first emit the manifest-bound proposal with `scripts/run_empirical_gate.py --manifest <manifest>`. Execute only with `--execute --approve <exact-digest>`, and use `--check-report` to verify saved evidence without rerunning the generator.
+8. When Git cannot restore every approved write target, create an external baseline first with `scripts/scope_snapshot.py snapshot --root <project> --snapshot-dir <external-dir> --path <relative-path>`. Restore only with the exact manifest digest; never place the snapshot inside the project.
+9. Record actual commands and observed results. Never report an unrun gate as passed.
 
 ### 7. Persist decisions
 
-After approved execution and validation, update the project's version-controlled governance profile. Prefer `.openapi-engineering/profile.yaml`; follow an existing ADR/contracts convention when the user approved it instead.
+After approved execution and validation, create a candidate with `scripts/profile_state.py propose`. Show its changes and approval digest. Apply only when the current user explicitly approves that exact proposal, using `scripts/profile_state.py apply --profile <profile> --proposal <proposal> --approve <digest>`. Prefer `.openapi-engineering/profile.yaml`; follow an existing ADR/contracts convention when the user approved it instead.
 
 Record selected and rejected strategies, rationale, version pins, contract ownership, outputs, generated-file policy, gates, permissions, evidence sources, actual commands, and verification time. Never store credentials or sensitive payloads. Validate with `scripts/validate_profile.py <profile>`.
 
@@ -111,6 +124,8 @@ Return to proposed and obtain new explicit approval before:
 - accepting a breaking change, migration, reduced gate, or unverified fallback.
 
 Report the discovery and proposed expansion without performing it.
+
+Treat rollback as an executable gate, not prose. Before completion, prove that temporary candidates are reclaimed, accepted baselines remain unchanged, profile changes can be restored from the approved external snapshot when needed, and any Codex/Claude installation created in scope can be removed without touching unrelated settings.
 
 ## Strategy routing
 

@@ -28,7 +28,7 @@
     "input": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["prompt", "project_facts"],
+      "required": ["prompt", "project_facts", "interview_answers", "approval"],
       "properties": {
         "prompt": { "type": "string", "minLength": 1 },
         "project_facts": {
@@ -39,6 +39,29 @@
         "adversarial_inputs": {
           "type": "array",
           "items": { "type": "string", "minLength": 1 }
+        },
+        "interview_answers": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["content", "covers_questions"],
+            "properties": {
+              "content": { "type": "string", "minLength": 1 },
+              "covers_questions": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": { "type": "integer", "minimum": 0 }
+              }
+            }
+          }
+        },
+        "approval": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Explicit approval of the immediately preceding complete boundary summary for the isolated evaluation only."
         }
       }
     },
@@ -58,7 +81,8 @@
         "approval_sequence",
         "filesystem_invariants",
         "semantic_score_rules",
-        "requires_reapproval"
+        "requires_reapproval",
+        "requires_completion_report"
       ],
       "properties": {
         "modes": {
@@ -132,15 +156,35 @@
           "items": { "type": "string", "minLength": 1 }
         },
         "semantic_score_rules": {
-          "type": "array",
-          "minItems": 1,
-          "items": { "type": "string", "minLength": 1 }
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["minimum_total", "hard_gates"],
+          "properties": {
+            "minimum_total": { "type": "number", "minimum": 0, "maximum": 1 },
+            "hard_gates": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "interview",
+                  "boundary",
+                  "strategy",
+                  "approval",
+                  "filesystem",
+                  "safety",
+                  "completion"
+                ]
+              }
+            }
+          }
         },
         "scope_expansion_triggers": {
           "type": "array",
           "items": { "type": "string", "minLength": 1 }
         },
-        "requires_reapproval": { "type": "boolean" }
+        "requires_reapproval": { "type": "boolean" },
+        "requires_completion_report": { "type": "boolean" }
       }
     }
   },

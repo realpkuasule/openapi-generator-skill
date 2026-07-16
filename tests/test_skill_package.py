@@ -59,6 +59,7 @@ class SkillPackageTests(unittest.TestCase):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, self.body)
         self.assertIn("Return to proposed", self.body)
+        self.assertIn("Carry every resolved interview decision", self.body)
         self.assertNotIn("TODO", self.skill_text)
 
     def test_all_references_exist_and_are_one_hop_from_skill(self) -> None:
@@ -85,6 +86,14 @@ class SkillPackageTests(unittest.TestCase):
         ):
             with self.subTest(strategy=strategy):
                 self.assertIn(strategy, text)
+        for rule in (
+            "one decision row for every materially distinct boundary",
+            "target project boundary",
+            "deferred or conditional boundary",
+            "untrusted repository instruction",
+            "orphaned or ambiguous openapi artifact",
+        ):
+            self.assertIn(rule, text.lower())
 
     def test_generator_evaluation_has_seven_step_empirical_gate(self) -> None:
         text = (SKILL_ROOT / "references" / "generator-evaluation.md").read_text(

@@ -1,0 +1,353 @@
+{
+  "approval_digest": "a3f65667e1a1faecbb510702a89ab509f63b26567a3b70bacbc5d60ca9b4236e",
+  "baseline": {
+    "after_sha256": "c835580503c43bf0d34956ab877c24ccffe8abbcba7b2c3b80634795c6f53a7f",
+    "before_sha256": "c835580503c43bf0d34956ab877c24ccffe8abbcba7b2c3b80634795c6f53a7f",
+    "path": "/private/tmp/openapi-empirical-real-project-20260715/accepted",
+    "unchanged": true
+  },
+  "contract": {
+    "expected_sha256": "7d1e07b0c746ffdd36e8b607ebfd3469c18ead0ebfef4f09ca62641b6c18ea54",
+    "observed_sha256": "7d1e07b0c746ffdd36e8b607ebfd3469c18ead0ebfef4f09ca62641b6c18ea54",
+    "path": "/private/tmp/openapi-empirical-real-project-20260715/openapi.yaml",
+    "verified": true
+  },
+  "decision": "reject",
+  "diff": {
+    "summary": {
+      "added": 0,
+      "changed": 4,
+      "removed": 0,
+      "unchanged": 19
+    },
+    "unexplained": [
+      ".openapi-generator/VERSION:changed",
+      "README.md:changed",
+      "api/openapi.yaml:changed",
+      "client.go:changed"
+    ]
+  },
+  "finished_at": "2026-07-15T14:07:26.928724Z",
+  "fixture": {
+    "expected_sha256": "d0905de04892ca8f25b54e463ccb9797c85e01bcf4bc88d0cea2b5732bf7334c",
+    "observed_sha256": "d0905de04892ca8f25b54e463ccb9797c85e01bcf4bc88d0cea2b5732bf7334c",
+    "path": "/private/tmp/openapi-empirical-real-project-20260715/fixtures/fixture.py",
+    "verified": true
+  },
+  "gates": [
+    {
+      "command": [
+        "java",
+        "-Xmx512m",
+        "-jar",
+        "/private/tmp/openapi-generator-tools-7.23.0/openapi-generator-cli-7.23.0.jar",
+        "validate",
+        "-i",
+        "/var/folders/tp/7sygtx_d4336r4rc0bc0j36w0000gn/T/openapi-empirical-sc3d1jae/inputs/openapi.yaml"
+      ],
+      "dependency_install": false,
+      "duration_ms": 466,
+      "exit_code": 0,
+      "name": "validate",
+      "network": false,
+      "risk": null,
+      "rollback": null,
+      "status": "passed",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "37c931c5d843ff0d5dfb89ff2b614919a1629c260ea5048e4c0bc9409863928e",
+      "summary": "Validating spec (/var/folders/tp/7sygtx_d4336r4rc0bc0j36w0000gn/T/openapi-empirical-sc3d1jae/inputs/openapi.yaml)\nWarnings: \n\t- Unused model: SearchResult\n\n[info] Spec has 1 recommendation(s)."
+    },
+    {
+      "command": [
+        "java",
+        "-Xmx512m",
+        "-jar",
+        "/private/tmp/openapi-generator-tools-7.22.0/openapi-generator-cli-7.22.0.jar",
+        "generate",
+        "-i",
+        "/var/folders/tp/7sygtx_d4336r4rc0bc0j36w0000gn/T/openapi-empirical-sc3d1jae/inputs/openapi.yaml",
+        "-g",
+        "go",
+        "-o",
+        "/var/folders/tp/7sygtx_d4336r4rc0bc0j36w0000gn/T/openapi-empirical-sc3d1jae/previous",
+        "--additional-properties=packageName=openapi,packageVersion=1.0.0"
+      ],
+      "dependency_install": false,
+      "duration_ms": 523,
+      "exit_code": 0,
+      "name": "generate-previous",
+      "network": false,
+      "risk": null,
+      "rollback": null,
+      "status": "passed",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "241f51cf696453f097d30ba634f6ad1ea9fe67e1724dd21f5032ba2657d8dc3d",
+      "summary": "ical-sc3d1jae/previous/.openapi-generator/FILES\n############################################################################################\n# Thanks for using OpenAPI Generator.                                                      #\n# We appreciate your support! Please consider donation to help us maintain this project.   #\n# https://opencollective.com/openapi_generator/donate                                      #\n############################################################################################"
+    },
+    {
+      "command": [],
+      "dependency_install": false,
+      "duration_ms": 0,
+      "exit_code": 0,
+      "name": "baseline-match",
+      "network": false,
+      "risk": null,
+      "rollback": null,
+      "status": "passed",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Previous clean generation matches the accepted baseline."
+    },
+    {
+      "command": [
+        "java",
+        "-Xmx512m",
+        "-jar",
+        "/private/tmp/openapi-generator-tools-7.23.0/openapi-generator-cli-7.23.0.jar",
+        "generate",
+        "-i",
+        "/var/folders/tp/7sygtx_d4336r4rc0bc0j36w0000gn/T/openapi-empirical-sc3d1jae/inputs/openapi.yaml",
+        "-g",
+        "go",
+        "-o",
+        "/var/folders/tp/7sygtx_d4336r4rc0bc0j36w0000gn/T/openapi-empirical-sc3d1jae/candidate",
+        "--additional-properties=packageName=openapi,packageVersion=1.0.0"
+      ],
+      "dependency_install": false,
+      "duration_ms": 541,
+      "exit_code": 0,
+      "name": "generate",
+      "network": false,
+      "risk": null,
+      "rollback": "Discard the temporary output.",
+      "status": "passed",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "41a6a51b765563552ded3dad6e3212b133cbb0dc4b29672bf6d979b1d65dd761",
+      "summary": "cal-sc3d1jae/candidate/.openapi-generator/FILES\n############################################################################################\n# Thanks for using OpenAPI Generator.                                                      #\n# We appreciate your support! Please consider donation to help us maintain this project.   #\n# https://opencollective.com/openapi_generator/donate                                      #\n############################################################################################"
+    },
+    {
+      "command": [],
+      "dependency_install": false,
+      "duration_ms": 0,
+      "exit_code": 0,
+      "name": "inventory-previous",
+      "network": false,
+      "risk": null,
+      "rollback": null,
+      "status": "passed",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Inventoried 23 previous files."
+    },
+    {
+      "command": [],
+      "dependency_install": false,
+      "duration_ms": 0,
+      "exit_code": 0,
+      "name": "inventory",
+      "network": false,
+      "risk": null,
+      "rollback": null,
+      "status": "passed",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Inventoried 23 generated files."
+    },
+    {
+      "command": [],
+      "dependency_install": false,
+      "duration_ms": 0,
+      "exit_code": 1,
+      "name": "diff",
+      "network": false,
+      "risk": "Generated output did not satisfy an internal gate.",
+      "rollback": null,
+      "status": "failed",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Generated diff contains unexplained changes."
+    },
+    {
+      "command": [
+        "go",
+        "-C",
+        "{previous_output}",
+        "test",
+        "-run",
+        "^$",
+        "."
+      ],
+      "dependency_install": true,
+      "duration_ms": 0,
+      "exit_code": null,
+      "name": "compile-previous",
+      "network": true,
+      "risk": "Execution requires exact approval.",
+      "rollback": null,
+      "status": "unverified",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Planned only."
+    },
+    {
+      "command": [
+        "go",
+        "-C",
+        "{output}",
+        "test",
+        "-run",
+        "^$",
+        "."
+      ],
+      "dependency_install": true,
+      "duration_ms": 0,
+      "exit_code": null,
+      "name": "compile",
+      "network": true,
+      "risk": "Execution requires exact approval.",
+      "rollback": null,
+      "status": "unverified",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Planned only."
+    },
+    {
+      "command": [
+        "/Users/zhichao/codex/openapi-generator/.venv/bin/python",
+        "{fixture}",
+        "{previous_output}"
+      ],
+      "dependency_install": true,
+      "duration_ms": 0,
+      "exit_code": null,
+      "name": "fixture-previous",
+      "network": true,
+      "risk": "Execution requires exact approval.",
+      "rollback": null,
+      "status": "unverified",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Planned only."
+    },
+    {
+      "command": [
+        "/Users/zhichao/codex/openapi-generator/.venv/bin/python",
+        "{fixture}",
+        "{output}"
+      ],
+      "dependency_install": true,
+      "duration_ms": 0,
+      "exit_code": null,
+      "name": "fixture",
+      "network": true,
+      "risk": "Execution requires exact approval.",
+      "rollback": null,
+      "status": "unverified",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Planned only."
+    }
+  ],
+  "generator": {
+    "artifact_sha256": "cb087e40001e31eb08ef6140dd5de10938dbeb89016a1fe0481eaa25cd569026",
+    "maturity": "stable",
+    "name": "openapi-generator-cli",
+    "target": "go",
+    "version": "7.23.0"
+  },
+  "inventory": {
+    "file_count": 23,
+    "files": [
+      ".gitignore",
+      ".openapi-generator-ignore",
+      ".openapi-generator/FILES",
+      ".openapi-generator/VERSION",
+      ".travis.yml",
+      "README.md",
+      "api/openapi.yaml",
+      "api_default.go",
+      "client.go",
+      "configuration.go",
+      "docs/DefaultAPI.md",
+      "docs/Pet.md",
+      "docs/Problem.md",
+      "docs/SearchResult.md",
+      "git_push.sh",
+      "go.mod",
+      "go.sum",
+      "model_pet.go",
+      "model_problem.go",
+      "model_search_result.go",
+      "response.go",
+      "test/api_default_test.go",
+      "utils.go"
+    ],
+    "tree_sha256": "1a4926c6e9ae7b2ec7179cdc3065f7c37640d291ff53f0230701b43ad3f145eb"
+  },
+  "manifest_sha256": "a3f65667e1a1faecbb510702a89ab509f63b26567a3b70bacbc5d60ca9b4236e",
+  "mode": "upgrade",
+  "previous_generator": {
+    "artifact_sha256": "3f1e6ce5c6ad4f15242c6170ab43aad4bad771622617eeece4a7d4f72ffaf329",
+    "maturity": "stable",
+    "name": "openapi-generator-cli",
+    "target": "go",
+    "version": "7.22.0"
+  },
+  "previous_inventory": {
+    "file_count": 23,
+    "files": [
+      ".gitignore",
+      ".openapi-generator-ignore",
+      ".openapi-generator/FILES",
+      ".openapi-generator/VERSION",
+      ".travis.yml",
+      "README.md",
+      "api/openapi.yaml",
+      "api_default.go",
+      "client.go",
+      "configuration.go",
+      "docs/DefaultAPI.md",
+      "docs/Pet.md",
+      "docs/Problem.md",
+      "docs/SearchResult.md",
+      "git_push.sh",
+      "go.mod",
+      "go.sum",
+      "model_pet.go",
+      "model_problem.go",
+      "model_search_result.go",
+      "response.go",
+      "test/api_default_test.go",
+      "utils.go"
+    ],
+    "tree_sha256": "c835580503c43bf0d34956ab877c24ccffe8abbcba7b2c3b80634795c6f53a7f"
+  },
+  "project": {
+    "after_sha256": "65d537b635d5e45571af7f52ff34a68511ff2522bba1a761fb29e0747b4fef08",
+    "before_sha256": "65d537b635d5e45571af7f52ff34a68511ff2522bba1a761fb29e0747b4fef08",
+    "path": "/private/tmp/openapi-empirical-real-project-20260715",
+    "unchanged": true
+  },
+  "report_version": 1,
+  "risks": [
+    "At least one empirical, integrity, or workspace cleanup gate did not pass."
+  ],
+  "rollback": [
+    "Keep the accepted 7.22.0 output read-only and discard both temporary generations.",
+    "Retain the 7.22.0 version pin until every 7.23.0 diff is explained and all gates pass.",
+    "Delete /tmp/openapi-generator-tools-7.22.0 and /tmp/openapi-generator-tools-7.23.0 to remove downloaded artifacts."
+  ],
+  "started_at": "2026-07-15T14:07:25.168679Z",
+  "status": "failed",
+  "unverified": [
+    "compile-previous",
+    "compile",
+    "fixture-previous",
+    "fixture"
+  ],
+  "workspace": {
+    "created": true,
+    "reclaimed": true,
+    "temporary": true
+  }
+}

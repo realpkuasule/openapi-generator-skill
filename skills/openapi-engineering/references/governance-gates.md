@@ -68,3 +68,15 @@ Pin every tool and distribution. Verify current release information from officia
 
 Report exact commands, exit results, changed files, contract/version decisions, generation diff, passed gates, unverified gates, risks, and rollback. Update the governance profile only after approval and successful validation.
 
+## Executable rollback
+
+When Git does not cover every approved target, create a digest-bound snapshot outside the project before the first write:
+
+```text
+python3 scripts/scope_snapshot.py snapshot --root <project> --snapshot-dir <external-dir> --path <relative-path>
+python3 scripts/scope_snapshot.py restore --root <project> --snapshot-dir <external-dir> --manifest <manifest> --approve <exact-digest>
+```
+
+Snapshot only the approved relative paths. Reject traversal, symlinks, overlapping selections, an in-project snapshot, changed snapshot data, or a mismatched restore digest. For generated code, prefer discarding the temporary candidate; never overwrite the accepted baseline merely to make rollback convenient.
+
+After a failed or interrupted run, verify process-group termination, temporary workspace removal, project/baseline digests, Profile state, and installed Skill targets. A rollback instruction is not `passed` until its before/after digest is observed.

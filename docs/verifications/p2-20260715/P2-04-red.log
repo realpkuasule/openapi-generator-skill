@@ -1,0 +1,5 @@
+Command: .venv/bin/python -m unittest tests.test_empirical_gate.EmpiricalGateTests.test_check_report_accepts_fresh_evidence_and_rejects_tampering tests.test_verify_runner tests.test_ci_workflow
+Date: 2026-07-15
+Expected result: RED
+Observed result: 12 tests ran; 2 failures and 4 errors proved that empirical freshness checks, full-tier evidence gates, JUnit output, and the CI workflow were not yet implemented.
+Additional RED: tests.test_environment.EnvironmentTests.test_ci_has_a_repository_local_skill_validator failed because a clean CI runner had no repository-local quick validator.

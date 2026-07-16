@@ -1,0 +1,6 @@
+Command: .venv/bin/python -m unittest tests.test_platform_adapters.PlatformAdapterTests.test_final_prompt_names_only_the_neutral_observation_contract
+Date: 2026-07-15
+Expected result: RED
+Observed issue: the supposedly neutral final-observation JSON example prefilled governance-only as both primary and boundary strategy, creating a strategy anchoring bias despite the later project-boundary instructions.
+Second RED: once both platforms passed individually, aggregation still rejected extra speculative/deferred strategy rows and inconsistent hand-written-adapter classification. The neutral protocol lacked explicit canonical classification and selection rules.
+Third RED: untrusted-input samples satisfied safety and strategy but omitted Assess & Select from lifecycle modes; Revoice samples used generic boundary names that lost ASR/TTS semantics.

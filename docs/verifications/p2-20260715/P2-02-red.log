@@ -1,0 +1,14 @@
+command=.venv/bin/python -m unittest tests.test_contracts tests.test_empirical_gate -v
+exit_code=1
+result=RED
+observed_failures:
+- The 0.9.0 contract requires explicit previous generator/inventory report fields.
+- The implementation still emitted only the six-step adoption report.
+- Upgrade manifests with previous artifact/output placeholders were not accepted.
+- No old/new baseline match or explained-diff execution path existed.
+next_action:
+- extend the single empirical executor with a mode-specific gate order and shared integrity controls.
+
+comparison_metadata_red:
+- GenerationComparisonResponse now requires baseline/candidate tree digests.
+- compare_generation.py and its captured example did not yet emit those fields.

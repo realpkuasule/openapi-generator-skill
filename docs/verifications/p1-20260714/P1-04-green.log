@@ -1,0 +1,10 @@
+test_dry_run_cli_writes_an_explicitly_blocked_report (tests.test_eval_runner.EvalRunnerTests.test_dry_run_cli_writes_an_explicitly_blocked_report) ... ok
+test_early_write_is_detected_by_hash_gate (tests.test_eval_runner.EvalRunnerTests.test_early_write_is_detected_by_hash_gate) ... ok
+test_pass_result_is_scored_in_sandbox_without_expected_leakage (tests.test_eval_runner.EvalRunnerTests.test_pass_result_is_scored_in_sandbox_without_expected_leakage) ... ok
+test_run_many_exit_semantics_do_not_convert_blocked_to_passed (tests.test_eval_runner.EvalRunnerTests.test_run_many_exit_semantics_do_not_convert_blocked_to_passed) ... ok
+test_timeout_is_failed_and_unavailable_adapter_is_blocked (tests.test_eval_runner.EvalRunnerTests.test_timeout_is_failed_and_unavailable_adapter_is_blocked) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.570s
+
+OK

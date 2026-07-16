@@ -1,0 +1,72 @@
+{
+  "baseline": {
+    "path": "/workspace/project/accepted",
+    "tree_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "commands": [
+    {
+      "argv": ["java", "-jar", "{artifact}", "validate", "-i", "{contract}"],
+      "dependency_install": false,
+      "gate": "validate",
+      "network": false,
+      "timeout_seconds": 120
+    },
+    {
+      "argv": ["java", "-jar", "{artifact}", "generate", "-i", "{contract}", "-g", "python", "-o", "{output}"],
+      "dependency_install": false,
+      "gate": "generate",
+      "network": false,
+      "timeout_seconds": 300
+    },
+    {
+      "argv": ["python3", "-m", "compileall", "-q", "{output}"],
+      "dependency_install": false,
+      "gate": "compile",
+      "network": false,
+      "timeout_seconds": 120
+    },
+    {
+      "argv": ["python3", "{fixture}", "{output}"],
+      "dependency_install": false,
+      "gate": "fixture",
+      "network": false,
+      "timeout_seconds": 120
+    }
+  ],
+  "contract": {
+    "path": "/workspace/project/openapi.yaml",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "diff_policy": {
+    "accepted_changes": [],
+    "allow_initial_generation": true
+  },
+  "fixture": {
+    "path": "/workspace/project/fixtures/generated_client.py",
+    "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  "generator": {
+    "artifact": {
+      "path": "/tools/openapi-generator-cli-7.23.0.jar",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "distribution": "jar",
+    "feature_gaps": [
+      {
+        "evidence": "OpenAPI Generator documents OpenAPI 3.1 support as beta.",
+        "feature": "OpenAPI 3.1",
+        "status": "partial"
+      }
+    ],
+    "maturity": "stable",
+    "name": "openapi-generator-cli",
+    "official_sources": ["https://openapi-generator.tech/docs/generators/python/"],
+    "target": "python",
+    "version": "7.23.0"
+  },
+  "manifest_version": 1,
+  "mode": "adoption",
+  "project_root": "/workspace/project",
+  "required_gates": ["validate", "generate", "inventory", "diff", "compile", "fixture"],
+  "rollback": ["Discard the temporary candidate directory; the accepted baseline is read-only."]
+}

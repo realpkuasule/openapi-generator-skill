@@ -1,0 +1,33 @@
+test_evals (unittest.loader._FailedTest.test_evals) ... ERROR
+test_eval_scorer (unittest.loader._FailedTest.test_eval_scorer) ... ERROR
+
+======================================================================
+ERROR: test_evals (unittest.loader._FailedTest.test_evals)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_evals
+Traceback (most recent call last):
+  File "/Users/zhichao/.local/share/uv/python/cpython-3.11.15-macos-aarch64-none/lib/python3.11/unittest/loader.py", line 162, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhichao/codex/openapi-generator/tests/test_evals.py", line 10, in <module>
+    from scripts.evals.load_cases import EvalCaseError, load_case, load_cases
+ModuleNotFoundError: No module named 'scripts.evals'
+
+
+======================================================================
+ERROR: test_eval_scorer (unittest.loader._FailedTest.test_eval_scorer)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_eval_scorer
+Traceback (most recent call last):
+  File "/Users/zhichao/.local/share/uv/python/cpython-3.11.15-macos-aarch64-none/lib/python3.11/unittest/loader.py", line 162, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhichao/codex/openapi-generator/tests/test_eval_scorer.py", line 9, in <module>
+    from scripts.evals.load_cases import load_cases
+ModuleNotFoundError: No module named 'scripts.evals'
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.000s
+
+FAILED (errors=2)

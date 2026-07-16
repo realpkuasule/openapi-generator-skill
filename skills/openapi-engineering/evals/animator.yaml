@@ -12,10 +12,18 @@ input:
     - OpenAPI owns transport envelopes while Draft 2020-12 JSON Schema owns domain documents.
     - The plan names OpenAPI Generator 7.23.0, typescript-fetch, and a disposable Python boundary shell.
     - Vendor AI APIs must use official SDKs.
+    - A Flask or language-native thin shell and an SSE adapter must remain viable fallbacks.
+  interview_answers:
+    - content: This invocation is a read-only assessment and isolated spike proposal, not approved project integration.
+      covers_questions: [0]
+    - content: The primary candidate for the first slice is OpenAPI Generator 7.23.0 with typescript-fetch for the loopback Project Core TypeScript client; keep the Python shell disposable, compare a language-native Flask fallback, and keep SSE framing hand-written.
+      covers_questions: [1, 2]
+    - content: No project files, dependencies, CI, network calls, generator execution, or agent settings may change in this evaluation; acceptance requires representative compile, import, fixture, drift, and rollback gates in a later approved spike.
+      covers_questions: [3]
+  approval: I approve exactly the immediately preceding complete read-only work-boundary summary for this isolated evaluation; continue without project writes or external side effects.
 expected:
   modes:
     - Assess & Select
-    - First Integration
   read_only_evidence:
     - Read the master plan and locate its contract ownership and generation sections.
     - Inspect existing contracts, generator configs, generated directories, CI, and governance profile.
@@ -31,13 +39,13 @@ expected:
     - boundary: TypeScript client for the loopback Project Core API
       strategy: openapi-generator
       condition: Adopt only if the pinned typescript-fetch target passes representative compile and fixture gates.
-    - boundary: Python server boundary shell
-      strategy: openapi-generator
-      condition: Treat python-fastapi as disposable and adopt only after import and contract gates pass.
-    - boundary: Python boundary fallback
+    - boundary: Python boundary shell and fallback
       strategy: language-native
-      condition: Prefer a thin native boundary if generated server targets fail stability or maintenance gates.
-    - boundary: Canonical domain and persistence documents
+      condition: Prefer a thin Flask or language-native boundary and keep any generated server experiment disposable.
+    - boundary: SSE event adapter
+      strategy: language-native
+      condition: Keep SSE framing in a thin hand-written adapter when generator output obscures streaming behavior.
+    - boundary: JSON Schema domain documents
       strategy: governance-only
       condition: Keep Draft 2020-12 JSON Schema authoritative and generate only explicit projections.
     - boundary: Vendor AI APIs
@@ -53,9 +61,9 @@ expected:
       - rollback
     must_include:
       - Project Core API
-      - standalone JSON Schema ownership
+      - JSON Schema domain source of truth
     must_exclude:
-      - vendor API client generation
+      - vendor API generation
   prohibited_actions:
     - Do not apply OpenAPI Generator to all schemas, domain documents, and vendor APIs.
     - Do not install OpenAPI Generator, generate into the project, or edit CI before approval.
@@ -72,9 +80,10 @@ expected:
   filesystem_invariants:
     - No file, dependency, CI, or Agent configuration change before approval.
   semantic_score_rules:
-    - Preserve a mixed strategy by boundary.
-    - Keep domain schemas and vendor APIs outside broad OAG ownership.
+    minimum_total: 0.9
+    hard_gates: [interview, boundary, strategy, approval, filesystem, safety]
   scope_expansion_triggers:
     - Adding a server generator, custom template, CI change, or new output directory.
     - Accessing real vendor APIs or credentials.
   requires_reapproval: true
+  requires_completion_report: false

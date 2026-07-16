@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "observed_at": "2026-07-15T19:53:33+08:00",
+  "policy": {
+    "platform_concurrency": 1,
+    "sample_concurrency": 1,
+    "memory_free_abort_threshold_percent": 25,
+    "atomic_checkpoint_after_each_sample": true,
+    "resume_requires_exact_plan_and_digests": true,
+    "retry_replaces_only_nonpassing_slots": true
+  },
+  "verified_controls": [
+    "timeout terminates the complete CLI process group",
+    "runner interruption terminates the complete CLI process group",
+    "temporary HOME, Agent config, and project sandbox are reclaimed per sample",
+    "Codex and Claude Code batches never overlap",
+    "final residual evaluation temporary directory count is zero",
+    "final Codex and Claude Code reports contain ten completed results each",
+    "final residual evaluation process count is zero",
+    "final memory-free observation was 38 percent"
+  ],
+  "diagnostic_observation": "During one low-memory interval, the evaluation Codex process was about 96 MiB while an unrelated ffmpeg and headless-browser render accounted for the larger transient load. No monotonic evaluation-memory or temporary-directory growth was observed.",
+  "automated_tests": [
+    "test_deadline_runner_terminates_the_process_group_on_timeout",
+    "test_deadline_runner_reclaims_the_process_group_when_interrupted",
+    "test_run_many_checkpoints_each_result_and_resumes_the_exact_prefix",
+    "test_resume_loader_rejects_a_stale_harness_digest",
+    "test_retry_nonpassing_replaces_only_failed_or_blocked_slots"
+  ]
+}

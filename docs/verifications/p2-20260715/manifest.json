@@ -1,0 +1,573 @@
+{
+  "approval": {
+    "approved_messages": [
+      "继续直到全部开发完成",
+      "请继续"
+    ],
+    "checkpoints": [
+      "B",
+      "C"
+    ],
+    "resource_policy": {
+      "generator_processes_run_sequentially": true,
+      "java_max_heap": "512m",
+      "minimum_free_memory_percent": 25,
+      "platforms_run_sequentially": true,
+      "user_processes_untouched": true
+    }
+  },
+  "artifacts": [
+    {
+      "bytes": 654,
+      "path": "docs/verifications/p2-20260715/P2-01-fake-green.log",
+      "sha256": "8c4c779da0217e2d5079de3a1c906f778fd7620dc6dd452c4996a4844fcb35f8"
+    },
+    {
+      "bytes": 771,
+      "path": "docs/verifications/p2-20260715/P2-01-real-green.log",
+      "sha256": "d79948b9a17f8fd7164f8d9db568633524c539dacebdf770709f977aa71106f8"
+    },
+    {
+      "bytes": 1163,
+      "path": "docs/verifications/p2-20260715/P2-01-red.log",
+      "sha256": "5764441b6e3e98649b57b0d427cb06cf372d9c6233cb9b1b0cf0e24814dfd5e7"
+    },
+    {
+      "bytes": 777,
+      "path": "docs/verifications/p2-20260715/P2-02-real-green.log",
+      "sha256": "526f3c2174d5fdbd7ced96f70c2bd6aa2293140cc431a39a7b4e6d640403fcbc"
+    },
+    {
+      "bytes": 732,
+      "path": "docs/verifications/p2-20260715/P2-02-red.log",
+      "sha256": "5e15873903c3e8458626722dedf64f224e3fbfff769038ba75e8a8c2cf4d395b"
+    },
+    {
+      "bytes": 743,
+      "path": "docs/verifications/p2-20260715/P2-03-green.log",
+      "sha256": "8390206582e04d8ceabb1d526bb5056fe51145e5b9f468ddaac3fdbaa7e4ec31"
+    },
+    {
+      "bytes": 256,
+      "path": "docs/verifications/p2-20260715/P2-03-red.log",
+      "sha256": "b6831f8845483fac1eb0fbb8d830a0911be1c1d032dd392784e06310df0601a1"
+    },
+    {
+      "bytes": 1145,
+      "path": "docs/verifications/p2-20260715/P2-04-green.log",
+      "sha256": "d43d66bbae12f681d6f5cb728e7659ac8a435708b0924bab6c57a19fdd1dadf4"
+    },
+    {
+      "bytes": 590,
+      "path": "docs/verifications/p2-20260715/P2-04-red.log",
+      "sha256": "254ef110c154f805642ddd5176c44585a3b0c0e9b99c0b54941bdeb272dc1b1b"
+    },
+    {
+      "bytes": 726,
+      "path": "docs/verifications/p2-20260715/P2-04-windows-adapter-red.log",
+      "sha256": "3db2163ef0be36b72eac94f9d8a75b6e3f1158c102d81c03ee849bf7699c4d01"
+    },
+    {
+      "bytes": 1041,
+      "path": "docs/verifications/p2-20260715/P2-04-windows-green.log",
+      "sha256": "b797d7ee3522c8689e8916ac7fef0050044875e1b1b3dd62b1b17d285dc14212"
+    },
+    {
+      "bytes": 542,
+      "path": "docs/verifications/p2-20260715/P2-04-windows-red.log",
+      "sha256": "ea152a87204511bf57f31957494aae5374aed4e7390c057f95ec73471d0f291d"
+    },
+    {
+      "bytes": 915,
+      "path": "docs/verifications/p2-20260715/P2-05-green.log",
+      "sha256": "1b508e0dceeb96ab3087ac858f21abf7bd0950397a504b1075f3aff47a46f3be"
+    },
+    {
+      "bytes": 314,
+      "path": "docs/verifications/p2-20260715/P2-05-red.log",
+      "sha256": "92d9e807ddf1cdaf479ed835e76e16906f242ce9539dd95271ae121aa6a26493"
+    },
+    {
+      "bytes": 710,
+      "path": "docs/verifications/p2-20260715/P2-forward-green.log",
+      "sha256": "a3243838dd653b7a23eb66e653e0c75e7684955ecacefa801d551d23fee1c290"
+    },
+    {
+      "bytes": 853,
+      "path": "docs/verifications/p2-20260715/P2-forward-red.log",
+      "sha256": "ad4881e81ec2feb30cdcc581b58608dd66b3a572331c6b8727adceb39e541170"
+    },
+    {
+      "bytes": 172968,
+      "path": "docs/verifications/p2-20260715/claude-forward-eval-report.json",
+      "sha256": "44784d0ca327ecd935d4d16093118fb6fca6c3c1f49521d4f807835f2572ed01"
+    },
+    {
+      "bytes": 177076,
+      "path": "docs/verifications/p2-20260715/claude-forward-eval-report.pre-animator-retry.json",
+      "sha256": "7e90a8726caa8f46e58f62270ec286625e67ccb12916b7142200e58ed6c26e5d"
+    },
+    {
+      "bytes": 177811,
+      "path": "docs/verifications/p2-20260715/claude-forward-eval-report.pre-classification-rules.json",
+      "sha256": "b85ed208c222d751ccca41c462c1aa8e51156cf97a887c3b01da1c86bc4409cb"
+    },
+    {
+      "bytes": 159929,
+      "path": "docs/verifications/p2-20260715/claude-forward-eval-report.pre-retry-boundary-strategy.json",
+      "sha256": "0fbc727e4b0a672dcd1b1622be5fe10649121dd9ea584e52ffcba3c8220f2a1f"
+    },
+    {
+      "bytes": 162896,
+      "path": "docs/verifications/p2-20260715/claude-forward-eval-report.pre-windows-batch-harness.json",
+      "sha256": "d6e3643fccb0f685c650a88a78e7733250a2c857eb558170df57c3634ae19b3c"
+    },
+    {
+      "bytes": 170139,
+      "path": "docs/verifications/p2-20260715/claude-forward-eval-report.refresh.pre-equivalence-replacement.json",
+      "sha256": "e607d6f41cf36f64bb96c4695988c8bac69d973cd49a9346621e38d074f9d7bd"
+    },
+    {
+      "bytes": 170154,
+      "path": "docs/verifications/p2-20260715/claude-forward-eval-report.refresh.pre-retry.json",
+      "sha256": "e5c8c4b331d97118bb625915e1821fe42193014cc1ec0e501f68c61a1e141a4c"
+    },
+    {
+      "bytes": 169691,
+      "path": "docs/verifications/p2-20260715/claude-forward-eval-report.refresh.pre-second-retry.json",
+      "sha256": "310976d3e641e79adcd02f9101018a0d97254e78d11728c40b35877a25281b60"
+    },
+    {
+      "bytes": 169407,
+      "path": "docs/verifications/p2-20260715/claude-forward-eval-report.refresh.pre-third-retry.json",
+      "sha256": "09996a78d16d49410d34489f88edce756c12fe7d37cd0e7bdffc4c4b2fa848c2"
+    },
+    {
+      "bytes": 37193,
+      "path": "docs/verifications/p2-20260715/claude-revoice-replacement.refresh.json",
+      "sha256": "7ed93c08485c2a479c0b20fc6cea1c87a7a161ea90b169654832831809b702f4"
+    },
+    {
+      "bytes": 126572,
+      "path": "docs/verifications/p2-20260715/codex-forward-eval-report.json",
+      "sha256": "20cee9c8331251a93414f7bba3b301f97037d89c8ed5e72e48e1c93669e147a7"
+    },
+    {
+      "bytes": 132201,
+      "path": "docs/verifications/p2-20260715/codex-forward-eval-report.pre-classification-rules.json",
+      "sha256": "767f5f62a05de1fca1eec387bbc61b20f4c66a0688dea7b1e9c91905d3469b97"
+    },
+    {
+      "bytes": 124846,
+      "path": "docs/verifications/p2-20260715/codex-forward-eval-report.pre-final-classification-retry.json",
+      "sha256": "88420a306289b2e544d9fca63efa24664fd8e456351c1fa146260827044ce130"
+    },
+    {
+      "bytes": 130845,
+      "path": "docs/verifications/p2-20260715/codex-forward-eval-report.pre-final-retry.json",
+      "sha256": "64578df8f8d006b6f1a161b300309649dc0b55917f4d9e40f3b1ab2d6c7ac23d"
+    },
+    {
+      "bytes": 128737,
+      "path": "docs/verifications/p2-20260715/codex-forward-eval-report.pre-mode-naming-rules.json",
+      "sha256": "f2f6a1270259fb8440b0ee03b0aeb1401680fbf74299839c6c151edb2e70e497"
+    },
+    {
+      "bytes": 130808,
+      "path": "docs/verifications/p2-20260715/codex-forward-eval-report.pre-neutral-prompt.json",
+      "sha256": "5fdf90f14eee99118c17757ea89cff097c2eff4d7d746c5e073954275141c7c9"
+    },
+    {
+      "bytes": 129135,
+      "path": "docs/verifications/p2-20260715/codex-forward-eval-report.pre-nonpassing-retry.json",
+      "sha256": "ca363174bd70c170d73e25bad987ad1d3f634cdfab4045e77c5c115b215f2859"
+    },
+    {
+      "bytes": 128614,
+      "path": "docs/verifications/p2-20260715/codex-forward-eval-report.pre-retry-boundary.json",
+      "sha256": "fdc0d840b50ce3ebb6943cb17eb3744a801cf4f10f850ce19feba12cdc83e266"
+    },
+    {
+      "bytes": 130684,
+      "path": "docs/verifications/p2-20260715/codex-forward-eval-report.pre-revoice-retry.json",
+      "sha256": "dca4290b23b14a02db1d346bcda8fe86fecf3641ec86eb24d58cf40c1817f0eb"
+    },
+    {
+      "bytes": 127847,
+      "path": "docs/verifications/p2-20260715/codex-forward-eval-report.pre-windows-batch-harness.json",
+      "sha256": "6b5bd07b68872e661c621c45e937b5cd5a683de1c44699d2df930f78a81c8eb7"
+    },
+    {
+      "bytes": 123224,
+      "path": "docs/verifications/p2-20260715/codex-forward-eval-report.refresh.pre-retry.json",
+      "sha256": "9e8e661f4833e52f866e9bac2cd17d3d64bd1681842a0cdc7946679d9735e593"
+    },
+    {
+      "bytes": 127992,
+      "path": "docs/verifications/p2-20260715/codex-forward-eval-report.refresh.pre-second-retry.json",
+      "sha256": "a8ccc26ff58b7497ddeb5816b222448c37252881db58c6f2edb9261e90fc3eef"
+    },
+    {
+      "bytes": 1975,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/01-contract-validation.log",
+      "sha256": "0a46118cbb588f7ad97c120cbe7c45d2b55d0449052576e0988bc265233f1e63"
+    },
+    {
+      "bytes": 403,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/02-captured-example-conformance.log",
+      "sha256": "6de9ae518e0dedc187c3c7226e4410fc6ec2e67d87426363fdc6c342a0748127"
+    },
+    {
+      "bytes": 23301,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/03-unit-test-suite.log",
+      "sha256": "9c782fae95f0362a527f412aeb008975becb0913a18ad54e8c1e1795ceda72ac"
+    },
+    {
+      "bytes": 250,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/04-skill-quick-validation.log",
+      "sha256": "b9bfa71573b30dcd0744157127762f24435d943fda65fd5265c441c40a9683f4"
+    },
+    {
+      "bytes": 788,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/05-inspect-project-help.log",
+      "sha256": "4137ee9b1cabd193ed93f2b7f3a78564920a82e3d35c1ab393b126a94bf0a5ee"
+    },
+    {
+      "bytes": 479,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/06-validate-profile-help.log",
+      "sha256": "8e8b103fa2595a3d3a5c4c133d4b5b701dc60991f0d9035f2af6072297276b3c"
+    },
+    {
+      "bytes": 521,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/07-compare-generation-help.log",
+      "sha256": "95e55555810103c68de3398b2d0d3d831e1108b3fd8e9b6f7123965d50474540"
+    },
+    {
+      "bytes": 645,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/08-empirical-gate-help.log",
+      "sha256": "2a9f89a80d3594c6c96bb9069400be39ddbb3fffa721f4626ec0ea2e0016df1f"
+    },
+    {
+      "bytes": 680,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/09-scope-snapshot-help.log",
+      "sha256": "165c699314121cb290ac54fbfcdf9760169349c8c4c745a50d1b37f6a32c701d"
+    },
+    {
+      "bytes": 669,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/10-profile-state-help.log",
+      "sha256": "534ac855eead9f001a901ff7b85df1f6e6e9cba0566a7aad9618d41f36dbb0a5"
+    },
+    {
+      "bytes": 361,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/11-eval-case-validation.log",
+      "sha256": "37657728ec0a0c9b51fc45c6436e4251db95d4e8aaf03d617fb2a3e28683527a"
+    },
+    {
+      "bytes": 766,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/12-eval-runner-help.log",
+      "sha256": "a8be79df7df900619abba575de4ca93bdfdbebe3795705abb10ed785bd4c6a56"
+    },
+    {
+      "bytes": 409,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/13-eval-scorer-help.log",
+      "sha256": "9f14e8e7cfce6c573a8440ff0e0b0d02fd5eea2c001e5b6f07c595940ac2a0ca"
+    },
+    {
+      "bytes": 904,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/14-forward-eval-aggregator-help.log",
+      "sha256": "a8a845f6bd493cbea34701fadd02774348cbd2a4449ed9ab924906613304640a"
+    },
+    {
+      "bytes": 776,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/15-skill-installer-dry-run.log",
+      "sha256": "c2dc36bbae6a000b12022b4fe0491f3eed0c6658ddf7ef16741706629ec10b0a"
+    },
+    {
+      "bytes": 431,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/16-tdd-evidence-help.log",
+      "sha256": "af59d526cb28bac9bea5e4b010df36f81b8376c7301fa7d6931921fee9971fe6"
+    },
+    {
+      "bytes": 156,
+      "path": "docs/verifications/p2-20260715/deterministic-report-evidence/17-source-tree-read-only.log",
+      "sha256": "1f1f2b18aa02672465a748aea110b7b7878a69da56bbacb26ed4f7ed0f9e847b"
+    },
+    {
+      "bytes": 10622,
+      "path": "docs/verifications/p2-20260715/deterministic-report.json",
+      "sha256": "2f34733c0a0316dadf833bde389ccd4325e2429037d78785b71661384add0849"
+    },
+    {
+      "bytes": 1879,
+      "path": "docs/verifications/p2-20260715/deterministic-report.xml",
+      "sha256": "9154331edc0bc4b0c9d389e68e940e54a9bf2fde49793eb4cf47e5476305bdbd"
+    },
+    {
+      "bytes": 6369,
+      "path": "docs/verifications/p2-20260715/forward-eval-report.json",
+      "sha256": "c12fe3abca2121b3a1472d294d8d16396420701c247456fa311ca98f1427bb0e"
+    },
+    {
+      "bytes": 6610,
+      "path": "docs/verifications/p2-20260715/forward-eval-report.pre-classification-rules.json",
+      "sha256": "b30e784a2dddb2b41800f80171b0e826b87cc130e6e32112205794e909bca397"
+    },
+    {
+      "bytes": 6398,
+      "path": "docs/verifications/p2-20260715/forward-eval-report.pre-windows-batch-harness.json",
+      "sha256": "a48c44095981c270fce9bc0768c71f0db129a47252ae185e9e19dcd262c1bc99"
+    },
+    {
+      "bytes": 1975,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/01-contract-validation.log",
+      "sha256": "99609cf8f887bb88ccf951b0f2f68b84e3dd7ae042e75c63e3ae1549a667402e"
+    },
+    {
+      "bytes": 403,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/02-captured-example-conformance.log",
+      "sha256": "6de9ae518e0dedc187c3c7226e4410fc6ec2e67d87426363fdc6c342a0748127"
+    },
+    {
+      "bytes": 23301,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/03-unit-test-suite.log",
+      "sha256": "4a12dffb44bba81dc891332307aab5b4790feda97519ffbfdee44cc94f6eb197"
+    },
+    {
+      "bytes": 250,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/04-skill-quick-validation.log",
+      "sha256": "b9bfa71573b30dcd0744157127762f24435d943fda65fd5265c441c40a9683f4"
+    },
+    {
+      "bytes": 788,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/05-inspect-project-help.log",
+      "sha256": "4137ee9b1cabd193ed93f2b7f3a78564920a82e3d35c1ab393b126a94bf0a5ee"
+    },
+    {
+      "bytes": 479,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/06-validate-profile-help.log",
+      "sha256": "8e8b103fa2595a3d3a5c4c133d4b5b701dc60991f0d9035f2af6072297276b3c"
+    },
+    {
+      "bytes": 521,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/07-compare-generation-help.log",
+      "sha256": "95e55555810103c68de3398b2d0d3d831e1108b3fd8e9b6f7123965d50474540"
+    },
+    {
+      "bytes": 645,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/08-empirical-gate-help.log",
+      "sha256": "2a9f89a80d3594c6c96bb9069400be39ddbb3fffa721f4626ec0ea2e0016df1f"
+    },
+    {
+      "bytes": 680,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/09-scope-snapshot-help.log",
+      "sha256": "165c699314121cb290ac54fbfcdf9760169349c8c4c745a50d1b37f6a32c701d"
+    },
+    {
+      "bytes": 669,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/10-profile-state-help.log",
+      "sha256": "534ac855eead9f001a901ff7b85df1f6e6e9cba0566a7aad9618d41f36dbb0a5"
+    },
+    {
+      "bytes": 361,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/11-eval-case-validation.log",
+      "sha256": "37657728ec0a0c9b51fc45c6436e4251db95d4e8aaf03d617fb2a3e28683527a"
+    },
+    {
+      "bytes": 766,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/12-eval-runner-help.log",
+      "sha256": "a8be79df7df900619abba575de4ca93bdfdbebe3795705abb10ed785bd4c6a56"
+    },
+    {
+      "bytes": 409,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/13-eval-scorer-help.log",
+      "sha256": "9f14e8e7cfce6c573a8440ff0e0b0d02fd5eea2c001e5b6f07c595940ac2a0ca"
+    },
+    {
+      "bytes": 904,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/14-forward-eval-aggregator-help.log",
+      "sha256": "a8a845f6bd493cbea34701fadd02774348cbd2a4449ed9ab924906613304640a"
+    },
+    {
+      "bytes": 776,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/15-skill-installer-dry-run.log",
+      "sha256": "c2dc36bbae6a000b12022b4fe0491f3eed0c6658ddf7ef16741706629ec10b0a"
+    },
+    {
+      "bytes": 431,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/16-tdd-evidence-help.log",
+      "sha256": "af59d526cb28bac9bea5e4b010df36f81b8376c7301fa7d6931921fee9971fe6"
+    },
+    {
+      "bytes": 377,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/17-combined-forward-report.log",
+      "sha256": "28c53d2c525b97a0532b4c8d50d0fb12012ef9c1b54eb4e1368d712e687471a0"
+    },
+    {
+      "bytes": 6615,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/18-empirical-adoption-report.log",
+      "sha256": "99b673d85178dd97ac5ce3e706b4c402e860587821e38f5489d65454aa4effcf"
+    },
+    {
+      "bytes": 10317,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/19-empirical-upgrade-report.log",
+      "sha256": "57a36a50fb27dbbc0748dff1a1982405f9bd3cafce10aef64f58fdb564a1703a"
+    },
+    {
+      "bytes": 20472,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/20-acceptance-traceability-report.log",
+      "sha256": "cf5a24f78214fd628f0d846ba827b20068bfdb15389c654068a8628940fcd3bb"
+    },
+    {
+      "bytes": 156,
+      "path": "docs/verifications/p2-20260715/full-report-evidence/21-source-tree-read-only.log",
+      "sha256": "1f1f2b18aa02672465a748aea110b7b7878a69da56bbacb26ed4f7ed0f9e847b"
+    },
+    {
+      "bytes": 13758,
+      "path": "docs/verifications/p2-20260715/full-report.json",
+      "sha256": "0b6d7c2e1838935f866932d4038ac61b6fe9c969ce92f56ff42a836a3a555304"
+    },
+    {
+      "bytes": 2111,
+      "path": "docs/verifications/p2-20260715/full-report.xml",
+      "sha256": "a53ec1ad13cf7ae117e72c0af4062a3a9f557a03668324dd61be40dcdd162bdc"
+    },
+    {
+      "bytes": 2871,
+      "path": "docs/verifications/p2-20260715/real-smoke-manifest.json",
+      "sha256": "cfcc72acfeb14cb94fe881458578154f32470a50e78b4333913a1eddee670dbc"
+    },
+    {
+      "bytes": 5254,
+      "path": "docs/verifications/p2-20260715/real-smoke-proposal.json",
+      "sha256": "e1edeb501ac2421dcf5514cea81d9c78e7cad609d5825979cedf446a4f3678ae"
+    },
+    {
+      "bytes": 7624,
+      "path": "docs/verifications/p2-20260715/real-smoke-report.json",
+      "sha256": "94890979385d039dc552e06a473f2f29c4e164c18b6eff59c4a3d8bf72b2d2ee"
+    },
+    {
+      "bytes": 7159,
+      "path": "docs/verifications/p2-20260715/real-smoke-report.pre-offline-enforcement.json",
+      "sha256": "26fcc88b8c3e67a2a54ae95203f52a53730a2eaecde68276a64b81ff73db8ff9"
+    },
+    {
+      "bytes": 5335,
+      "path": "docs/verifications/p2-20260715/real-upgrade-manifest.json",
+      "sha256": "d6a55531018a5bd03c70c7c2fe2463a3aaecb0dc4ea8bee656ef03403e4bf74c"
+    },
+    {
+      "bytes": 8074,
+      "path": "docs/verifications/p2-20260715/real-upgrade-proposal.json",
+      "sha256": "894b398a7904a2b4d1d88d735725718003385f4b76a94dda28bded301d839154"
+    },
+    {
+      "bytes": 12296,
+      "path": "docs/verifications/p2-20260715/real-upgrade-report.json",
+      "sha256": "56cc860cd9213fecf32ea6c3db34dedc68883b22ac22a4d221fefdc5bcb1a084"
+    },
+    {
+      "bytes": 11660,
+      "path": "docs/verifications/p2-20260715/real-upgrade-report.pre-explained-diff.json",
+      "sha256": "02d98ea33dc07cda801e288e8a4169043840b701206afbe2582a1bcbc745da5e"
+    },
+    {
+      "bytes": 536,
+      "path": "docs/verifications/p2-20260715/secret-scan-report.json",
+      "sha256": "841f0165eec3dc14fca3ba64ed6fa2e351151f5244725a3593f91d1c083d7d62"
+    },
+    {
+      "bytes": 20092,
+      "path": "docs/verifications/p2-20260715/traceability-report.json",
+      "sha256": "9d13a833defaa92af4ebb12de780cf3f15c97d89b6c9c67b8c832482040ecffe"
+    }
+  ],
+  "cleanup": {
+    "free_memory_percent_after_cleanup": 56,
+    "removed_bytes_approximate": 63045632,
+    "removed_paths": [
+      "/tmp/openapi-generator-tools-7.23.0",
+      "/tmp/openapi-generator-tools-7.22.0",
+      "/tmp/openapi-empirical-real-project-20260715"
+    ],
+    "status": "passed",
+    "user_processes_modified": false
+  },
+  "digests": {
+    "harness_sha256": "4930131cbb43f9499f6e6fb8e4451827864910d89ed899af469740d86a28821a",
+    "skill_sha256": "fe590fed8be092f66d2615f6dd6a65a21585d32efb34833712fbb603968cf6c7"
+  },
+  "final_status": "passed",
+  "plan": "docs/plans/full-fix-20260714-2050.md",
+  "schema_version": 1,
+  "tasks": [
+    {
+      "green_evidence": [
+        "docs/verifications/p2-20260715/P2-01-fake-green.log",
+        "docs/verifications/p2-20260715/P2-01-real-green.log",
+        "docs/verifications/p2-20260715/real-smoke-report.json"
+      ],
+      "id": "P2-01",
+      "red_evidence": [
+        "docs/verifications/p2-20260715/P2-01-red.log"
+      ],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/p2-20260715/P2-02-real-green.log",
+        "docs/verifications/p2-20260715/real-upgrade-report.json"
+      ],
+      "id": "P2-02",
+      "red_evidence": [
+        "docs/verifications/p2-20260715/P2-02-red.log"
+      ],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/p2-20260715/P2-03-green.log",
+        "docs/verifications/p2-20260715/traceability-report.json"
+      ],
+      "id": "P2-03",
+      "red_evidence": [
+        "docs/verifications/p2-20260715/P2-03-red.log"
+      ],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/p2-20260715/P2-04-green.log",
+        "docs/verifications/p2-20260715/deterministic-report.json"
+      ],
+      "id": "P2-04",
+      "red_evidence": [
+        "docs/verifications/p2-20260715/P2-04-red.log"
+      ],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/p2-20260715/P2-05-green.log",
+        "docs/verifications/p2-20260715/full-report.json"
+      ],
+      "id": "P2-05",
+      "red_evidence": [
+        "docs/verifications/p2-20260715/P2-05-red.log"
+      ],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/p2-20260715/P2-forward-green.log",
+        "docs/verifications/p2-20260715/forward-eval-report.json"
+      ],
+      "id": "P2-forward",
+      "red_evidence": [
+        "docs/verifications/p2-20260715/P2-forward-red.log"
+      ],
+      "status": "passed"
+    }
+  ]
+}

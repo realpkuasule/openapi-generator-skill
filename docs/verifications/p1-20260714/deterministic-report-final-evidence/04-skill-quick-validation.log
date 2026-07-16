@@ -1,0 +1,6 @@
+command=["/Users/zhichao/codex/openapi-generator/.venv/bin/python", "/Users/zhichao/.codex/skills/.system/skill-creator/scripts/quick_validate.py", "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering"]
+exit_code=0
+stdout:
+Skill is valid!
+
+stderr:

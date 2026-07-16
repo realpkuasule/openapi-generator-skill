@@ -1,0 +1,17 @@
+test_apply_links_both_platforms_to_one_core_tree_and_is_idempotent (tests.test_install_skill.InstallSkillTests.test_apply_links_both_platforms_to_one_core_tree_and_is_idempotent) ... ok
+test_cli_defaults_to_dry_run (tests.test_install_skill.InstallSkillTests.test_cli_defaults_to_dry_run) ... ok
+test_copy_fallback_has_same_digest (tests.test_install_skill.InstallSkillTests.test_copy_fallback_has_same_digest) ... ok
+test_default_dry_run_plans_both_platforms_without_writing (tests.test_install_skill.InstallSkillTests.test_default_dry_run_plans_both_platforms_without_writing) ... ok
+test_divergent_existing_target_blocks_all_writes (tests.test_install_skill.InstallSkillTests.test_divergent_existing_target_blocks_all_writes) ... ok
+test_all_references_exist_and_are_one_hop_from_skill (tests.test_skill_package.SkillPackageTests.test_all_references_exist_and_are_one_hop_from_skill) ... ok
+test_core_workflow_enforces_approval_boundary (tests.test_skill_package.SkillPackageTests.test_core_workflow_enforces_approval_boundary) ... ok
+test_decision_reference_supports_every_strategy (tests.test_skill_package.SkillPackageTests.test_decision_reference_supports_every_strategy) ... ok
+test_frontmatter_is_portable_and_trigger_complete (tests.test_skill_package.SkillPackageTests.test_frontmatter_is_portable_and_trigger_complete) ... ok
+test_generator_evaluation_has_seven_step_empirical_gate (tests.test_skill_package.SkillPackageTests.test_generator_evaluation_has_seven_step_empirical_gate) ... ok
+test_lifecycle_reference_defines_all_modes (tests.test_skill_package.SkillPackageTests.test_lifecycle_reference_defines_all_modes) ... ok
+test_platform_metadata_and_package_are_minimal (tests.test_skill_package.SkillPackageTests.test_platform_metadata_and_package_are_minimal) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.052s
+
+OK

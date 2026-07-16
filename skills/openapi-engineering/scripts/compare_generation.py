@@ -47,6 +47,16 @@ def collect(root: Path) -> dict[str, str]:
     return files
 
 
+def tree_digest(files: dict[str, str]) -> str:
+    hasher = hashlib.sha256()
+    for path, file_digest in files.items():
+        hasher.update(path.encode("utf-8"))
+        hasher.update(b"\0")
+        hasher.update(bytes.fromhex(file_digest))
+        hasher.update(b"\0")
+    return hasher.hexdigest()
+
+
 def compare(baseline: Path, candidate: Path) -> dict[str, Any]:
     baseline_files = collect(baseline)
     candidate_files = collect(candidate)
@@ -78,6 +88,8 @@ def compare(baseline: Path, candidate: Path) -> dict[str, Any]:
         "status": "ok",
         "baseline": str(baseline),
         "candidate": str(candidate),
+        "baseline_tree_sha256": tree_digest(baseline_files),
+        "candidate_tree_sha256": tree_digest(candidate_files),
         "summary": counts,
         "files": rows,
     }

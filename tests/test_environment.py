@@ -20,6 +20,10 @@ class EnvironmentTests(unittest.TestCase):
         self.assertIn('requires-python = ">=3.11"', text)
         self.assertIn("openapi-spec-validator", text)
 
+    def test_ci_has_a_repository_local_skill_validator(self) -> None:
+        validator = REPO_ROOT / "scripts" / "quick_validate.py"
+        self.assertTrue(validator.is_file())
+
 
 if __name__ == "__main__":
     unittest.main()

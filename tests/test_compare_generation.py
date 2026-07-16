@@ -34,6 +34,11 @@ class CompareGenerationTests(unittest.TestCase):
                 payload["summary"],
                 {"added": 1, "removed": 1, "changed": 1, "unchanged": 1},
             )
+            self.assertRegex(payload["baseline_tree_sha256"], r"^[a-f0-9]{64}$")
+            self.assertRegex(payload["candidate_tree_sha256"], r"^[a-f0-9]{64}$")
+            self.assertNotEqual(
+                payload["baseline_tree_sha256"], payload["candidate_tree_sha256"]
+            )
             states = {item["path"]: item["state"] for item in payload["files"]}
             self.assertEqual(
                 states,

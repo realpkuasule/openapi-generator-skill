@@ -1,0 +1,14 @@
+test_check_reports_only_relevant_tool_and_output_conflicts (tests.test_profile_state.ProfileStateTests.test_check_reports_only_relevant_tool_and_output_conflicts) ... FAIL
+
+======================================================================
+FAIL: test_check_reports_only_relevant_tool_and_output_conflicts (tests.test_profile_state.ProfileStateTests.test_check_reports_only_relevant_tool_and_output_conflicts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/zhichao/codex/openapi-generator/tests/test_profile_state.py", line 164, in test_check_reports_only_relevant_tool_and_output_conflicts
+    self.assertEqual(result.returncode, 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.536s
+
+FAILED (failures=1)

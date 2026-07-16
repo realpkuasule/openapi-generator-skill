@@ -1,0 +1,6 @@
+command=["/Users/zhichao/codex/openapi-generator/.venv/bin/python", "/Users/zhichao/codex/openapi-generator/scripts/capture_contract_examples.py", "--check"]
+exit_code=0
+stdout:
+{"checked": ["error-response.json", "empirical-gate-response.json", "generation-comparison-response.json", "inspect-response.json", "profile-state-response.json", "profile-validation-response.json"], "status": "ok"}
+
+stderr:

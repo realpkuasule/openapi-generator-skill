@@ -1,0 +1,4 @@
+Command: .venv/bin/python -m unittest tests.test_platform_adapters tests.test_eval_runner tests.test_eval_scorer tests.test_forward_aggregation
+Date: 2026-07-15
+Observed result: 50 tests passed. The final-observation example now uses non-schema placeholders instead of preselecting governance-only, while schema validation, project-boundary selection rules, hard gates, resume, and aggregation semantics remain unchanged.
+Follow-up: 50 tests also passed after adding canonical rules that hand-written adapters are language-native, speculative future candidates are omitted unless selected, and an observed existing generator is not itself an openapi-generator decision. Aggregation strictness was not relaxed.

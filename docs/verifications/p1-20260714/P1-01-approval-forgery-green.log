@@ -1,0 +1,6 @@
+test_apply_requires_exact_digest_and_rejects_stale_profile (tests.test_profile_state.ProfileStateTests.test_apply_requires_exact_digest_and_rejects_stale_profile) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 2.358s
+
+OK

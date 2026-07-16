@@ -1,0 +1,478 @@
+{
+  "approval": {
+    "approved_at": "2026-07-14T23:41:00+08:00",
+    "approved_message": "好，继续",
+    "excludes": [
+      "real Codex or Claude Code forward tests",
+      "writes to real ~/.codex or ~/.claude",
+      "generator downloads or execution"
+    ],
+    "includes": [
+      "P1 deterministic repository implementation",
+      "temporary-directory fake adapter tests",
+      "temporary-HOME Codex and Claude installation tests"
+    ]
+  },
+  "artifacts": [
+    {
+      "bytes": 267,
+      "path": "docs/verifications/p1-20260714/P1-01-approval-forgery-green.log",
+      "sha256": "3c8b4a58d0904ef753f1c1b9e74c5c1d89cbd100625a02698c63b74c4de292eb"
+    },
+    {
+      "bytes": 848,
+      "path": "docs/verifications/p1-20260714/P1-01-approval-forgery-red.log",
+      "sha256": "1e48ffbafca01e6842767db4ca8f05df4092984bffdace069777dab623cf23ce"
+    },
+    {
+      "bytes": 2353,
+      "path": "docs/verifications/p1-20260714/P1-01-green.log",
+      "sha256": "351ce3717f2501c562d1c7805fe69399cf2f788f88180b61bab28a098d19a95a"
+    },
+    {
+      "bytes": 10601,
+      "path": "docs/verifications/p1-20260714/P1-01-red.log",
+      "sha256": "c95bf1a7d641adf1d40195ecdbddcdc662899d237b6cdb60a3c1785bc4838f08"
+    },
+    {
+      "bytes": 267,
+      "path": "docs/verifications/p1-20260714/P1-01-tool-output-green.log",
+      "sha256": "e5f1fde8b5924098c4ed32c4f662fcda22804e99f9831bebb2491caa4de34e6d"
+    },
+    {
+      "bytes": 848,
+      "path": "docs/verifications/p1-20260714/P1-01-tool-output-red.log",
+      "sha256": "add40698054226a9aa77650a59f3a63161bec238d9589bddc18f51bafcb877de"
+    },
+    {
+      "bytes": 2765,
+      "path": "docs/verifications/p1-20260714/P1-02-03-green.log",
+      "sha256": "30e96885fe25d05bda357fe3ac66010bd697ff55cd5ebf817d8c3546e52d06d7"
+    },
+    {
+      "bytes": 1716,
+      "path": "docs/verifications/p1-20260714/P1-02-03-red.log",
+      "sha256": "d31d47b35167fe71af639fc36f324b4d04cb591f6236836eb8474064ac86045e"
+    },
+    {
+      "bytes": 894,
+      "path": "docs/verifications/p1-20260714/P1-04-green.log",
+      "sha256": "494b2c1a52d1d47be0fffe093bc0c0ca7725fb1bd30568ba2df1b5ba558d3012"
+    },
+    {
+      "bytes": 950,
+      "path": "docs/verifications/p1-20260714/P1-04-red.log",
+      "sha256": "bec9665dd57b565416abc4a44f434102b93ad6cbe2058b8c7da040760210f384"
+    },
+    {
+      "bytes": 1885,
+      "path": "docs/verifications/p1-20260714/P1-06-green.log",
+      "sha256": "a54b15db4ec819eb55edb6120422030f720029b65295087947eea0bf5e92e8b4"
+    },
+    {
+      "bytes": 952,
+      "path": "docs/verifications/p1-20260714/P1-06-red.log",
+      "sha256": "82639a3f6ee6bc89c569c22b15d1ab8923cab7489871f01c0a0ff496d98adf70"
+    },
+    {
+      "bytes": 13753,
+      "path": "docs/verifications/p1-20260714/claude-audit-replacement.json",
+      "sha256": "50d94965d4eca242ac31916d83ea31f5ea508084eb639662eabc254c9958743c"
+    },
+    {
+      "bytes": 168635,
+      "path": "docs/verifications/p1-20260714/claude-forward-eval-report.json",
+      "sha256": "91a15667f5e8c2a2e18ed6d3be8966c94cef3e287f7219a2f1128ed5cacb6de6"
+    },
+    {
+      "bytes": 165425,
+      "path": "docs/verifications/p1-20260714/claude-forward-eval-report.pre-audit-matrix-rerun.json",
+      "sha256": "24e9f2bfb2bb2b6fba99f0924b1792cab42843c74aacdb6598a53022b844e13b"
+    },
+    {
+      "bytes": 144035,
+      "path": "docs/verifications/p1-20260714/claude-forward-eval-report.pre-exact-plan-retry.json",
+      "sha256": "2e8a07ee783696401bdc0b98b521076ba9ac54e5ffdc60ac6c469cc87fab54c6"
+    },
+    {
+      "bytes": 129366,
+      "path": "docs/verifications/p1-20260714/claude-forward-eval-report.pre-final-format-retry.json",
+      "sha256": "b70ed7e8addc421f03adcd134d5bf2f9999b79a75ed9c5856c6139b876b93b1e"
+    },
+    {
+      "bytes": 167881,
+      "path": "docs/verifications/p1-20260714/claude-forward-eval-report.pre-final-harness-retry.json",
+      "sha256": "f03fb097eaeaf9f68aeaa5fe8cf799615704d95b12c1e5230b616049d0c83e00"
+    },
+    {
+      "bytes": 142881,
+      "path": "docs/verifications/p1-20260714/claude-forward-eval-report.pre-final-single-retry.json",
+      "sha256": "b1569b7063ec74d7f6c5c4309b7d8dca903798a9cd5f74b63289dd715b5f4da9"
+    },
+    {
+      "bytes": 142397,
+      "path": "docs/verifications/p1-20260714/claude-forward-eval-report.pre-nonpassing-retry.json",
+      "sha256": "a9511b7d7ac77712c6f686003408ab7967b41ad11dcf9c42f6c1d508297b77ec"
+    },
+    {
+      "bytes": 148361,
+      "path": "docs/verifications/p1-20260714/claude-forward-eval-report.pre-normalization.json",
+      "sha256": "cde929addd748e8283d4f859724f58a6431d9fcac882e487c9c4d63fb1a852b8"
+    },
+    {
+      "bytes": 160018,
+      "path": "docs/verifications/p1-20260714/claude-forward-eval-report.pre-rescore.json",
+      "sha256": "67449fa42b11c0deafe07cc53f72cb970a9eae98c4b21098aa6bc1d7cb1d220b"
+    },
+    {
+      "bytes": 128996,
+      "path": "docs/verifications/p1-20260714/codex-forward-eval-report.json",
+      "sha256": "01ad9b8f23f66ddedf27912d9989651fd0b54350aece97142911119f4b595bb2"
+    },
+    {
+      "bytes": 129330,
+      "path": "docs/verifications/p1-20260714/codex-forward-eval-report.pre-exact-plan-retry.json",
+      "sha256": "3b9f903c5fc39d2bf40c121eb11a8e2b539743f9e7366027ba160f782f837682"
+    },
+    {
+      "bytes": 114257,
+      "path": "docs/verifications/p1-20260714/codex-forward-eval-report.pre-final-harness-retry.json",
+      "sha256": "f68eb2dbd9a03237b8b191d90fb46404d17f34c728bd6d59d37892e7a457a653"
+    },
+    {
+      "bytes": 117974,
+      "path": "docs/verifications/p1-20260714/codex-forward-eval-report.pre-final-harness-second-retry.json",
+      "sha256": "064035cc67ffb8dc697ec0905e8e5db47d53badd6d30640d9dde614ee7ff1baf"
+    },
+    {
+      "bytes": 37655,
+      "path": "docs/verifications/p1-20260714/codex-forward-eval-report.pre-final-rescore.json",
+      "sha256": "e7427aa80f7e81471c693cdc48f427e7df7aef9abf39720214b6a19941d82826"
+    },
+    {
+      "bytes": 127556,
+      "path": "docs/verifications/p1-20260714/codex-forward-eval-report.pre-nonpassing-retry.json",
+      "sha256": "a1b46b087e528773d4ee873c9612e83e1da0dddf991cc1e44de639be5c82d07f"
+    },
+    {
+      "bytes": 132524,
+      "path": "docs/verifications/p1-20260714/codex-forward-eval-report.pre-rescore.json",
+      "sha256": "e608506c35cc291bf470b1ae79c6581219c6fc728cc9643688d1899c382061b3"
+    },
+    {
+      "bytes": 119091,
+      "path": "docs/verifications/p1-20260714/codex-forward-eval-report.pre-retry-capability.json",
+      "sha256": "583f8f9287c60f673970a1d2ad1cf0162dac0e97593c8965dec09b8e5c6eb8e1"
+    },
+    {
+      "bytes": 132962,
+      "path": "docs/verifications/p1-20260714/codex-forward-eval-report.pre-second-exact-plan-retry.json",
+      "sha256": "a2ef041bc9dd45717275282d6813cf267419c526e956636890d4b69dcc9dc4aa"
+    },
+    {
+      "bytes": 132354,
+      "path": "docs/verifications/p1-20260714/codex-forward-eval-report.pre-third-exact-plan-retry.json",
+      "sha256": "32ce826a75b97df150df2f0c2ef41f5fba09e38327609ea633e2888cd6bec7fd"
+    },
+    {
+      "bytes": 37655,
+      "path": "docs/verifications/p1-20260714/codex-forward-eval-report.pre-timeout-retries.json",
+      "sha256": "e7427aa80f7e81471c693cdc48f427e7df7aef9abf39720214b6a19941d82826"
+    },
+    {
+      "bytes": 16113,
+      "path": "docs/verifications/p1-20260714/codex-retry-animator-900s.json",
+      "sha256": "e0eb13f3a3017f0c2d65fc78182bb4c2c9e36696ec4b00c1f9115e61d43da572"
+    },
+    {
+      "bytes": 1411,
+      "path": "docs/verifications/p1-20260714/codex-retry-animator-one-sample.json",
+      "sha256": "e7969cb9dfa27ec28bbc65abeebd577a94e45ff801448f13bada7ec973f1bc07"
+    },
+    {
+      "bytes": 74059,
+      "path": "docs/verifications/p1-20260714/codex-retry-batch-two-samples.json",
+      "sha256": "bd254c2cf4c1ce40090ae1a7c8b9455215a8decfcf85ce0e63956d30ea1dd089"
+    },
+    {
+      "bytes": 1671,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/01-contract-validation.log",
+      "sha256": "05a923aa8613d9ce59917fadb0735c9b1c5cfbf028d4ba75c5a8bc999a7dc108"
+    },
+    {
+      "bytes": 372,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/02-captured-example-conformance.log",
+      "sha256": "644a72967daa78942c6982da109f1b2e299bb639a429f375e6fa06043b9f9f4f"
+    },
+    {
+      "bytes": 10909,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/03-unit-test-suite.log",
+      "sha256": "8ff864c288650ceeebcb7402675d5afbe0bae968a6ad3f74ffb9597fca9ccbdc"
+    },
+    {
+      "bytes": 263,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/04-skill-quick-validation.log",
+      "sha256": "36d00e8aa2f15724b86e8c0f30a128a9e1600ca03645df5cfce30ef28ec7eb43"
+    },
+    {
+      "bytes": 789,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/05-inspect-project-help.log",
+      "sha256": "4128585912a006edae803540b56ec5c2c4ac9b5b5a6faece54a569f7b90b80dc"
+    },
+    {
+      "bytes": 480,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/06-validate-profile-help.log",
+      "sha256": "6d6e2a389317e0969d5daebb952e7e895cf0816c63c9362ef2ab6e54b552d8ed"
+    },
+    {
+      "bytes": 522,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/07-compare-generation-help.log",
+      "sha256": "9117e7ab192a962d5defe65d28ace8ca79a1c354f89aa4e85f2f87031dbfe50a"
+    },
+    {
+      "bytes": 670,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/08-profile-state-help.log",
+      "sha256": "c5fe5884ff5b10859162074502b5a8cb429e6660e0fc6052b9af13f5f6d369f7"
+    },
+    {
+      "bytes": 362,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/09-eval-case-validation.log",
+      "sha256": "94d50bc00bfc374701d7f11c5a24ad040666d42c39e3d647cd589615f396e9b8"
+    },
+    {
+      "bytes": 637,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/10-eval-runner-help.log",
+      "sha256": "5ca6e15bf37ec566b7274df8a5294a1bd6f749ff0ed2a673445dda1a490414c4"
+    },
+    {
+      "bytes": 958,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/11-eval-scorer-help.log",
+      "sha256": "5d6c742b89c19b8b58bdedc67610816efb99df764d550dcbb8d17c0e9b3add36"
+    },
+    {
+      "bytes": 777,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/12-skill-installer-dry-run.log",
+      "sha256": "5fa665fd6a7a6d1bcf450ff4ef40fb88b5c11a1a5b8eeaa9b34674012e44a8a3"
+    },
+    {
+      "bytes": 432,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/13-tdd-evidence-help.log",
+      "sha256": "19f6e74d4aa0d56bcd8b696bec90757f271d37c88cfb5408e23ebb33399b948f"
+    },
+    {
+      "bytes": 156,
+      "path": "docs/verifications/p1-20260714/deterministic-report-evidence/14-source-tree-read-only.log",
+      "sha256": "e61f29e7c3a8f3600bb653f525a21ab6f72c7dd8eb90296c59a7b4738fc5cda4"
+    },
+    {
+      "bytes": 1670,
+      "path": "docs/verifications/p1-20260714/deterministic-report-final-evidence/01-contract-validation.log",
+      "sha256": "d8241208a7aa9aa92291543fbfa4397f53544391a0d921a7af72a5d112010821"
+    },
+    {
+      "bytes": 371,
+      "path": "docs/verifications/p1-20260714/deterministic-report-final-evidence/02-captured-example-conformance.log",
+      "sha256": "c5a3928f5ff1d49532a44c575c2539b7688b4932957556a69dd08e52c3d04244"
+    },
+    {
+      "bytes": 17930,
+      "path": "docs/verifications/p1-20260714/deterministic-report-final-evidence/03-unit-test-suite.log",
+      "sha256": "ca50c136c3de6cf3ccbe1a31820cdfc69d19be9ffdd365192a361289df1c3f36"
+    },
+    {
+      "bytes": 262,
+      "path": "docs/verifications/p1-20260714/deterministic-report-final-evidence/04-skill-quick-validation.log",
+      "sha256": "1ce474f0c8a6075a67ce96eaa16d93f8cf759726e3ba40f1d94bd238d315d72b"
+    },
+    {
+      "bytes": 788,
+      "path": "docs/verifications/p1-20260714/deterministic-report-final-evidence/05-inspect-project-help.log",
+      "sha256": "4137ee9b1cabd193ed93f2b7f3a78564920a82e3d35c1ab393b126a94bf0a5ee"
+    },
+    {
+      "bytes": 479,
+      "path": "docs/verifications/p1-20260714/deterministic-report-final-evidence/06-validate-profile-help.log",
+      "sha256": "8e8b103fa2595a3d3a5c4c133d4b5b701dc60991f0d9035f2af6072297276b3c"
+    },
+    {
+      "bytes": 521,
+      "path": "docs/verifications/p1-20260714/deterministic-report-final-evidence/07-compare-generation-help.log",
+      "sha256": "95e55555810103c68de3398b2d0d3d831e1108b3fd8e9b6f7123965d50474540"
+    },
+    {
+      "bytes": 669,
+      "path": "docs/verifications/p1-20260714/deterministic-report-final-evidence/08-profile-state-help.log",
+      "sha256": "534ac855eead9f001a901ff7b85df1f6e6e9cba0566a7aad9618d41f36dbb0a5"
+    },
+    {
+      "bytes": 361,
+      "path": "docs/verifications/p1-20260714/deterministic-report-final-evidence/09-eval-case-validation.log",
+      "sha256": "37657728ec0a0c9b51fc45c6436e4251db95d4e8aaf03d617fb2a3e28683527a"
+    },
+    {
+      "bytes": 766,
+      "path": "docs/verifications/p1-20260714/deterministic-report-final-evidence/10-eval-runner-help.log",
+      "sha256": "a8be79df7df900619abba575de4ca93bdfdbebe3795705abb10ed785bd4c6a56"
+    },
+    {
+      "bytes": 409,
+      "path": "docs/verifications/p1-20260714/deterministic-report-final-evidence/11-eval-scorer-help.log",
+      "sha256": "9f14e8e7cfce6c573a8440ff0e0b0d02fd5eea2c001e5b6f07c595940ac2a0ca"
+    },
+    {
+      "bytes": 904,
+      "path": "docs/verifications/p1-20260714/deterministic-report-final-evidence/12-forward-eval-aggregator-help.log",
+      "sha256": "a8a845f6bd493cbea34701fadd02774348cbd2a4449ed9ab924906613304640a"
+    },
+    {
+      "bytes": 776,
+      "path": "docs/verifications/p1-20260714/deterministic-report-final-evidence/13-skill-installer-dry-run.log",
+      "sha256": "0678dc3f284d4805ca866808748f8bcfc690e8ec2e99030a65dcccef29f3999c"
+    },
+    {
+      "bytes": 431,
+      "path": "docs/verifications/p1-20260714/deterministic-report-final-evidence/14-tdd-evidence-help.log",
+      "sha256": "af59d526cb28bac9bea5e4b010df36f81b8376c7301fa7d6931921fee9971fe6"
+    },
+    {
+      "bytes": 156,
+      "path": "docs/verifications/p1-20260714/deterministic-report-final-evidence/15-source-tree-read-only.log",
+      "sha256": "fee3c7d64d7aba9c4c7ad23556177eb205e80185bb088098d1636cb753cca5dc"
+    },
+    {
+      "bytes": 9474,
+      "path": "docs/verifications/p1-20260714/deterministic-report-final.json",
+      "sha256": "de29efc1725e0903d9cdbcbe512597ea1f170901cc9d0ded89849c544414a086"
+    },
+    {
+      "bytes": 8775,
+      "path": "docs/verifications/p1-20260714/deterministic-report.json",
+      "sha256": "a019bb9795082e115d69335890e96e81fc54f890ecbbb8016cb083ac71a46469"
+    },
+    {
+      "bytes": 6314,
+      "path": "docs/verifications/p1-20260714/forward-eval-report.json",
+      "sha256": "a2db8aa8744a571f643b6a550720bdcbb2e99262d95e0e849befbb5ba1608809"
+    },
+    {
+      "bytes": 377,
+      "path": "docs/verifications/p1-20260714/forward-verification-report-evidence/01-combined-forward-report.log",
+      "sha256": "18b0fd1ecb5b9c300561c230c9c29103dc6d8b299ddacc547e01770154073afb"
+    },
+    {
+      "bytes": 156,
+      "path": "docs/verifications/p1-20260714/forward-verification-report-evidence/02-source-tree-read-only.log",
+      "sha256": "fee3c7d64d7aba9c4c7ad23556177eb205e80185bb088098d1636cb753cca5dc"
+    },
+    {
+      "bytes": 1469,
+      "path": "docs/verifications/p1-20260714/forward-verification-report.json",
+      "sha256": "57e366d966965f5d7944278e31e03130208a97e7e79fd5dcc6ed37d702dc67c3"
+    },
+    {
+      "bytes": 1531,
+      "path": "docs/verifications/p1-20260714/resource-safety-report.json",
+      "sha256": "c60bedb18b17880d70c7f2036134a0a8709e657175a5819ec613d95252eb9c98"
+    },
+    {
+      "bytes": 497,
+      "path": "docs/verifications/p1-20260714/secret-scan-report.json",
+      "sha256": "56d3c9d7448de15d284ec8c534205fad3a9b7a1b4e6e14312b25bde546846134"
+    }
+  ],
+  "base_commit": "b77e809e0e7af975dcb80669944d0621c0c18c1a",
+  "branch": "feat/p1-governance-evals",
+  "checkpoint_b_approval": {
+    "approved_message": "好，继续",
+    "excludes": [
+      "writes to real ~/.codex or ~/.claude",
+      "generator downloads or execution"
+    ],
+    "includes": [
+      "real Codex and Claude Code forward tests",
+      "read-only isolated platform invocation",
+      "atomic per-sample checkpoints and exact resume",
+      "nonpassing-slot retries and cross-platform aggregation"
+    ]
+  },
+  "resource_policy": {
+    "abort_below_memory_free_percent": 25,
+    "atomic_sample_checkpoints": true,
+    "platform_concurrency": 1,
+    "process_group_cleanup_on_interrupt_or_timeout": true,
+    "sample_concurrency": 1
+  },
+  "schema_version": 1,
+  "tasks": [
+    {
+      "green_evidence": [
+        "docs/verifications/p1-20260714/P1-01-approval-forgery-green.log",
+        "docs/verifications/p1-20260714/P1-01-green.log",
+        "docs/verifications/p1-20260714/P1-01-tool-output-green.log",
+        "docs/verifications/p1-20260714/deterministic-report-final.json"
+      ],
+      "id": "P1-01",
+      "red_evidence": [
+        "docs/verifications/p1-20260714/P1-01-approval-forgery-red.log",
+        "docs/verifications/p1-20260714/P1-01-red.log",
+        "docs/verifications/p1-20260714/P1-01-tool-output-red.log"
+      ],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/p1-20260714/P1-02-03-green.log",
+        "docs/verifications/p1-20260714/deterministic-report-final.json"
+      ],
+      "id": "P1-02/P1-03",
+      "red_evidence": [
+        "docs/verifications/p1-20260714/P1-02-03-red.log"
+      ],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/p1-20260714/P1-04-green.log",
+        "docs/verifications/p1-20260714/deterministic-report-final.json",
+        "docs/verifications/p1-20260714/resource-safety-report.json"
+      ],
+      "id": "P1-04",
+      "red_evidence": [
+        "docs/verifications/p1-20260714/P1-04-red.log"
+      ],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/p1-20260714/codex-forward-eval-report.json",
+        "docs/verifications/p1-20260714/claude-forward-eval-report.json",
+        "docs/verifications/p1-20260714/forward-eval-report.json",
+        "docs/verifications/p1-20260714/forward-verification-report.json",
+        "docs/verifications/p1-20260714/secret-scan-report.json"
+      ],
+      "id": "P1-05",
+      "red_evidence": [
+        "docs/verifications/p1-20260714/codex-forward-eval-report.pre-retry-capability.json",
+        "docs/verifications/p1-20260714/codex-forward-eval-report.pre-nonpassing-retry.json",
+        "docs/verifications/p1-20260714/codex-forward-eval-report.pre-final-harness-retry.json",
+        "docs/verifications/p1-20260714/codex-forward-eval-report.pre-final-harness-second-retry.json",
+        "docs/verifications/p1-20260714/claude-forward-eval-report.pre-nonpassing-retry.json",
+        "docs/verifications/p1-20260714/claude-forward-eval-report.pre-audit-matrix-rerun.json",
+        "docs/verifications/p1-20260714/claude-forward-eval-report.pre-final-format-retry.json",
+        "docs/verifications/p1-20260714/claude-forward-eval-report.pre-final-single-retry.json"
+      ],
+      "status": "passed"
+    },
+    {
+      "green_evidence": [
+        "docs/verifications/p1-20260714/P1-06-green.log",
+        "docs/verifications/p1-20260714/deterministic-report-final.json"
+      ],
+      "id": "P1-06",
+      "red_evidence": [
+        "docs/verifications/p1-20260714/P1-06-red.log"
+      ],
+      "status": "passed"
+    }
+  ]
+}

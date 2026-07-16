@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openapi-engineering.local/schemas/forward-observation.schema.json",
+  "title": "OpenAPI Engineering Forward Observation",
+  "description": "The tested platform's structured account of its own decision after a real multi-turn boundary interview. Harness-owned transcript, approval, action, and file-integrity evidence are added separately.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "observed_modes",
+    "boundary_summary",
+    "tool_decision",
+    "scope_expansion_requires_reapproval",
+    "completion_report",
+    "unverified"
+  ],
+  "properties": {
+    "observed_modes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "eval-case.schema.json#/$defs/mode" }
+    },
+    "boundary_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fields", "included", "excluded"],
+      "properties": {
+        "fields": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "included": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "excluded": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "tool_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary_strategy", "boundaries"],
+      "properties": {
+        "primary_strategy": { "$ref": "eval-case.schema.json#/$defs/strategy" },
+        "boundaries": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["boundary", "strategy"],
+            "properties": {
+              "boundary": { "type": "string", "minLength": 1 },
+              "strategy": { "$ref": "eval-case.schema.json#/$defs/strategy" }
+            }
+          }
+        }
+      }
+    },
+    "scope_expansion_requires_reapproval": { "type": "boolean" },
+    "completion_report": {
+      "oneOf": [
+        { "$ref": "completion-report.schema.json" },
+        { "type": "null" }
+      ]
+    },
+    "unverified": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}

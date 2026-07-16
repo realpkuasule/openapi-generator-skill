@@ -1,0 +1,8 @@
+Commands:
+- .venv/bin/python -m unittest tests.test_empirical_gate.EmpiricalGateTests.test_check_report_accepts_fresh_evidence_and_rejects_tampering tests.test_verify_runner tests.test_ci_workflow tests.test_environment
+- .venv/bin/python skills/openapi-engineering/scripts/run_empirical_gate.py --manifest docs/verifications/p2-20260715/real-smoke-manifest.json --check-report docs/verifications/p2-20260715/real-smoke-report.json
+- .venv/bin/python skills/openapi-engineering/scripts/run_empirical_gate.py --manifest docs/verifications/p2-20260715/real-upgrade-manifest.json --check-report docs/verifications/p2-20260715/real-upgrade-report.json
+- .venv/bin/python scripts/quick_validate.py skills/openapi-engineering
+- .venv/bin/python -m py_compile scripts/verify.py scripts/check_traceability.py scripts/quick_validate.py skills/openapi-engineering/scripts/run_empirical_gate.py
+Date: 2026-07-15
+Observed result: 15 focused tests passed; both real empirical reports passed read-only freshness checks; the repository-local Skill validator and Python compilation passed. No empirical temporary directories or generator/Go processes remained.

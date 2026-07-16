@@ -1,0 +1,184 @@
+{
+  "approval_digest": "1c6a5eed76f6fef0200e3b036d97ea646a3df89199da22c81d1e1f722833fbda",
+  "baseline": {
+    "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "path": "/private/tmp/openapi-empirical-real-project-20260715/adoption-empty",
+    "unchanged": true
+  },
+  "contract": {
+    "expected_sha256": "7d1e07b0c746ffdd36e8b607ebfd3469c18ead0ebfef4f09ca62641b6c18ea54",
+    "observed_sha256": "7d1e07b0c746ffdd36e8b607ebfd3469c18ead0ebfef4f09ca62641b6c18ea54",
+    "path": "/private/tmp/openapi-empirical-real-project-20260715/openapi.yaml",
+    "verified": true
+  },
+  "decision": "proposed",
+  "diff": null,
+  "finished_at": "2026-07-15T14:13:18.978475Z",
+  "fixture": {
+    "expected_sha256": "bae2cc3d1f63a19bfcabeb4306ac81c87ba80c4935e1003642f1484cf528c137",
+    "observed_sha256": "bae2cc3d1f63a19bfcabeb4306ac81c87ba80c4935e1003642f1484cf528c137",
+    "path": "/private/tmp/openapi-empirical-real-project-20260715/fixtures/fixture.py",
+    "verified": true
+  },
+  "gates": [
+    {
+      "command": [
+        "java",
+        "-Xmx512m",
+        "-jar",
+        "{artifact}",
+        "validate",
+        "-i",
+        "{contract}"
+      ],
+      "dependency_install": false,
+      "duration_ms": 0,
+      "exit_code": null,
+      "name": "validate",
+      "network": false,
+      "risk": "Execution requires exact approval.",
+      "rollback": null,
+      "status": "unverified",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Planned only."
+    },
+    {
+      "command": [
+        "java",
+        "-Xmx512m",
+        "-jar",
+        "{artifact}",
+        "generate",
+        "-i",
+        "{contract}",
+        "-g",
+        "go",
+        "-o",
+        "{output}",
+        "--additional-properties=packageName=openapi,packageVersion=1.0.0"
+      ],
+      "dependency_install": false,
+      "duration_ms": 0,
+      "exit_code": null,
+      "name": "generate",
+      "network": false,
+      "risk": "Execution requires exact approval.",
+      "rollback": "Discard the temporary output.",
+      "status": "unverified",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Planned only."
+    },
+    {
+      "command": [],
+      "dependency_install": false,
+      "duration_ms": 0,
+      "exit_code": null,
+      "name": "inventory",
+      "network": false,
+      "risk": "Execution requires exact approval.",
+      "rollback": null,
+      "status": "unverified",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Planned only."
+    },
+    {
+      "command": [],
+      "dependency_install": false,
+      "duration_ms": 0,
+      "exit_code": null,
+      "name": "diff",
+      "network": false,
+      "risk": "Execution requires exact approval.",
+      "rollback": null,
+      "status": "unverified",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Planned only."
+    },
+    {
+      "command": [
+        "go",
+        "-C",
+        "{output}",
+        "test",
+        "-run",
+        "^$",
+        "."
+      ],
+      "dependency_install": true,
+      "duration_ms": 0,
+      "exit_code": null,
+      "name": "compile",
+      "network": true,
+      "risk": "Execution requires exact approval.",
+      "rollback": null,
+      "status": "unverified",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Planned only."
+    },
+    {
+      "command": [
+        "/Users/zhichao/codex/openapi-generator/.venv/bin/python",
+        "{fixture}",
+        "{output}"
+      ],
+      "dependency_install": true,
+      "duration_ms": 0,
+      "exit_code": null,
+      "name": "fixture",
+      "network": true,
+      "risk": "Execution requires exact approval.",
+      "rollback": null,
+      "status": "unverified",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "summary": "Planned only."
+    }
+  ],
+  "generator": {
+    "artifact_sha256": "cb087e40001e31eb08ef6140dd5de10938dbeb89016a1fe0481eaa25cd569026",
+    "maturity": "stable",
+    "name": "openapi-generator-cli",
+    "target": "go",
+    "version": "7.23.0"
+  },
+  "inventory": null,
+  "manifest_sha256": "1c6a5eed76f6fef0200e3b036d97ea646a3df89199da22c81d1e1f722833fbda",
+  "mode": "adoption",
+  "previous_generator": null,
+  "previous_inventory": null,
+  "project": {
+    "after_sha256": "6630c59be223c8e36799ae45c868b95382007ccc41c32be77d6d57136772bf02",
+    "before_sha256": "6630c59be223c8e36799ae45c868b95382007ccc41c32be77d6d57136772bf02",
+    "path": "/private/tmp/openapi-empirical-real-project-20260715",
+    "unchanged": true
+  },
+  "report_version": 1,
+  "risks": [
+    "Commands have not run; no generator claim is verified."
+  ],
+  "rollback": [
+    "Discard the temporary candidate directory; the accepted baseline and project remain read-only.",
+    "Delete /tmp/openapi-generator-tools-7.23.0 to remove the downloaded generator artifact."
+  ],
+  "started_at": "2026-07-15T14:13:18.978107Z",
+  "status": "proposed",
+  "unverified": [
+    "validate",
+    "generate",
+    "inventory",
+    "diff",
+    "compile",
+    "fixture"
+  ],
+  "workspace": {
+    "created": false,
+    "reclaimed": true,
+    "temporary": true
+  }
+}

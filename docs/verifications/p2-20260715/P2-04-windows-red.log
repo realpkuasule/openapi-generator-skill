@@ -1,0 +1,8 @@
+task=P2-04-windows-hosted
+phase=RED
+run=https://github.com/realpkuasule/openapi-generator-skill/actions/runs/29460395706
+job=https://github.com/realpkuasule/openapi-generator-skill/actions/runs/29460395706/job/87502472585
+head=d541a1d0d06b2afe7a457096609f49f8eb779689
+result=failed
+root_causes=generation comparison fixture used platform newline; installer test expected symlink on Windows; fake platform CLI fixture used a POSIX shebang
+unaffected=ubuntu-latest passed; macos-latest passed; Skill digest and real platform protocol unchanged
