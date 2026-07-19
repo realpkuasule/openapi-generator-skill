@@ -34,6 +34,9 @@ class ExampleCaptureTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             output = Path(directory)
+            for example in output.glob("*.json"):
+                with self.subTest(example=example.name):
+                    self.assertNotIn(b"\r\n", example.read_bytes())
             inspection = json.loads((output / "inspect-response.json").read_text())
             comparison = json.loads(
                 (output / "generation-comparison-response.json").read_text()

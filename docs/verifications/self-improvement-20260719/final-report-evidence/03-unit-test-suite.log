@@ -265,6 +265,6 @@ test_report_and_evidence_redact_machine_specific_repository_paths (test_verify_r
 test_windows_npm_gate_uses_the_cmd_shim_without_a_shell (test_verify_runner.VerifyRunnerTests.test_windows_npm_gate_uses_the_cmd_shim_without_a_shell) ... ok
 
 ----------------------------------------------------------------------
-Ran 260 tests in 123.918s
+Ran 260 tests in 134.635s
 
 OK (skipped=2)

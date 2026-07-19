@@ -524,9 +524,9 @@ def capture_examples(output: Path) -> None:
             "maintenance-promotion-response.json": promotion,
         }
     for name, payload in examples.items():
-        (output / name).write_text(
+        write_text(
+            output / name,
             json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-            encoding="utf-8",
         )
 
 
