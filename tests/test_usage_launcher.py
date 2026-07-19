@@ -50,6 +50,7 @@ def run_session(root: Path, *command: str, **limits: str):
 
 
 class UsageLauncherTests(unittest.TestCase):
+    @unittest.skipIf(os.name == "nt", "Windows intentionally blocks unsupported RSS sampling")
     def test_completed_child_records_strict_facts_without_raw_output_or_argv(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -70,6 +71,22 @@ class UsageLauncherTests(unittest.TestCase):
             serialized = json.dumps(payload)
             self.assertNotIn("CANARY_CHILD_OUTPUT_SECRET", serialized)
             self.assertNotIn("print(", serialized)
+
+    @unittest.skipUnless(os.name == "nt", "Windows-specific unsupported launcher contract")
+    def test_windows_launcher_blocks_before_starting_child(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            result, payload, output = run_session(
+                Path(directory),
+                sys.executable,
+                "-c",
+                "print('must not run')",
+            )
+
+            self.assertEqual(result.returncode, 2, result.stderr)
+            self.assertEqual(payload, json.loads(output.read_text(encoding="utf-8")))
+            self.assertEqual(payload["status"], "blocked")
+            self.assertEqual(payload["termination_reason"], "unsupported")
+            self.assertEqual(payload["peak_rss_mb"]["source"], "unsupported")
 
     @unittest.skipIf(os.name == "nt", "POSIX process-group isolation is asserted here")
     def test_timeout_kills_only_owned_group_and_leaves_existing_process_alive(self) -> None:
@@ -116,6 +133,7 @@ class UsageLauncherTests(unittest.TestCase):
             self.assertGreater(payload["peak_rss_mb"]["value"], 20)
             self.assertTrue(payload["process_group_reclaimed"])
 
+    @unittest.skipIf(os.name == "nt", "Windows intentionally blocks unsupported RSS sampling")
     def test_launcher_record_uses_bounded_report_facts_and_rejects_manual_spoofing(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

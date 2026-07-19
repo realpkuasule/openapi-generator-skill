@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tests.support import REPO_ROOT, snapshot_tree
+from tests.support import REPO_ROOT, snapshot_tree, usage_config_path
 
 
 CLI = REPO_ROOT / "bin" / "openapi-engineering-skill.mjs"
@@ -25,6 +25,34 @@ def run_usage(home: Path, *arguments: str) -> tuple[subprocess.CompletedProcess[
 
 
 class UsageConfigTests(unittest.TestCase):
+    def test_windows_defaults_are_derived_from_explicit_home_not_ambient_localappdata(self) -> None:
+        module = (REPO_ROOT / "lib" / "usage" / "paths.mjs").as_uri()
+        script = (
+            f'import {{ defaultConfigRoot, defaultStateRoot }} from {json.dumps(module)};'
+            "console.log(JSON.stringify({"
+            "config: defaultConfigRoot('/isolated-home', 'win32', {LOCALAPPDATA:'/ambient'}),"
+            "state: defaultStateRoot('/isolated-home', 'win32', {LOCALAPPDATA:'/ambient'})"
+            "}));"
+        )
+        result = subprocess.run(
+            ["node", "--input-type=module", "--eval", script],
+            cwd=REPO_ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertEqual(
+            payload["config"],
+            "/isolated-home/AppData/Local/openapi-engineering-skill",
+        )
+        self.assertEqual(
+            payload["state"],
+            "/isolated-home/AppData/Local/openapi-engineering-skill/state",
+        )
+
     def test_status_is_read_only_and_defaults_to_disabled(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             home = Path(directory)
@@ -56,7 +84,7 @@ class UsageConfigTests(unittest.TestCase):
             applied, payload = run_usage(
                 home, "enable", "--device", "m4", "--coordinator", "--apply"
             )
-            config_path = home / ".config" / "openapi-engineering-skill" / "usage.json"
+            config_path = usage_config_path(home)
 
             self.assertEqual(applied.returncode, 0, applied.stderr)
             self.assertTrue(payload["applied"])

@@ -83,7 +83,7 @@ def portable_path(path: Path) -> str:
     try:
         return resolved.relative_to(REPO_ROOT.resolve()).as_posix()
     except ValueError:
-        return redact_machine_paths(str(resolved))
+        return str(resolved)
 
 
 def portable_command(command: Sequence[str]) -> list[str]:

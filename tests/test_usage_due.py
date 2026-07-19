@@ -6,6 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from tests.support import usage_state_root
 from tests.test_usage_summary import event, run_usage, seed
 
 
@@ -24,7 +25,7 @@ class UsageDueTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             home = Path(directory)
             run_usage(home, "enable", "--device", "m2", "--apply")
-            state = home / ".local" / "state" / "openapi-engineering-skill"
+            state = usage_state_root(home)
             before = tree_hash(state)
 
             result, payload = run_usage(home, "due", "--now", "2026-07-19T18:00:00Z")

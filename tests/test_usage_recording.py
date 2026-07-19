@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tests.support import REPO_ROOT, snapshot_tree
+from tests.support import REPO_ROOT, snapshot_tree, usage_state_root
 
 
 CLI = REPO_ROOT / "bin" / "openapi-engineering-skill.mjs"
@@ -70,7 +70,40 @@ def record(home: Path, report: Path, session: str, *extra: str):
     )
 
 
+def usage_tree_digest(root: Path) -> str:
+    module = (REPO_ROOT / "lib" / "usage" / "events.mjs").as_uri()
+    script = (
+        f'import {{ treeDigest }} from {json.dumps(module)};'
+        "console.log(await treeDigest(process.argv[1]));"
+    )
+    result = subprocess.run(
+        ["node", "--input-type=module", "--eval", script, str(root)],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise AssertionError(result.stderr or result.stdout)
+    return result.stdout.strip()
+
+
 class UsageRecordingTests(unittest.TestCase):
+    def test_skill_digest_ignores_generated_cache_files(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            skill = Path(directory) / "skill"
+            cache = skill / "scripts" / "__pycache__"
+            cache.mkdir(parents=True)
+            (skill / "SKILL.md").write_text("stable\n", encoding="utf-8")
+            (skill / ".DS_Store").write_bytes(b"first")
+            (cache / "module.pyc").write_bytes(b"first")
+
+            before = usage_tree_digest(skill)
+            (skill / ".DS_Store").write_bytes(b"second")
+            (cache / "module.pyc").write_bytes(b"second")
+
+            self.assertEqual(usage_tree_digest(skill), before)
+
     def test_disabled_record_is_a_zero_write_noop(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             home = Path(directory)
@@ -101,7 +134,7 @@ class UsageRecordingTests(unittest.TestCase):
             self.assertEqual(payload["event"]["project_alias"], "animator")
             self.assertEqual(payload["event"]["duration_ms"]["availability"], "unavailable")
 
-            state = home / ".local" / "state" / "openapi-engineering-skill"
+            state = usage_state_root(home)
             event_file = state / "local" / "events" / "m4" / "2026-07.jsonl"
             outbound_files = list((state / "outbound" / "m4").glob("*.json"))
             self.assertTrue(event_file.is_file())
@@ -159,7 +192,7 @@ class UsageRecordingTests(unittest.TestCase):
             self.assertEqual(second["status"], "duplicate")
             self.assertFalse(second["recorded"])
             self.assertEqual(second["event"], first["event"])
-            state = home / ".local" / "state" / "openapi-engineering-skill"
+            state = usage_state_root(home)
             lines = (state / "local" / "events" / "m4" / "2026-07.jsonl").read_text(
                 encoding="utf-8"
             ).splitlines()
@@ -192,7 +225,7 @@ class UsageRecordingTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual(payload["rating"], "friction")
             self.assertEqual(payload["note"], "Interview was longer than needed")
-            state = home / ".local" / "state" / "openapi-engineering-skill"
+            state = usage_state_root(home)
             feedback_file = state / "feedback" / "m4" / "2026-07.jsonl"
             self.assertTrue(feedback_file.is_file())
             outbound = json.loads(

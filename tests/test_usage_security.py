@@ -6,6 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from tests.support import usage_state_root
 from tests.test_usage_recording import record, run_usage, write_report
 
 
@@ -19,7 +20,7 @@ class UsageSecurityTests(unittest.TestCase):
             report = home / "completion.json"
             write_report(report)
             run_usage(home, "enable", "--device", "m4", "--apply")
-            state = home / ".local" / "state" / "openapi-engineering-skill"
+            state = usage_state_root(home)
             external = root / "external"
             external.mkdir()
             (state / "outbound").mkdir(parents=True)
@@ -44,7 +45,7 @@ class UsageSecurityTests(unittest.TestCase):
             run_usage(home, "enable", "--device", "m4", "--apply")
             external = root / "external"
             external.mkdir()
-            state = home / ".local" / "state" / "openapi-engineering-skill"
+            state = usage_state_root(home)
             state.parent.mkdir(parents=True)
             state.symlink_to(external, target_is_directory=True)
 
@@ -90,7 +91,7 @@ class UsageSecurityTests(unittest.TestCase):
             write_report(report)
             run_usage(home, "enable", "--device", "m4", "--apply")
             record(home, report, "ses-0000000000000013")
-            outbound = home / ".local" / "state" / "openapi-engineering-skill" / "outbound" / "m4"
+            outbound = usage_state_root(home) / "outbound" / "m4"
             envelope = json.loads(next(outbound.glob("*.json")).read_text(encoding="utf-8"))
 
             self.assertEqual(

@@ -8,7 +8,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator, FormatChecker
 
-from tests.support import REPO_ROOT, snapshot_tree
+from tests.support import REPO_ROOT, snapshot_tree, usage_state_root
 from tests.test_usage_recording import run_usage
 from tests.test_usage_summary import event
 from tests.test_usage_git_sync import configure, git, show
@@ -70,7 +70,7 @@ def seed_remote(root: Path, remote: Path) -> Path:
 class UsageRetentionTests(unittest.TestCase):
     def seed(self, home: Path) -> tuple[Path, tuple[Path, ...]]:
         run_usage(home, "enable", "--device", "m4", "--coordinator", "--apply")
-        state = home / ".local" / "state" / "openapi-engineering-skill"
+        state = usage_state_root(home)
         events = state / "local" / "events" / "m4" / "2026-04.jsonl"
         feedback_path = state / "feedback" / "m4" / "2026-04.jsonl"
         events.parent.mkdir(parents=True)
@@ -181,7 +181,7 @@ class UsageRetentionTests(unittest.TestCase):
             home = root / "home"
             home.mkdir()
             run_usage(home, "enable", "--device", "m4", "--apply")
-            state = home / ".local" / "state" / "openapi-engineering-skill"
+            state = usage_state_root(home)
             external = root / "external"
             external.mkdir()
             marker = external / "events.jsonl"

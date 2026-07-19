@@ -6,6 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from tests.support import usage_state_root
 from tests.test_usage_recording import record, run_usage, write_report
 
 
@@ -84,14 +85,7 @@ class UsageGitSyncTests(unittest.TestCase):
                 home, "due", "--now", "2026-07-19T18:00:00Z"
             )
             self.assertEqual(due_result.returncode, 0, due_result.stderr)
-            outbound = (
-                home
-                / ".local"
-                / "state"
-                / "openapi-engineering-skill"
-                / "outbound"
-                / "m4"
-            )
+            outbound = usage_state_root(home) / "outbound" / "m4"
             self.assertEqual(
                 {path.name for path in outbound.glob("*.json")},
                 {"summary-2026-W29.json", "findings-2026-W29.json"},
@@ -130,7 +124,7 @@ class UsageGitSyncTests(unittest.TestCase):
             rows = [json.loads(line) for line in show(remote, "events/m4/2026-07.jsonl").splitlines()]
             self.assertEqual(len(rows), 1)
             self.assertNotIn("project_alias", rows[0])
-            outbound = home / ".local" / "state" / "openapi-engineering-skill" / "outbound" / "m4"
+            outbound = usage_state_root(home) / "outbound" / "m4"
             self.assertEqual(list(outbound.glob("*.json")), [])
 
     def test_multiple_devices_append_only_to_owned_partitions(self) -> None:
@@ -160,7 +154,7 @@ class UsageGitSyncTests(unittest.TestCase):
             home.mkdir()
             configure(home, remote, "m4", coordinator=True)
             record_one(home, 4)
-            outbound = home / ".local" / "state" / "openapi-engineering-skill" / "outbound" / "m4"
+            outbound = usage_state_root(home) / "outbound" / "m4"
             queued = next(outbound.glob("*.json"))
             envelope = json.loads(queued.read_text(encoding="utf-8"))
             envelope["payload_sha256"] = "0" * 64
@@ -181,7 +175,7 @@ class UsageGitSyncTests(unittest.TestCase):
             home.mkdir()
             configure(home, remote, "m4", coordinator=True)
             record_one(home, 5)
-            outbound = home / ".local" / "state" / "openapi-engineering-skill" / "outbound" / "m4"
+            outbound = usage_state_root(home) / "outbound" / "m4"
             before = {path.name for path in outbound.glob("*.json")}
 
             result, payload = run_usage(home, "sync")

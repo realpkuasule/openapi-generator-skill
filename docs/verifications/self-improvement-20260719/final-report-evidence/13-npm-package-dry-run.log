@@ -6,10 +6,10 @@ stdout:
     "id": "@realpkuasule/openapi-engineering-skill@0.1.0-rc.3",
     "name": "@realpkuasule/openapi-engineering-skill",
     "version": "0.1.0-rc.3",
-    "size": 91593,
-    "unpackedSize": 389758,
-    "shasum": "b50d783e62173bed8e025f32e72a68161890c5e6",
-    "integrity": "sha512-OJw+fv41yg+YOzYiWmCkVZORg+PoBuNrLSJgUhNmDLcz4RsHOVapVGsMjB4XzFmqZandvRbOizTA9nEjZF6PUw==",
+    "size": 91539,
+    "unpackedSize": 389310,
+    "shasum": "0bec7b77273eae310ea827056e08719086a960e2",
+    "integrity": "sha512-CNu+jn9sx+gH9/9ofC6H/KOVvE/+IGYnWdYAcXiXEGUhw621D7oOzdNjegHaAkL3NOSpw1GEqLzx4CLjCK7zLw==",
     "filename": "realpkuasule-openapi-engineering-skill-0.1.0-rc.3.tgz",
     "files": [
       {
@@ -24,7 +24,7 @@ stdout:
       },
       {
         "path": "bin/openapi-engineering-skill.mjs",
-        "size": 30254,
+        "size": 29034,
         "mode": 493
       },
       {
@@ -99,7 +99,7 @@ stdout:
       },
       {
         "path": "lib/usage/events.mjs",
-        "size": 11449,
+        "size": 11113,
         "mode": 420
       },
       {
@@ -124,7 +124,7 @@ stdout:
       },
       {
         "path": "lib/usage/paths.mjs",
-        "size": 2796,
+        "size": 2674,
         "mode": 420
       },
       {
@@ -155,6 +155,11 @@ stdout:
       {
         "path": "lib/usage/thresholds.mjs",
         "size": 4232,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/tree-digest.mjs",
+        "size": 1230,
         "mode": 420
       },
       {
@@ -348,7 +353,7 @@ stdout:
         "mode": 420
       }
     ],
-    "entryCount": 67,
+    "entryCount": 68,
     "bundled": []
   }
 ]

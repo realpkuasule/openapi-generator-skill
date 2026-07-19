@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tests.support import REPO_ROOT
+from tests.support import REPO_ROOT, usage_state_root
 
 
 CLI = REPO_ROOT / "bin" / "openapi-engineering-skill.mjs"
@@ -60,7 +60,7 @@ def event(index: int, **overrides) -> dict:
 
 def seed(home: Path, events: list[dict], feedback: list[dict] | None = None) -> Path:
     run_usage(home, "enable", "--device", "m4", "--coordinator", "--apply")
-    state = home / ".local" / "state" / "openapi-engineering-skill"
+    state = usage_state_root(home)
     event_path = state / "local" / "events" / "m4" / "2026-07.jsonl"
     event_path.parent.mkdir(parents=True)
     event_path.write_text("".join(json.dumps(item) + "\n" for item in events), encoding="utf-8")

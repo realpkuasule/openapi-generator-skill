@@ -5,6 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from tests.support import usage_state_root
 from tests.test_usage_summary import event, run_usage, seed
 
 
@@ -37,7 +38,7 @@ class UsageThresholdTests(unittest.TestCase):
                     events[1]["tool_overridden"] = True
                 else:
                     events[1]["gates"]["unverified"] = 1
-                state = home / ".local" / "state" / "openapi-engineering-skill"
+                state = usage_state_root(home)
                 path = state / "local" / "events" / "m4" / "2026-07.jsonl"
                 path.write_text("".join(json.dumps(item) + "\n" for item in events), encoding="utf-8")
                 self.assertIn(rule, summarize(home))

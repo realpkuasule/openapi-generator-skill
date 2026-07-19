@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tests.support import REPO_ROOT, snapshot_tree
+from tests.support import REPO_ROOT, snapshot_tree, usage_config_path, usage_state_root
 from tests.test_usage_git_sync import configure, git, show
 from tests.test_usage_recording import record, write_report
 
@@ -71,14 +71,7 @@ class SelfImprovementE2ETests(unittest.TestCase):
             )
             self.assertEqual(recorded_result.returncode, 0, recorded_result.stderr)
             self.assertTrue(recorded["recorded"])
-            outbound_dir = (
-                home
-                / ".local"
-                / "state"
-                / "openapi-engineering-skill"
-                / "outbound"
-                / "m4"
-            )
+            outbound_dir = usage_state_root(home) / "outbound" / "m4"
             envelope = json.loads(next(outbound_dir.glob("*.json")).read_text(encoding="utf-8"))
             self.assertNotIn("project_alias", envelope["payload"])
 
@@ -172,7 +165,7 @@ class SelfImprovementE2ETests(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            config = home / ".config" / "openapi-engineering-skill" / "usage.json"
+            config = usage_config_path(home)
             proposed_result, proposed = python_json(
                 PROPOSE,
                 "--analysis",

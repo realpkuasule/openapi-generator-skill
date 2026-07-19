@@ -32,7 +32,10 @@ class VerifyRunnerTests(unittest.TestCase):
         self.assertIn("npm-package-dry-run", gates)
         self.assertIn(
             "skills/openapi-engineering-maintainer",
-            " ".join(str(item) for item in gates["maintainer-skill-quick-validation"].command),
+            " ".join(
+                str(item).replace("\\", "/")
+                for item in gates["maintainer-skill-quick-validation"].command
+            ),
         )
         self.assertIn(
             "tests.test_self_improvement_e2e",
@@ -138,6 +141,11 @@ class VerifyRunnerTests(unittest.TestCase):
         )
         self.assertNotIn(repository_path, evidence_text)
         self.assertIn("repository=<repo>", evidence_text)
+
+    def test_external_evidence_path_remains_absolute_and_readable(self) -> None:
+        external = Path.home() / ".openapi-engineering-test" / "evidence.log"
+
+        self.assertEqual(verify.portable_path(external), str(external.resolve()))
 
     def test_forward_tier_is_blocked_without_combined_report(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

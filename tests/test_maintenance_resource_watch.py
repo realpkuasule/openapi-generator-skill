@@ -31,6 +31,7 @@ def process_exists(pid: int) -> bool:
 
 
 class MaintenanceResourceWatchTests(unittest.TestCase):
+    @unittest.skipIf(os.name == "nt", "Windows intentionally blocks unsupported RSS sampling")
     def test_success_records_peak_rss_warning_and_bounded_output(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -55,6 +56,26 @@ class MaintenanceResourceWatchTests(unittest.TestCase):
             self.assertTrue(result.resources["warning_exceeded"])
             self.assertEqual(result.resources["termination_reason"], "exited")
             self.assertFalse(result.resources["process_group_reclaimed"])
+
+    @unittest.skipUnless(os.name == "nt", "Windows-specific unsupported watcher contract")
+    def test_windows_blocks_before_launch_when_rss_measurement_is_unsupported(self) -> None:
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "process_watch.subprocess.Popen"
+        ) as launch:
+            with self.assertRaises(ProcessLimitExceeded) as raised:
+                run_controlled(
+                    [sys.executable, "-c", "print('must not run')"],
+                    cwd=Path(directory),
+                    env=os.environ.copy(),
+                    input_text=None,
+                    timeout_seconds=5,
+                    warning_limit_bytes=64 * 1024 * 1024,
+                    hard_limit_bytes=128 * 1024 * 1024,
+                )
+
+        launch.assert_not_called()
+        self.assertEqual(raised.exception.reason, "measurement-unsupported")
+        self.assertEqual(raised.exception.resources["measurement_status"], "unsupported")
 
     @unittest.skipIf(os.name == "nt", "POSIX process-group ownership test")
     def test_rss_limit_reclaims_only_owned_process_group(self) -> None:

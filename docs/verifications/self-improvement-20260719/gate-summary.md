@@ -8,12 +8,12 @@ Prepared release: `0.1.0-rc.3` (not tagged or published)
 
 - Status: `passed`
 - Gates: 26/26 passed
-- Unit and integration tests: 250/250 passed, serial execution
+- Unit and integration tests: 255/255 passed, serial execution (2 Windows-specific assertions skipped locally)
 - SI acceptance: SI-AC-01 through SI-AC-18 passed; `acceptance_complete: true`
 - Contract: OpenAPI 3.1 document version 1.2.0; all Draft 2020-12 Schemas and captured examples passed
 - Packaging: runtime and Maintainer Skill validation passed; npm dry pack allowlist passed
 - Integrity: protected source-tree digest was unchanged by verification
-- Resource evidence: maximum verifier RSS 110,084,096 bytes; 0 swaps
+- Resource evidence: maximum verifier RSS 110,100,480 bytes; 0 swaps
 
 Authoritative machine reports:
 

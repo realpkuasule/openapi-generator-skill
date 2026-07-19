@@ -6,6 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from tests.support import usage_state_root
 from tests.test_usage_git_sync import configure, git, record_one
 from tests.test_usage_recording import run_usage
 
@@ -53,14 +54,7 @@ class UsageMultideviceTests(unittest.TestCase):
             self.assertEqual(due_result.returncode, 0, due_result.stderr)
             self.assertEqual(due["summary"]["sample_count"], 4)
             self.assertEqual(due["summary"]["device_count"], 3)
-            aggregate = (
-                m4
-                / ".local"
-                / "state"
-                / "openapi-engineering-skill"
-                / "aggregate"
-                / "events.json"
-            )
+            aggregate = usage_state_root(m4) / "aggregate" / "events.json"
             self.assertTrue(aggregate.is_file())
             self.assertEqual(len(json.loads(aggregate.read_text(encoding="utf-8"))), 4)
 
@@ -86,14 +80,7 @@ class UsageMultideviceTests(unittest.TestCase):
                 "payload_sha256": canonical_sha256(summary),
                 "payload": summary,
             }
-            outbound = (
-                m2
-                / ".local"
-                / "state"
-                / "openapi-engineering-skill"
-                / "outbound"
-                / "m2"
-            )
+            outbound = usage_state_root(m2) / "outbound" / "m2"
             outbound.mkdir(parents=True)
             queued = outbound / "forged-summary.json"
             queued.write_text(json.dumps(envelope), encoding="utf-8")
@@ -118,14 +105,7 @@ class UsageMultideviceTests(unittest.TestCase):
                 m4, "due", "--now", "2026-07-19T18:00:00Z"
             )
             self.assertEqual(first.returncode, 0, first.stderr)
-            outbound = (
-                m4
-                / ".local"
-                / "state"
-                / "openapi-engineering-skill"
-                / "outbound"
-                / "m4"
-            )
+            outbound = usage_state_root(m4) / "outbound" / "m4"
             for path in outbound.glob("summary-*.json"):
                 path.unlink()
             for path in outbound.glob("findings-*.json"):

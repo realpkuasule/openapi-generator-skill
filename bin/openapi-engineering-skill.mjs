@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 
-import { createHash } from "node:crypto";
 import { spawn } from "node:child_process";
 import {
   cp,
   lstat,
   mkdir,
   readFile,
-  readdir,
   readlink,
   realpath,
   rename,
@@ -29,6 +27,7 @@ import { manageLaunchd } from "../lib/usage/launchd.mjs";
 import { runUsageSession } from "../lib/usage/session-launcher.mjs";
 import { cleanupUsage } from "../lib/usage/retention.mjs";
 import { buildUsageTrends } from "../lib/usage/trends.mjs";
+import { treeDigest } from "../lib/usage/tree-digest.mjs";
 
 const PACKAGE_ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const PACKAGE = JSON.parse(
@@ -46,7 +45,6 @@ const LAUNCHD_TEMPLATE = join(
   "launchd",
   "com.realpkuasule.openapi-engineering-maintainer.plist",
 );
-const IGNORED_NAMES = new Set([".DS_Store", "__pycache__"]);
 const TARGETS = {
   codex: [".codex", "skills"],
   claude: [".claude", "skills"],
@@ -413,46 +411,6 @@ async function pathInfo(path) {
     if (error.code === "ENOENT") return null;
     throw error;
   }
-}
-
-async function listFiles(root, directory = root) {
-  const entries = await readdir(directory, { withFileTypes: true });
-  const files = [];
-  for (const entry of entries) {
-    if (IGNORED_NAMES.has(entry.name)) continue;
-    const path = join(directory, entry.name);
-    if (entry.isDirectory()) {
-      files.push(...(await listFiles(root, path)));
-    } else if (entry.isFile()) {
-      files.push(path);
-    } else {
-      throw new Error(`Unsupported entry in skill payload: ${relative(root, path)}`);
-    }
-  }
-  return files;
-}
-
-async function treeDigest(root) {
-  const digest = createHash("sha256");
-  const files = (await listFiles(root))
-    .map((path) => {
-      const name = relative(root, path).split("\\").join("/");
-      return {
-        path,
-        name,
-        order: process.platform === "win32" ? name.toLowerCase() : name,
-      };
-    })
-    .sort((left, right) =>
-      left.order < right.order ? -1 : left.order > right.order ? 1 : 0,
-    );
-  for (const { path, name } of files) {
-    digest.update(name);
-    digest.update("\0");
-    digest.update(await readFile(path));
-    digest.update("\0");
-  }
-  return digest.digest("hex");
 }
 
 function installationPaths(home) {
