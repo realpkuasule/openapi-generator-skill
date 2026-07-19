@@ -602,9 +602,20 @@ paths:
   /v1/maintenance/analyses:
     post:
       operationId: analyzeMaintenanceFindings
-      x-cli-command: openapi-engineering-skill maintenance analyze --findings <path>
+      x-cli-command: >-
+        openapi-engineering-skill maintenance analyze --findings <path>
+        [--credential-mode <environment|active-cli-session>]
+        [--resume-analysis <path>]
       x-cli-arguments:
         findings: --findings; sanitized and schema-validated finding bundle only
+        credentialMode: >-
+          --credential-mode; environment uses approved API-key environment variables and is the
+          default, while active-cli-session explicitly uses only the active platform credential
+          channel: a staged Codex auth file or the allowlisted authentication/provider fields from
+          Claude Code's private user settings
+        resumeAnalysis: >-
+          --resume-analysis; validated prior analysis with the same input digest and a passed Codex
+          primary, a self-consistent analysis ID, and a required blocked/failed secondary review
         timeoutSeconds: --timeout-seconds; 1..600, defaults to 600
         warningRssMb: --rss-warning-mb; defaults to 512
         hardRssMb: --rss-hard-mb; defaults to 1024 and must exceed warningRssMb
@@ -617,7 +628,11 @@ paths:
       description: >-
         Accepts at most 50 sanitized events. Codex is primary. Claude Code is invoked
         serially only for safety, platform drift, P0/P1, low-confidence, or blocked
-        primary results. Neither analyzer may access target projects or local detail.
+        primary results. Neither analyzer may access target projects or local detail. Active CLI
+        session reuse is explicit, loads no hooks, plugins, permissions, MCP, history, or projects,
+        and removes any staged credential with the analyzer's temporary HOME. A Claude Code
+        compatible provider is recorded as the actual configured model and is not represented as
+        Anthropic model evidence.
       requestBody:
         required: true
         content:
@@ -1471,6 +1486,14 @@ components:
           maxItems: 50
           items:
             $ref: './schemas/usage-event.schema.json#/$defs/sanitized_event'
+        credential_mode:
+          enum: [environment, active-cli-session]
+          default: environment
+        resume_analysis:
+          oneOf:
+            - $ref: './schemas/maintenance-analysis.schema.json'
+            - type: 'null'
+          default: null
         timeout_seconds: { type: integer, minimum: 1, maximum: 600, default: 600 }
         warning_rss_mb: { type: integer, minimum: 1, default: 512 }
         hard_rss_mb: { type: integer, minimum: 2, default: 1024 }

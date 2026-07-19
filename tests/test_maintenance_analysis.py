@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -80,6 +81,221 @@ def run_analysis(bundle: Path, fake: Path, output: Path):
 
 
 class MaintenanceAnalysisTests(unittest.TestCase):
+    def test_valid_resume_reuses_passed_codex_and_runs_only_secondary(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            bundle = root / "bundle.json"
+            primary_response = root / "primary.json"
+            secondary_response = root / "secondary.json"
+            initial = root / "initial.json"
+            resumed = root / "resumed.json"
+            bundle.write_text(
+                json.dumps(
+                    {"findings": [finding()], "sanitized_events": [sanitized_event(1)]}
+                ),
+                encoding="utf-8",
+            )
+            semantic = {
+                "clusters": [
+                    {
+                        "key": "resource-regression",
+                        "finding_ids": ["finding-0123456789abcdef"],
+                    }
+                ],
+                "confidence": 0.9,
+                "candidate_causes": ["Bounded cause."],
+                "unverified": [],
+            }
+            primary_response.write_text(json.dumps(semantic), encoding="utf-8")
+            secondary_response.write_text(json.dumps(semantic), encoding="utf-8")
+            first = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT),
+                    "--findings",
+                    str(bundle),
+                    "--adapter",
+                    "fake",
+                    "--fake-platform",
+                    "codex",
+                    "--fake-response",
+                    str(primary_response),
+                    "--secondary-adapter",
+                    "none",
+                    "--output",
+                    str(initial),
+                    "--now",
+                    "2026-07-19T12:00:00Z",
+                ],
+                cwd=REPO_ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(first.returncode, 2, first.stderr)
+
+            environment = os.environ.copy()
+            environment["PATH"] = ""
+            second = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT),
+                    "--findings",
+                    str(bundle),
+                    "--adapter",
+                    "codex",
+                    "--resume-analysis",
+                    str(initial),
+                    "--secondary-adapter",
+                    "fake",
+                    "--secondary-fake-platform",
+                    "claude",
+                    "--secondary-fake-response",
+                    str(secondary_response),
+                    "--output",
+                    str(resumed),
+                    "--now",
+                    "2026-07-19T13:00:00Z",
+                ],
+                cwd=REPO_ROOT,
+                env=environment,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+
+            self.assertEqual(second.returncode, 0, second.stderr or second.stdout)
+            payload = json.loads(resumed.read_text(encoding="utf-8"))
+            self.assertEqual(
+                [row["platform"] for row in payload["analyzer_sequence"]],
+                ["codex", "claude"],
+            )
+            self.assertEqual(payload["primary"], json.loads(first.stdout)["primary"])
+            self.assertEqual(payload["secondary_review"]["status"], "passed")
+
+    def test_resume_blocks_drift_or_nonpassed_primary_before_adapters(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            bundle = root / "bundle.json"
+            primary_response = root / "primary.json"
+            initial = root / "initial.json"
+            output = root / "resumed.json"
+            semantic = {
+                "clusters": [
+                    {
+                        "key": "resource-regression",
+                        "finding_ids": ["finding-0123456789abcdef"],
+                    }
+                ],
+                "confidence": 0.9,
+                "candidate_causes": ["Bounded cause."],
+                "unverified": [],
+            }
+            original_bundle = {
+                "findings": [finding()],
+                "sanitized_events": [sanitized_event(1)],
+            }
+            bundle.write_text(json.dumps(original_bundle), encoding="utf-8")
+            primary_response.write_text(json.dumps(semantic), encoding="utf-8")
+            first = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT),
+                    "--findings",
+                    str(bundle),
+                    "--adapter",
+                    "fake",
+                    "--fake-platform",
+                    "codex",
+                    "--fake-response",
+                    str(primary_response),
+                    "--secondary-adapter",
+                    "none",
+                    "--output",
+                    str(initial),
+                    "--now",
+                    "2026-07-19T12:00:00Z",
+                ],
+                cwd=REPO_ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(first.returncode, 2, first.stderr)
+
+            environment = os.environ.copy()
+            environment["PATH"] = ""
+            command = [
+                sys.executable,
+                str(SCRIPT),
+                "--findings",
+                str(bundle),
+                "--adapter",
+                "codex",
+                "--resume-analysis",
+                str(initial),
+                "--secondary-adapter",
+                "fake",
+                "--secondary-fake-response",
+                str(root / "must-not-be-read.json"),
+                "--output",
+                str(output),
+            ]
+
+            drifted_bundle = {
+                "findings": [finding()],
+                "sanitized_events": [sanitized_event(2)],
+            }
+            bundle.write_text(json.dumps(drifted_bundle), encoding="utf-8")
+            drift = subprocess.run(
+                command,
+                cwd=REPO_ROOT,
+                env=environment,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(drift.returncode, 2)
+            self.assertEqual(json.loads(drift.stdout)["error"]["code"], "input-blocked")
+            self.assertFalse(output.exists())
+
+            bundle.write_text(json.dumps(original_bundle), encoding="utf-8")
+            eligible = json.loads(initial.read_text(encoding="utf-8"))
+            ineligible = json.loads(json.dumps(eligible))
+            ineligible["primary"]["status"] = "blocked"
+            ineligible["analyzer_sequence"][0]["status"] = "blocked"
+            initial.write_text(json.dumps(ineligible), encoding="utf-8")
+            nonpassed = subprocess.run(
+                command,
+                cwd=REPO_ROOT,
+                env=environment,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(nonpassed.returncode, 2)
+            self.assertEqual(
+                json.loads(nonpassed.stdout)["error"]["code"], "input-blocked"
+            )
+            self.assertFalse(output.exists())
+
+            tampered = json.loads(json.dumps(eligible))
+            tampered["candidate_causes"] = ["Schema-valid but digest-inconsistent cause."]
+            initial.write_text(json.dumps(tampered), encoding="utf-8")
+            inconsistent = subprocess.run(
+                command,
+                cwd=REPO_ROOT,
+                env=environment,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(inconsistent.returncode, 2)
+            self.assertEqual(
+                json.loads(inconsistent.stdout)["error"]["code"], "input-blocked"
+            )
+            self.assertFalse(output.exists())
+
     def test_fake_analysis_is_schema_valid_and_secondary_review_remains_pending(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

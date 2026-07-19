@@ -38,6 +38,10 @@ class MaintenanceCliTests(unittest.TestCase):
         source = CLI.read_text(encoding="utf-8")
         self.assertNotIn("shell: true", source)
 
+        analyze_help = run_maintenance("analyze", "--help")
+        self.assertIn("--credential-mode", analyze_help.stdout)
+        self.assertIn("--resume-analysis", analyze_help.stdout)
+
     def test_analyze_command_preserves_script_json_and_exit_code(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

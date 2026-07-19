@@ -85,6 +85,7 @@ jobs:
           uv run python scripts/maintenance/analyze_usage.py
           --findings "$MAINTENANCE_BUNDLE_PATH"
           --adapter codex --secondary-adapter claude
+          --credential-mode environment
           --output docs/verifications/ci/maintenance-analysis.json
           --timeout-seconds 600
       - uses: actions/upload-artifact@v4

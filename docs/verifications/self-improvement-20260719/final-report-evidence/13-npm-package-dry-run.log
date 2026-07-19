@@ -6,20 +6,20 @@ stdout:
     "id": "@realpkuasule/openapi-engineering-skill@0.1.0-rc.3",
     "name": "@realpkuasule/openapi-engineering-skill",
     "version": "0.1.0-rc.3",
-    "size": 91638,
-    "unpackedSize": 389764,
-    "shasum": "aef92fca48e8774926e411db2e9434d66c198cd7",
-    "integrity": "sha512-GJ+xobxuS60Br43K1/NLHp61GEbBANizbOZKs9YTGHA0fCdw+IJxdL+Gz6hQ67sdIJtTgu4P2UWXM24RUOxeEQ==",
+    "size": 96062,
+    "unpackedSize": 410146,
+    "shasum": "608a69cb8b76791c7e918fdaba71bd8b07907bc8",
+    "integrity": "sha512-qMLO71Lpo59CYNceJ4RxMAWF/vOJwZEjwZUjejrpmhqaixZbF30lw9Br4QunAi28cKuxhEJWPJtvPIlrkLTZ1Q==",
     "filename": "realpkuasule-openapi-engineering-skill-0.1.0-rc.3.tgz",
     "files": [
       {
         "path": "CHANGELOG.md",
-        "size": 4089,
+        "size": 4653,
         "mode": 420
       },
       {
         "path": "README.md",
-        "size": 7581,
+        "size": 8579,
         "mode": 420
       },
       {
@@ -29,7 +29,7 @@ stdout:
       },
       {
         "path": "contracts/schemas/maintenance-analysis.schema.json",
-        "size": 5649,
+        "size": 5982,
         "mode": 420
       },
       {
@@ -179,12 +179,12 @@ stdout:
       },
       {
         "path": "scripts/maintenance/adapters.py",
-        "size": 11148,
+        "size": 22454,
         "mode": 420
       },
       {
         "path": "scripts/maintenance/analyze_usage.py",
-        "size": 13151,
+        "size": 17813,
         "mode": 420
       },
       {
@@ -229,12 +229,12 @@ stdout:
       },
       {
         "path": "skills/openapi-engineering-maintainer/references/analysis-workflow.md",
-        "size": 2719,
+        "size": 4326,
         "mode": 420
       },
       {
         "path": "skills/openapi-engineering-maintainer/references/privacy-boundary.md",
-        "size": 2175,
+        "size": 2547,
         "mode": 420
       },
       {
@@ -244,7 +244,7 @@ stdout:
       },
       {
         "path": "skills/openapi-engineering-maintainer/SKILL.md",
-        "size": 4571,
+        "size": 5111,
         "mode": 420
       },
       {

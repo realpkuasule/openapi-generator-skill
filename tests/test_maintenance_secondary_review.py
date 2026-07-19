@@ -161,7 +161,7 @@ class MaintenanceSecondaryReviewTests(unittest.TestCase):
             self.assertIn("low-confidence", payload["secondary_review"]["trigger_reasons"])
             self.assertEqual(len(payload["analyzer_sequence"]), 1)
 
-    def test_malformed_secondary_preserves_primary_as_blocked_review(self) -> None:
+    def test_malformed_secondary_preserves_primary_as_failed_review(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
 
@@ -175,10 +175,17 @@ class MaintenanceSecondaryReviewTests(unittest.TestCase):
             self.assertEqual(result.returncode, 2)
             self.assertTrue(output.is_file())
             self.assertEqual(payload["candidate_causes"], ["Primary remains authoritative."])
-            self.assertEqual(payload["secondary_review"]["status"], "blocked")
+            self.assertEqual(payload["secondary_review"]["status"], "failed")
             self.assertEqual(payload["secondary_review"]["result"], None)
             self.assertEqual(payload["analyzer_sequence"][-1]["platform"], "claude")
-            self.assertEqual(payload["analyzer_sequence"][-1]["status"], "blocked")
+            self.assertEqual(payload["analyzer_sequence"][-1]["status"], "failed")
+            self.assertEqual(
+                payload["analyzer_sequence"][-1]["failure_code"], "invalid-output"
+            )
+            self.assertEqual(
+                payload["analyzer_sequence"][-1]["resources"]["measurement_status"],
+                "not-run",
+            )
 
 
 if __name__ == "__main__":

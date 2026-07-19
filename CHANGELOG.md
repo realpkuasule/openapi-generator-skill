@@ -10,6 +10,10 @@ All notable changes to this project are documented in this file.
   deterministic trend/recurrence reports across coordinator and collector devices.
 - Strict launcher and Maintainer analyzer process watchers with timeout, process-group ownership,
   peak RSS evidence, and serial Codex/Claude risk review.
+- Active CLI session authentication for Codex and Claude-compatible providers without requiring
+  separate OpenAI or Anthropic API keys, while excluding user hooks, plugins, tools, and history.
+- Digest-bound analysis recovery that reuses a passed Codex primary result and reruns only the
+  required Claude review, with safe failure codes and preserved resource evidence.
 - Approval-bound private proposal and promotion workflows with path allowlists, secret scanning,
   exact target hashes, atomic rollback, and deliberately RED failing-test candidates.
 - Explicit runtime and Maintainer installation for both Codex and Claude Code, including safe
@@ -31,10 +35,12 @@ All notable changes to this project are documented in this file.
 
 ### Verified
 
-- OpenAPI 1.2.0, all JSON Schemas, captured examples, and 261/261 tests pass locally.
+- OpenAPI 1.2.0, all JSON Schemas, captured examples, and 269/269 tests pass locally.
 - The actual npm tarball completes isolated install, digest verification, and uninstall without
   touching real Codex or Claude Code settings.
 - Ubuntu, macOS, and Windows deterministic jobs pass on PR #4.
+- The approved live Maintainer gate passed in strict Codex→Claude order. Claude Code used the
+  configured `deepseek-v4-pro[1m]` compatible model; both analyzers remained below 512 MiB RSS.
 
 ## [0.1.0-rc.2] - 2026-07-19
 

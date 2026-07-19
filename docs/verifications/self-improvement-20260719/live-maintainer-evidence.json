@@ -1,0 +1,61 @@
+{
+  "evidence_version": 1,
+  "status": "passed",
+  "generated_at": "2026-07-19T16:46:01.923954Z",
+  "analysis_id": "analysis-2cb2b3b965fbe272",
+  "input_sha256": "bb8c7a2526230a0d32446c16ceb3496f276fa49227c89e684e26290756e3cf3f",
+  "credential_mode": "active-cli-session",
+  "schema_valid": true,
+  "serial_execution": true,
+  "independent_secondary_review": true,
+  "analyzers": [
+    {
+      "platform": "codex",
+      "cli_version": "codex-cli 0.145.0-alpha.18",
+      "model": null,
+      "status": "passed",
+      "duration_ms": 16977,
+      "peak_rss_bytes": 154697728,
+      "warning_limit_bytes": 536870912,
+      "hard_limit_bytes": 1073741824,
+      "warning_exceeded": false,
+      "termination_reason": "exited",
+      "process_group_reclaimed": false
+    },
+    {
+      "platform": "claude",
+      "cli_version": "2.1.152 (Claude Code)",
+      "model": "deepseek-v4-pro[1m]",
+      "status": "passed",
+      "duration_ms": 29460,
+      "peak_rss_bytes": 337559552,
+      "warning_limit_bytes": 536870912,
+      "hard_limit_bytes": 1073741824,
+      "warning_exceeded": false,
+      "termination_reason": "exited",
+      "process_group_reclaimed": false
+    }
+  ],
+  "review_comparison": {
+    "agreements": [
+      "confidence-band"
+    ],
+    "disagreements": [
+      "cluster-keys",
+      "candidate-causes",
+      "unverified"
+    ]
+  },
+  "privacy": {
+    "sanitized_bundle_only": true,
+    "credentials_recorded": false,
+    "provider_endpoint_recorded": false,
+    "raw_prompt_recorded": false,
+    "raw_model_result_committed": false
+  },
+  "notes": [
+    "The Claude Code CLI used a configured DeepSeek-compatible model; this is not Anthropic model evidence.",
+    "Candidate causes remain untrusted analysis and were not converted into automatic repository changes.",
+    "The passed run reused a Schema-valid Codex primary result and launched only the required Claude secondary review."
+  ]
+}

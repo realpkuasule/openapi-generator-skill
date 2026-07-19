@@ -97,6 +97,24 @@ class ContractTests(unittest.TestCase):
         self.assertIn("resume", evaluation_request["properties"])
         self.assertIn("retry_nonpassing", evaluation_request["properties"])
 
+        maintenance_operation = self.openapi["paths"]["/v1/maintenance/analyses"]["post"]
+        self.assertIn("credentialMode", maintenance_operation["x-cli-arguments"])
+        maintenance_request = self.openapi["components"]["schemas"][
+            "MaintenanceAnalysisRequest"
+        ]
+        credential_mode = maintenance_request["properties"]["credential_mode"]
+        self.assertEqual(
+            credential_mode["enum"], ["environment", "active-cli-session"]
+        )
+        self.assertEqual(credential_mode["default"], "environment")
+        self.assertIn("resumeAnalysis", maintenance_operation["x-cli-arguments"])
+        self.assertIn("resume_analysis", maintenance_request["properties"])
+        failure_codes = self.schemas["maintenance-analysis.schema.json"]["$defs"][
+            "analyzer_result"
+        ]["properties"]["failure_code"]["enum"]
+        self.assertIn("turn-limit", failure_codes)
+        self.assertIn("invalid-output", failure_codes)
+
     def test_all_json_schemas_are_valid_draft_2020_12(self) -> None:
         expected = {
             "acceptance-traceability.schema.json",

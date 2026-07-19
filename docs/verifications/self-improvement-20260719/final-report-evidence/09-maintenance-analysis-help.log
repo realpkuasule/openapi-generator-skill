@@ -2,6 +2,8 @@ command=["<repo>/.venv/bin/python3", "<repo>/scripts/maintenance/analyze_usage.p
 exit_code=0
 stdout:
 usage: analyze_usage.py [-h] --findings FINDINGS [--adapter {fake,codex}]
+                        [--credential-mode {environment,active-cli-session}]
+                        [--resume-analysis RESUME_ANALYSIS]
                         [--fake-response FAKE_RESPONSE]
                         [--fake-platform {fake,codex,claude}]
                         [--secondary-adapter {none,fake,claude}]
@@ -18,6 +20,8 @@ options:
   -h, --help            show this help message and exit
   --findings FINDINGS
   --adapter {fake,codex}
+  --credential-mode {environment,active-cli-session}
+  --resume-analysis RESUME_ANALYSIS
   --fake-response FAKE_RESPONSE
   --fake-platform {fake,codex,claude}
   --secondary-adapter {none,fake,claude}

@@ -57,6 +57,7 @@ class CiWorkflowTests(unittest.TestCase):
         self.assertIn("scripts/maintenance/analyze_usage.py", commands)
         self.assertIn("--adapter codex", commands)
         self.assertIn("--secondary-adapter claude", commands)
+        self.assertIn("--credential-mode environment", commands)
         self.assertNotIn("&", commands)
         self.assertNotIn("${{ inputs.maintenance_bundle_path }}", commands)
         analysis_step = next(

@@ -33,7 +33,7 @@
     ],
     "unverified": []
   },
-  "generated_at": "2026-07-19T08:53:13.493886Z",
+  "generated_at": "2026-07-19T17:07:27.897245Z",
   "manifest_sha256": "a802db708a4addcd488ad0133faf4c978f83501fc8b4776d55f389a55100cb58",
   "report_version": 1,
   "requirements": [
@@ -65,11 +65,11 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_usage_config.UsageConfigTests.test_status_is_read_only_and_defaults_to_disabled",
-          "sha256": "232296722de3699dc7e3681a8e446f49cc1468ab84d64c79055f2df5286c4f9f",
+          "sha256": "fd10b10fea8014d84b44fd172acd3a5c6ec752033da3ea8792e728dfdf24a9c7",
           "status": "passed"
         }
       ]
@@ -102,11 +102,11 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_usage_config.UsageConfigTests.test_sync_authorization_is_separate_and_device_change_invalidates_it",
-          "sha256": "232296722de3699dc7e3681a8e446f49cc1468ab84d64c79055f2df5286c4f9f",
+          "sha256": "fd10b10fea8014d84b44fd172acd3a5c6ec752033da3ea8792e728dfdf24a9c7",
           "status": "passed"
         }
       ]
@@ -139,11 +139,11 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_usage_recording.UsageRecordingTests.test_record_writes_local_event_and_rebuilt_sanitized_outbound",
-          "sha256": "d5ed107fa3a6121989f443d5853ee8d8ced42fe746ab6643455250ff0152de0d",
+          "sha256": "78fc278fee117744e56b4b68116923d396b4d179b594b7463ce10dd6dae4381a",
           "status": "passed"
         }
       ]
@@ -176,11 +176,11 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_usage_security.UsageSecurityTests.test_outbound_envelope_contains_only_digest_and_sanitized_payload",
-          "sha256": "630dbcd2765d5565b44e1aa5a51336a868d5e617abc207686ce1ab25440db034",
+          "sha256": "8dc9d195bf3c15670acfb70a32df9460668032ecaba018b394a802f8022b1434",
           "status": "passed"
         }
       ]
@@ -213,11 +213,11 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_usage_recording.UsageRecordingTests.test_normal_success_samples_every_fifth_event_and_anomalies_always_ask",
-          "sha256": "d5ed107fa3a6121989f443d5853ee8d8ced42fe746ab6643455250ff0152de0d",
+          "sha256": "78fc278fee117744e56b4b68116923d396b4d179b594b7463ce10dd6dae4381a",
           "status": "passed"
         }
       ]
@@ -250,11 +250,11 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_usage_launcher.UsageLauncherTests.test_launcher_record_uses_bounded_report_facts_and_rejects_manual_spoofing",
-          "sha256": "0f5d13879362880e917c8b2aa8eaddaeb5ad138ae3883beb9403c6ea90fab900",
+          "sha256": "442a57c0b38c63187fa059b73fda425ce92894ff55011f581b15fd61992b94eb",
           "status": "passed"
         }
       ]
@@ -287,11 +287,11 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_usage_due.UsageDueTests.test_non_coordinator_is_blocked_without_creating_state",
-          "sha256": "0fcd175f5525f8ae025f953da145d4b9af9add8fd37a8d439e8f02e8ee345055",
+          "sha256": "bc8d7dc046942cff37296c9a198aee6b32014bbbf9a4658df28147f6c3b99bdf",
           "status": "passed"
         }
       ]
@@ -303,7 +303,7 @@
         {
           "path": "contracts/openapi-engineering.openapi.yaml#/paths/~1v1~1usage~1synchronizations",
           "reason": null,
-          "sha256": "bb87c7c479ce9836e28db99b0592a2d5d1b59254731c37327d46e762ee4bb6cd",
+          "sha256": "6d1bfc54b1ec44bab9cdd278c1fa3a30cd803edd1ad6afbab4cbd4662106e35c",
           "status": "passed"
         }
       ],
@@ -324,11 +324,11 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_usage_git_sync.UsageGitSyncTests.test_remote_failure_never_drops_outbound",
-          "sha256": "ddcada05cf3fc02407e797dab7d5638d485093f4c09bd3d659f2cd22ec98d829",
+          "sha256": "57e5b41d8a939a6e7fa5858e4cff02d481d546a8bcbd26f3534ea986d802399f",
           "status": "passed"
         }
       ]
@@ -340,7 +340,7 @@
         {
           "path": "contracts/openapi-engineering.openapi.yaml#/paths/~1v1~1usage~1due-checks",
           "reason": null,
-          "sha256": "bb87c7c479ce9836e28db99b0592a2d5d1b59254731c37327d46e762ee4bb6cd",
+          "sha256": "6d1bfc54b1ec44bab9cdd278c1fa3a30cd803edd1ad6afbab4cbd4662106e35c",
           "status": "passed"
         }
       ],
@@ -361,11 +361,11 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_usage_due.UsageDueTests.test_no_findings_checkpoint_is_idempotent",
-          "sha256": "0fcd175f5525f8ae025f953da145d4b9af9add8fd37a8d439e8f02e8ee345055",
+          "sha256": "bc8d7dc046942cff37296c9a198aee6b32014bbbf9a4658df28147f6c3b99bdf",
           "status": "passed"
         }
       ]
@@ -398,11 +398,11 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_usage_thresholds.UsageThresholdTests.test_interview_and_resource_boundaries_are_strict",
-          "sha256": "512bdc7d572d0266878b30d4af8a128975e9cc47256285a8fdd5f525a9d34f59",
+          "sha256": "d5410a2ef069c96ff370373d7aa41e5454b50fcf58f616275f006f137123283d",
           "status": "passed"
         }
       ]
@@ -414,7 +414,7 @@
         {
           "path": "contracts/schemas/maintenance-analysis.schema.json",
           "reason": null,
-          "sha256": "6503bd3e74e596b6bc33a8f83b7315885c8b13dc19c5ef356cd1999158f6f756",
+          "sha256": "87069edf412ef89764a84d2f451694865bdc3203024ba3c73fe66c4096c49248",
           "status": "passed"
         }
       ],
@@ -435,11 +435,11 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_maintenance_secondary_review.MaintenanceSecondaryReviewTests.test_p1_finding_runs_codex_then_independent_claude_and_preserves_disagreement",
-          "sha256": "43e13bb29008237067007e530bee68f649a92bc1a26bd066ddafcdaa279eb32e",
+          "sha256": "79b2863570c69d986c5534015d3fdb8bd93962fa91d0ff0ca77e4ca8a35074ce",
           "status": "passed"
         }
       ]
@@ -451,7 +451,7 @@
         {
           "path": "contracts/schemas/maintenance-analysis.schema.json",
           "reason": null,
-          "sha256": "6503bd3e74e596b6bc33a8f83b7315885c8b13dc19c5ef356cd1999158f6f756",
+          "sha256": "87069edf412ef89764a84d2f451694865bdc3203024ba3c73fe66c4096c49248",
           "status": "passed"
         }
       ],
@@ -472,11 +472,11 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_maintenance_analysis.MaintenanceAnalysisTests.test_more_than_fifty_events_is_blocked_before_adapter",
-          "sha256": "ab9e11d2bb229e3340d33e06e2833d19de005fa97b4b512705ce48a6a476c9cf",
+          "sha256": "80bba0760967b343a765257cbbe6f214d3b0aa839393160657af33522f702f18",
           "status": "passed"
         }
       ]
@@ -488,13 +488,13 @@
         {
           "path": "docs/openapi-engineering-self-improvement-requirements.md",
           "reason": null,
-          "sha256": "ee9c97dcae2c2f254083a86c509e621eaa315552ba6fdb862d5f3bdb7b6c9607",
+          "sha256": "d7b6dbddd7505f9e5c43e3e1f47eb1aacbaf093a44cdd4d01c2177efcdd8580a",
           "status": "passed"
         },
         {
           "path": "contracts/schemas/maintenance-analysis.schema.json",
           "reason": null,
-          "sha256": "6503bd3e74e596b6bc33a8f83b7315885c8b13dc19c5ef356cd1999158f6f756",
+          "sha256": "87069edf412ef89764a84d2f451694865bdc3203024ba3c73fe66c4096c49248",
           "status": "passed"
         }
       ],
@@ -521,19 +521,19 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_maintenance_resource_watch.MaintenanceResourceWatchTests.test_rss_limit_reclaims_only_owned_process_group",
-          "sha256": "87adaa9dbf6cbe1bfbc04d6d850b4622369accfef8656c514e2a2cde2346dedd",
+          "sha256": "3ce7e3bfb5b7e10df59e767476022fd27d01aaca1b752055347bb323b3a158a2",
           "status": "passed"
         },
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_maintenance_resource_watch.MaintenanceResourceWatchTests.test_timeout_reclaims_owned_group_without_touching_unrelated_process",
-          "sha256": "87adaa9dbf6cbe1bfbc04d6d850b4622369accfef8656c514e2a2cde2346dedd",
+          "sha256": "3ce7e3bfb5b7e10df59e767476022fd27d01aaca1b752055347bb323b3a158a2",
           "status": "passed"
         }
       ]
@@ -545,7 +545,7 @@
         {
           "path": "skills/openapi-engineering-maintainer/references/privacy-boundary.md",
           "reason": null,
-          "sha256": "d23950edd25cc1a4b91c18ed2309169c6e3ebf3f9a673b6fa40683bdf14d145d",
+          "sha256": "d4b5e1282bd61b136a50eac218dc21e146953044da84077e48137f6d24bb8fb8",
           "status": "passed"
         }
       ],
@@ -566,11 +566,11 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_self_improvement_e2e.SelfImprovementE2ETests.test_opt_in_to_private_proposal_is_offline_reproducible_and_source_read_only",
-          "sha256": "569247a6f67f2dd4dba6c3a386879a8d5ad27d12a6ca7cb8f86917fe40a880d2",
+          "sha256": "6aa752c502b4f0a0730c242ae1aa63c3306b7ffee57e7d3c1a63f035e3d2d35e",
           "status": "passed"
         }
       ]
@@ -627,7 +627,7 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_maintenance_promotion.MaintenancePromotionTests.test_dry_run_is_zero_write_and_exact_approval_atomically_promotes_red_test",
@@ -635,7 +635,7 @@
           "status": "passed"
         },
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_maintenance_promotion.MaintenancePromotionTests.test_stale_hash_and_symlink_are_rejected_without_external_write",
@@ -643,7 +643,7 @@
           "status": "passed"
         },
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_maintenance_promotion.MaintenancePromotionTests.test_partial_replace_failure_restores_all_target_snapshots",
@@ -680,11 +680,11 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_usage_retention.UsageRetentionTests.test_remote_cleanup_deletes_only_expired_event_rows_and_preserves_durable_paths",
-          "sha256": "e4235b4a98715a7db37ac980e3e0f81a5eefb64c7cc795d8a2839d059e716488",
+          "sha256": "34e3d2cbafa766d922785dba3e08ba041d80ec8e6e10137392cf3d8addfc2313",
           "status": "passed"
         }
       ]
@@ -696,7 +696,7 @@
         {
           "path": "skills/openapi-engineering-maintainer/SKILL.md",
           "reason": null,
-          "sha256": "9cf40c7e3f17e3ee629f8b967cfab8c83e43e2538fc48d3a6be33f57a07f131c",
+          "sha256": "71ddcbf0b3fc0b7672ffd3c31b4e907fc147def5152af5d6fd1e10f9745aae49",
           "status": "passed"
         }
       ],
@@ -717,11 +717,11 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_npm_distribution.NpmDistributionTests.test_maintainer_component_is_explicit_and_installs_on_both_platforms",
-          "sha256": "b9c2d5ea45d78a655dd19d367c1a470bc19a38631e94ca481470289dd72ef426",
+          "sha256": "04ead83ee114103b3fab5cdee47626a56713d44a2e2ac31fe829782eaf3fa7d1",
           "status": "passed"
         }
       ]
@@ -733,7 +733,7 @@
         {
           "path": "contracts/openapi-engineering.openapi.yaml",
           "reason": null,
-          "sha256": "bb87c7c479ce9836e28db99b0592a2d5d1b59254731c37327d46e762ee4bb6cd",
+          "sha256": "6d1bfc54b1ec44bab9cdd278c1fa3a30cd803edd1ad6afbab4cbd4662106e35c",
           "status": "passed"
         }
       ],
@@ -754,11 +754,11 @@
       "reasons": [],
       "tests": [
         {
-          "duration_ms": 8472,
+          "duration_ms": 8142,
           "exit_code": 0,
           "reason": null,
           "selector": "tests.test_self_improvement_e2e.SelfImprovementE2ETests.test_opt_in_to_private_proposal_is_offline_reproducible_and_source_read_only",
-          "sha256": "569247a6f67f2dd4dba6c3a386879a8d5ad27d12a6ca7cb8f86917fe40a880d2",
+          "sha256": "6aa752c502b4f0a0730c242ae1aa63c3306b7ffee57e7d3c1a63f035e3d2d35e",
           "status": "passed"
         }
       ]

@@ -39,9 +39,11 @@ implementation. After all evidence is approved, publish once with `npm publish -
 ## Verification checklist
 
 - [x] OpenAPI 1.2.0, JSON Schemas, and captured examples pass with no drift.
-- [x] Full deterministic suite passes serially with bounded RSS and zero swap.
+- [x] Full deterministic suite passes serially; the protected source digest is unchanged and no
+      verifier or analyzer process remains afterward.
 - [x] npm allowlist and isolated tarball lifecycle pass.
 - [x] Ubuntu, macOS, and Windows deterministic CI pass.
-- [ ] Approved Codex and Claude Code live evidence passes without public-source changes.
+- [x] Approved Codex and Claude Code live evidence passes with sanitized input, serial execution,
+      bounded RSS, and no model-initiated public-source changes.
 - [ ] Git tag, GitHub prerelease, npm publication, registry integrity, and cross-machine npx checks
       receive separate owner approval.

@@ -104,6 +104,20 @@ openapi-engineering-skill maintenance promote --proposal PRIVATE-PROPOSAL.json \
 # Repeat the unchanged command with --apply only after reviewing the exact plan.
 ```
 
+The analysis command defaults to approved API-key environment variables. For a one-person local
+installation with existing Codex and Claude Code subscription logins, explicitly add
+`--credential-mode active-cli-session`. That mode stages only Codex's private auth file and extracts
+only allowlisted Claude Code authentication/provider fields into the controlled child environment;
+it never loads hooks, plugins, permissions, MCP configuration, history, projects, or Agent
+configuration, and it refuses unsafe credential permissions instead of falling back to the real
+home directory. Compatible DeepSeek/MiMo providers are recorded as their actual model, not as an
+Anthropic model.
+
+If Codex passed but a required Claude review was blocked or failed, retry only the secondary review
+with `--resume-analysis PRIVATE-ANALYSIS.json`. Resume requires an exact current bundle digest,
+finding-ID match, valid prior Schema, and a passed Codex primary; it never skips an unrun or failed
+primary analysis.
+
 Automatic analysis never reads a target project or writes public source. An approved promotion is
 limited to allowlisted sanitized fixtures, eval cases, deliberately failing test skeletons, or
 traceability candidates; any secret, open question, target drift, symlink, or partial write causes

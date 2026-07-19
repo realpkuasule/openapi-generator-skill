@@ -1,5 +1,5 @@
 {
-  "finished_at": "2026-07-19T11:37:13.368448Z",
+  "finished_at": "2026-07-19T17:07:07.018977Z",
   "gates": [
     {
       "command": [
@@ -10,9 +10,9 @@
         "tests.test_environment",
         "-v"
       ],
-      "duration_ms": 970,
+      "duration_ms": 930,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/01-contract-validation.log",
-      "evidence_sha256": "da191513ddaf9fedd6e6c650098d8d4c310ca3cc90eac819621b5eaa5ebe853f",
+      "evidence_sha256": "8ea1cecac05c08ca4f436d1a667a32736759fe3cd3f74fbf37a7d6bb65a99e07",
       "exit_code": 0,
       "name": "contract-validation",
       "risk": null,
@@ -25,7 +25,7 @@
         "<repo>/scripts/capture_contract_examples.py",
         "--check"
       ],
-      "duration_ms": 2728,
+      "duration_ms": 2612,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/02-captured-example-conformance.log",
       "evidence_sha256": "4edc74b447af8a4262afb79befcfc5954affe818c6bde3992782fc898fe6a241",
       "exit_code": 0,
@@ -44,9 +44,9 @@
         "tests",
         "-v"
       ],
-      "duration_ms": 121578,
+      "duration_ms": 119425,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/03-unit-test-suite.log",
-      "evidence_sha256": "684441cba7e7b8f74f046c9af9783be12c516d546e66241e46e0843888ff3c7b",
+      "evidence_sha256": "52636a2e28f8843a85fa3ca590dd1ecb13fbbf04f4a405b5b917b849c33d6370",
       "exit_code": 0,
       "name": "unit-test-suite",
       "risk": null,
@@ -59,7 +59,7 @@
         "<repo>/scripts/quick_validate.py",
         "<repo>/skills/openapi-engineering"
       ],
-      "duration_ms": 23,
+      "duration_ms": 22,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/04-skill-quick-validation.log",
       "evidence_sha256": "ccb04e41349a980c1c232b702ef040423b64a20d77d2d1c1d9a06ffa04c2375b",
       "exit_code": 0,
@@ -74,7 +74,7 @@
         "<repo>/scripts/quick_validate.py",
         "<repo>/skills/openapi-engineering-maintainer"
       ],
-      "duration_ms": 23,
+      "duration_ms": 20,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/05-maintainer-skill-quick-validation.log",
       "evidence_sha256": "26f0fc0155dd4362eefa36bbdc5a1c202326fb079ba0a6939a0d0fd2859b7a90",
       "exit_code": 0,
@@ -91,9 +91,9 @@
         "tests.test_self_improvement_e2e",
         "-v"
       ],
-      "duration_ms": 1365,
+      "duration_ms": 1273,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/06-self-improvement-usage-e2e.log",
-      "evidence_sha256": "cd0d4516a721bc711184be927d82a9bef9dfd56971f64a324cf95e66d2e5057e",
+      "evidence_sha256": "a4c4cbd64d177736ee577d52ce65b310996ba5d3cae4a3da5ead2d07022e334a",
       "exit_code": 0,
       "name": "self-improvement-usage-e2e",
       "risk": null,
@@ -108,9 +108,9 @@
         "<repo>/contracts/self-improvement-acceptance-traceability.yaml",
         "--verify"
       ],
-      "duration_ms": 9194,
+      "duration_ms": 8660,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/07-self-improvement-traceability.log",
-      "evidence_sha256": "b65eb027faab70cef5a557c690e804a32010f58268d977955347d71ca080261f",
+      "evidence_sha256": "0c5fa8616770427b3f3776fb95d3d3e96e8f637b07ba8458d39955a2a6fac1bc",
       "exit_code": 0,
       "name": "self-improvement-traceability",
       "risk": null,
@@ -123,7 +123,7 @@
         "<repo>/bin/openapi-engineering-skill.mjs",
         "--help"
       ],
-      "duration_ms": 29,
+      "duration_ms": 27,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/08-usage-cli-help.log",
       "evidence_sha256": "f143934cfeaa9f745dc07a9bacdeafee48dafd6dec3a5cb351b6d334f2514294",
       "exit_code": 0,
@@ -138,9 +138,9 @@
         "<repo>/scripts/maintenance/analyze_usage.py",
         "--help"
       ],
-      "duration_ms": 469,
+      "duration_ms": 451,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/09-maintenance-analysis-help.log",
-      "evidence_sha256": "f1203cf47c7c729cc9beca377d8e3035b061ef1dcc598c6ac4984b5fb821b8d3",
+      "evidence_sha256": "de458ad46a55d106321c4e2c14e37b4ccbe8efbfa0484e8110c1e0a675f091f3",
       "exit_code": 0,
       "name": "maintenance-analysis-help",
       "risk": null,
@@ -153,7 +153,7 @@
         "<repo>/scripts/maintenance/build_proposal.py",
         "--help"
       ],
-      "duration_ms": 466,
+      "duration_ms": 440,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/10-maintenance-proposal-help.log",
       "evidence_sha256": "b263bc1f1de3e626732ef0283aba4edb82c5270017ef3b320439fb0abccd607c",
       "exit_code": 0,
@@ -168,7 +168,7 @@
         "<repo>/scripts/maintenance/promote_candidate.py",
         "--help"
       ],
-      "duration_ms": 468,
+      "duration_ms": 439,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/11-maintenance-promotion-help.log",
       "evidence_sha256": "2fad9a70c5e2bfcd6bb23e7622e7a98e9a30e0009c8dae3d79868b61d6486ff1",
       "exit_code": 0,
@@ -184,7 +184,7 @@
         "--root",
         "<repo>/skills/openapi-engineering-maintainer/evals"
       ],
-      "duration_ms": 505,
+      "duration_ms": 482,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/12-maintainer-eval-case-validation.log",
       "evidence_sha256": "c819cd54a3e99a919f78ea829421e287c3faf97ff9f52ff19f74d7126169912a",
       "exit_code": 0,
@@ -201,9 +201,9 @@
         "--json",
         "--ignore-scripts"
       ],
-      "duration_ms": 348,
+      "duration_ms": 188,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/13-npm-package-dry-run.log",
-      "evidence_sha256": "ec1fa8562e1627b4b802bcd4435cf21200c012009c0e540918c6489b66388bab",
+      "evidence_sha256": "39eb23b12ae0e15f373036a0236aa2671ede65beed7238fc9f3da482e7eb715d",
       "exit_code": 0,
       "name": "npm-package-dry-run",
       "risk": null,
@@ -216,7 +216,7 @@
         "<repo>/skills/openapi-engineering/scripts/inspect_project.py",
         "--help"
       ],
-      "duration_ms": 22,
+      "duration_ms": 19,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/14-inspect-project-help.log",
       "evidence_sha256": "93bc5a946021eab28215729a605e66b107b722b6529cfa7e7b79bd93c41192d1",
       "exit_code": 0,
@@ -231,7 +231,7 @@
         "<repo>/skills/openapi-engineering/scripts/validate_profile.py",
         "--help"
       ],
-      "duration_ms": 21,
+      "duration_ms": 19,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/15-validate-profile-help.log",
       "evidence_sha256": "a41c3d421faee774787e28929d0ec1cdaad2693f1f41997784f7aa6333cf8d0a",
       "exit_code": 0,
@@ -246,7 +246,7 @@
         "<repo>/skills/openapi-engineering/scripts/compare_generation.py",
         "--help"
       ],
-      "duration_ms": 21,
+      "duration_ms": 19,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/16-compare-generation-help.log",
       "evidence_sha256": "ee1d26c0d4d0b42ae5d401ed40a7792a6e82bfc28f7aa89397c0b8b23c8bb14c",
       "exit_code": 0,
@@ -261,7 +261,7 @@
         "<repo>/skills/openapi-engineering/scripts/run_empirical_gate.py",
         "--help"
       ],
-      "duration_ms": 27,
+      "duration_ms": 24,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/17-empirical-gate-help.log",
       "evidence_sha256": "c8198855f0db7f3e3db49e3c34cb2a575b6367bbc2100048d34024e923281a65",
       "exit_code": 0,
@@ -276,7 +276,7 @@
         "<repo>/skills/openapi-engineering/scripts/scope_snapshot.py",
         "--help"
       ],
-      "duration_ms": 459,
+      "duration_ms": 442,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/18-scope-snapshot-help.log",
       "evidence_sha256": "94158e10aa114c31b6a049c0040892757c5820b79f2ad95af58c52d527ece557",
       "exit_code": 0,
@@ -291,7 +291,7 @@
         "<repo>/skills/openapi-engineering/scripts/profile_state.py",
         "--help"
       ],
-      "duration_ms": 24,
+      "duration_ms": 21,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/19-profile-state-help.log",
       "evidence_sha256": "988af873cacbf297d5a824720932950c25bd003dbf9ef914ffc9b7e3c8ba6caf",
       "exit_code": 0,
@@ -305,7 +305,7 @@
         "<repo>/.venv/bin/python3",
         "<repo>/scripts/evals/load_cases.py"
       ],
-      "duration_ms": 547,
+      "duration_ms": 501,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/20-eval-case-validation.log",
       "evidence_sha256": "73c80a254b86a6c54ffcb537ed766ea7772a403300bbb482b1adb4761e0444a0",
       "exit_code": 0,
@@ -320,7 +320,7 @@
         "<repo>/scripts/run_skill_evals.py",
         "--help"
       ],
-      "duration_ms": 477,
+      "duration_ms": 447,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/21-eval-runner-help.log",
       "evidence_sha256": "06a0d73d445c87b2edef07066c329a6ceae87551f87a7cdddd17b32a707f4edd",
       "exit_code": 0,
@@ -335,7 +335,7 @@
         "<repo>/scripts/evals/score_result.py",
         "--help"
       ],
-      "duration_ms": 471,
+      "duration_ms": 445,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/22-eval-scorer-help.log",
       "evidence_sha256": "3643f7037e8fdcb7d0b59d267ac45e1aae53f31c1c5ae13e13d7ffffb075b904",
       "exit_code": 0,
@@ -350,7 +350,7 @@
         "<repo>/scripts/aggregate_forward_evals.py",
         "--help"
       ],
-      "duration_ms": 476,
+      "duration_ms": 448,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/23-forward-eval-aggregator-help.log",
       "evidence_sha256": "83b776c49786104ea01f2d1b25442ac23ccff25f13e8dd04cf2126f59bccb6ae",
       "exit_code": 0,
@@ -366,7 +366,7 @@
         "--home",
         "/tmp/openapi-engineering-installer-dry-run"
       ],
-      "duration_ms": 24,
+      "duration_ms": 21,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/24-skill-installer-dry-run.log",
       "evidence_sha256": "8af2ca9e7303e901e3bdfe023e044bc5898e9f7a605bf28a564918f8971bce1b",
       "exit_code": 0,
@@ -381,7 +381,7 @@
         "<repo>/scripts/tdd_evidence.py",
         "--help"
       ],
-      "duration_ms": 20,
+      "duration_ms": 18,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/25-tdd-evidence-help.log",
       "evidence_sha256": "c24546c2e2637b74451ed205e278065276efc32e01ca3e51e65cc4b92ecadbe3",
       "exit_code": 0,
@@ -399,7 +399,7 @@
       ],
       "duration_ms": 0,
       "evidence": "docs/verifications/self-improvement-20260719/final-report-evidence/26-source-tree-read-only.log",
-      "evidence_sha256": "9b1b9acd6d38373c9f52a3505b39d448590c6f34d2e0558419f7c5e126f6e5e0",
+      "evidence_sha256": "45c1f5835a37d629c9384e47b269252a83bb777892b64127e16602634bdf6415",
       "exit_code": 0,
       "name": "source-tree-read-only",
       "risk": null,
@@ -408,7 +408,7 @@
     }
   ],
   "report_version": 1,
-  "started_at": "2026-07-19T11:34:52.557407Z",
+  "started_at": "2026-07-19T17:04:49.573237Z",
   "status": "passed",
   "tier": "deterministic"
 }

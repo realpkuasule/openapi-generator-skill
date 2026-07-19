@@ -123,6 +123,19 @@
         "cli_version": { "type": ["string", "null"], "maxLength": 100 },
         "model": { "type": ["string", "null"], "maxLength": 100 },
         "status": { "enum": ["passed", "failed", "blocked"] },
+        "failure_code": {
+          "type": ["string", "null"],
+          "enum": [
+            null,
+            "adapter-blocked",
+            "adapter-unavailable",
+            "resource-limit",
+            "cli-failed",
+            "turn-limit",
+            "invalid-output",
+            "not-independent"
+          ]
+        },
         "resources": { "$ref": "#/$defs/analyzer_resources" }
       }
     },

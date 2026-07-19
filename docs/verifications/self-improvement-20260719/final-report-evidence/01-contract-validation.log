@@ -18,6 +18,6 @@ test_locked_validation_dependencies_are_available (tests.test_environment.Enviro
 test_project_and_lock_files_exist (tests.test_environment.EnvironmentTests.test_project_and_lock_files_exist) ... ok
 
 ----------------------------------------------------------------------
-Ran 13 tests in 0.352s
+Ran 13 tests in 0.349s
 
 OK

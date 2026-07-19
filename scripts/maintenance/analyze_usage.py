@@ -16,9 +16,11 @@ from adapters import (
     AdapterBlocked,
     AdapterFailure,
     blocked_analyzer,
+    failed_analyzer,
     run_claude,
     run_codex,
     run_fake,
+    validate_semantic_result,
 )
 
 
@@ -80,6 +82,72 @@ def validate_bundle(value: Any, max_events: int) -> dict[str, Any]:
     if any(errors_for(item, sanitized_schema) for item in value["sanitized_events"]):
         raise InputBlocked("Finding bundle contains a non-sanitized event.")
     return value
+
+
+def validated_resume_analysis(
+    path: Path,
+    *,
+    input_sha256: str,
+    finding_ids: set[str],
+) -> tuple[dict[str, Any], dict[str, Any], list[str]]:
+    value = load_json(path)
+    if errors_for(value, schema(ANALYSIS_SCHEMA)):
+        raise InputBlocked("Resume analysis does not satisfy the analysis contract.")
+    if value["input_sha256"] != input_sha256:
+        raise InputBlocked("Resume analysis input digest does not match.")
+    if value["finding_ids"] != sorted(finding_ids):
+        raise InputBlocked("Resume analysis finding IDs do not match.")
+
+    primary = value["primary"]
+    sequence = value["analyzer_sequence"]
+    review = value["secondary_review"]
+    if (
+        primary["platform"] != "codex"
+        or primary["status"] != "passed"
+        or not sequence
+        or sequence[0] != primary
+    ):
+        raise InputBlocked("Resume analysis does not contain a reusable Codex primary result.")
+    if (
+        not review["required"]
+        or review["status"] not in {"blocked", "failed"}
+        or review["result"] is not None
+        or any(item["status"] == "passed" for item in sequence[1:])
+    ):
+        raise InputBlocked("Resume analysis is not eligible for secondary-review recovery.")
+    if len(sequence) == 1:
+        if review["analyzer"] is not None:
+            raise InputBlocked("Resume analysis secondary-review evidence is inconsistent.")
+    elif (
+        sequence[1] != review["analyzer"]
+        or sequence[1]["platform"] != "claude"
+        or sequence[1]["status"] not in {"blocked", "failed"}
+    ):
+        raise InputBlocked("Resume analysis secondary-review evidence is inconsistent.")
+
+    try:
+        semantic = validate_semantic_result(
+            {
+                "clusters": value["clusters"],
+                "confidence": value["confidence"],
+                "candidate_causes": value["candidate_causes"],
+                "unverified": value["unverified"],
+            },
+            finding_ids,
+        )
+    except AdapterFailure as exc:
+        raise InputBlocked("Resume analysis semantic result is invalid.") from exc
+    expected_analysis_id = "analysis-" + sha256_value(
+        {
+            "input": input_sha256,
+            "semantic": semantic,
+            "sequence": sequence,
+            "review": review,
+        }
+    )[:16]
+    if value["analysis_id"] != expected_analysis_id:
+        raise InputBlocked("Resume analysis ID is not self-consistent.")
+    return semantic, primary, review["trigger_reasons"]
 
 
 def atomic_write_json(path: Path, value: Any) -> None:
@@ -165,6 +233,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Analyze sanitized maintenance findings.")
     parser.add_argument("--findings", type=Path, required=True)
     parser.add_argument("--adapter", choices=("fake", "codex"), default="codex")
+    parser.add_argument(
+        "--credential-mode",
+        choices=("environment", "active-cli-session"),
+        default="environment",
+    )
+    parser.add_argument("--resume-analysis", type=Path)
     parser.add_argument("--fake-response", type=Path)
     parser.add_argument("--fake-platform", choices=("fake", "codex", "claude"), default="fake")
     parser.add_argument(
@@ -193,39 +267,56 @@ def main() -> int:
         hard_limit_bytes = args.rss_hard_mb * 1024 * 1024
         bundle = validate_bundle(load_json(args.findings.resolve()), args.max_events)
         finding_ids = {item["finding_id"] for item in bundle["findings"]}
+        input_sha256 = sha256_value(bundle)
         primary_blocked = False
-        try:
-            if args.adapter == "fake":
-                if args.fake_response is None:
-                    raise InputBlocked("Fake adapter requires --fake-response.")
-                semantic, primary = run_fake(
-                    args.fake_response.resolve(),
-                    finding_ids,
-                    args.fake_platform,
+        if args.resume_analysis is not None:
+            if args.adapter != "codex" or args.secondary_adapter == "none":
+                raise InputBlocked(
+                    "Resume analysis requires Codex primary evidence and a secondary adapter."
+                )
+            semantic, primary, previous_triggers = validated_resume_analysis(
+                args.resume_analysis.expanduser().resolve(),
+                input_sha256=input_sha256,
+                finding_ids=finding_ids,
+            )
+        else:
+            try:
+                if args.adapter == "fake":
+                    if args.fake_response is None:
+                        raise InputBlocked("Fake adapter requires --fake-response.")
+                    semantic, primary = run_fake(
+                        args.fake_response.resolve(),
+                        finding_ids,
+                        args.fake_platform,
+                        warning_limit_bytes=warning_limit_bytes,
+                        hard_limit_bytes=hard_limit_bytes,
+                    )
+                else:
+                    semantic, primary = run_codex(
+                        bundle,
+                        finding_ids,
+                        args.timeout_seconds,
+                        warning_limit_bytes,
+                        hard_limit_bytes,
+                        args.credential_mode,
+                    )
+            except AdapterBlocked as exc:
+                primary_blocked = True
+                semantic = None
+                primary = blocked_analyzer(
+                    "codex",
+                    bundle,
+                    exc.resources,
                     warning_limit_bytes=warning_limit_bytes,
                     hard_limit_bytes=hard_limit_bytes,
+                    failure_code=exc.code,
                 )
-            else:
-                semantic, primary = run_codex(
-                    bundle,
-                    finding_ids,
-                    args.timeout_seconds,
-                    warning_limit_bytes,
-                    hard_limit_bytes,
-                )
-        except AdapterBlocked as exc:
-            primary_blocked = True
-            semantic = None
-            primary = blocked_analyzer(
-                "codex",
-                bundle,
-                exc.resources,
-                warning_limit_bytes=warning_limit_bytes,
-                hard_limit_bytes=hard_limit_bytes,
-            )
 
         sequence = [primary]
         triggers = review_reasons(bundle, semantic, primary_blocked)
+        if args.resume_analysis is not None:
+            if previous_triggers != triggers:
+                raise InputBlocked("Resume analysis review triggers do not match.")
         review = {
             "required": bool(triggers),
             "trigger_reasons": triggers,
@@ -267,9 +358,16 @@ def main() -> int:
                             args.timeout_seconds,
                             warning_limit_bytes,
                             hard_limit_bytes,
+                            args.credential_mode,
                         )
                     if not independent(primary, secondary):
-                        raise AdapterBlocked("Secondary review is not independent.")
+                        raise AdapterFailure(
+                            "Secondary review is not independent.",
+                            code="not-independent",
+                            resources=secondary["resources"],
+                            cli_version=secondary["cli_version"],
+                            model=secondary["model"],
+                        )
                     sequence.append(secondary)
                     review.update(
                         status="passed",
@@ -279,15 +377,31 @@ def main() -> int:
                     )
                 except (AdapterBlocked, AdapterFailure) as exc:
                     review_blocked = True
-                    secondary = blocked_analyzer(
-                        secondary_platform,
-                        bundle,
-                        exc.resources if isinstance(exc, AdapterBlocked) else None,
-                        warning_limit_bytes=warning_limit_bytes,
-                        hard_limit_bytes=hard_limit_bytes,
-                    )
+                    if isinstance(exc, AdapterBlocked):
+                        secondary = blocked_analyzer(
+                            secondary_platform,
+                            bundle,
+                            exc.resources,
+                            warning_limit_bytes=warning_limit_bytes,
+                            hard_limit_bytes=hard_limit_bytes,
+                            failure_code=exc.code,
+                        )
+                        review_status = "blocked"
+                    else:
+                        secondary = failed_analyzer(
+                            secondary_platform,
+                            bundle,
+                            exc,
+                            warning_limit_bytes=warning_limit_bytes,
+                            hard_limit_bytes=hard_limit_bytes,
+                        )
+                        review_status = "failed"
                     sequence.append(secondary)
-                    review.update(analyzer=secondary, independent=independent(primary, secondary))
+                    review.update(
+                        status=review_status,
+                        analyzer=secondary,
+                        independent=independent(primary, secondary),
+                    )
 
         accepted_semantic = semantic or secondary_semantic
         if accepted_semantic is None:
@@ -295,7 +409,6 @@ def main() -> int:
         if semantic is not None and secondary_semantic is not None:
             agreements, disagreements = compare_semantics(semantic, secondary_semantic)
             review.update(agreements=agreements, disagreements=disagreements)
-        input_sha256 = sha256_value(bundle)
         generated_at = args.now or utc_now()
         try:
             datetime.fromisoformat(generated_at.replace("Z", "+00:00"))

@@ -30,6 +30,11 @@ Permit automatic writes only under the configured private state/Git areas:
 - `summaries/`, `findings/`, `analyses/`, `proposals/`, and approved per-device event/feedback partitions;
 - temporary isolated analyzer directories that are reclaimed after the run.
 
+An explicitly approved active CLI session credential may be used only as authentication material
+through a temporary home or an allowlisted child-process environment. It is never analysis input
+or evidence. Reject symbolic links, non-owner files, group/world-readable files, unexpected size,
+and any request to copy or load a complete Codex or Claude configuration tree.
+
 Treat every remote object as untrusted. Validate path ownership, Schema, canonical digest, privacy canaries, and symlinks before reading or merging it. Disable local Git hooks and execute Git with explicit argv; never run repository scripts.
 
 Never automatically write public source, contracts, tests, CI, target projects, Issues, branches, pull requests, releases, npm state, Codex configuration, or Claude configuration.

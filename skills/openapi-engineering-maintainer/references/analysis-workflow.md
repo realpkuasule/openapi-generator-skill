@@ -25,6 +25,11 @@ Use Codex as the primary analyzer. Give it the stable rule IDs, observed metrics
 
 Run in an isolated temporary home with the narrowest available read-only mode. Forward only the documented process/locale/certificate environment allowlist. Do not forward arbitrary parent environment variables.
 
+Authentication has two explicit modes:
+
+- `environment` (default): forward only the platform-specific approved API-key variables.
+- `active-cli-session`: copy only Codex `auth.json` into its temporary home. For Claude Code, parse a regular, owner-matched, private, bounded user settings file and forward only allowlisted `ANTHROPIC_*` authentication, compatible endpoint, and model fields. Never load the settings file itself, hooks, plugins, permissions, MCP state, history, projects, rules, or other user content. Record a compatible provider's actual model and never call it Anthropic model evidence. Remove staged credentials with the temporary home and never fall back to the real user home.
+
 ## Secondary review
 
 Require Claude Code review only when at least one condition holds:
@@ -36,6 +41,12 @@ Require Claude Code review only when at least one condition holds:
 - primary result is blocked.
 
 Run Claude only after the Codex process group has exited and its temporary directory has been reclaimed. Require a genuinely different platform/session. If Claude is unavailable, keep the primary result and set the review status to `blocked`; do not run Codex again as a substitute.
+
+Disable all Claude tools and allow at most two internal turns for schema-bound output. Treat a second-turn exhaustion as failed; never enable tools or retry without a new bounded run.
+
+Distinguish a launch/auth/resource block from a CLI or output failure. Preserve measured resources for every started secondary analyzer represented in the analysis, mark non-zero CLI, turn exhaustion, malformed JSON, or invalid structured output as `failed`, and record only the contract-enumerated non-sensitive `failure_code`.
+
+Resume only a Schema-valid prior analysis whose input digest and finding IDs exactly match the current bundle, whose analysis ID is self-consistent, whose Codex primary passed, and whose required secondary review is blocked or failed. Reuse only the primary semantic result and analyzer evidence, discard the old secondary attempt, and run Claude once. Block before model launch on any drift.
 
 ## Output validation
 

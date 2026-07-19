@@ -38,6 +38,8 @@ Classify every input as observed deterministic evidence, user decision, or analy
 
 Read [analysis workflow](references/analysis-workflow.md). Run at most one controlled analyzer subprocess, with a 600-second timeout, a 512 MB warning, and a 1024 MB hard child-process limit. Terminate only the process group started for this analysis; never target an existing Codex, Claude, browser, generator, or user process.
 
+Use environment authentication by default. Use active-cli-session authentication only after explicit approval for the current run; stage only Codex's minimal auth file, extract only allowlisted Claude authentication/provider fields from private user settings, reject unsafe credential sources, and never load hooks, plugins, permissions, MCP configuration, history, projects, or Agent configuration. Record the actual configured Claude-compatible model without representing it as an Anthropic model. Never fall back to the real user home.
+
 Record platform, CLI/model version when observable, input digest, status, confidence, candidate causes, and unverified items. Preserve failed, malformed, timed-out, and unavailable results as failed or blocked; never rewrite them as passed.
 
 ### 4. Produce a private proposal
