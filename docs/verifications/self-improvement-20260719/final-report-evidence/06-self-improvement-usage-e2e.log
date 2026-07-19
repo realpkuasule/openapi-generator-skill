@@ -1,0 +1,11 @@
+command=["<repo>/.venv/bin/python", "-m", "unittest", "tests.test_self_improvement_e2e", "-v"]
+exit_code=0
+stdout:
+
+stderr:
+test_opt_in_to_private_proposal_is_offline_reproducible_and_source_read_only (tests.test_self_improvement_e2e.SelfImprovementE2ETests.test_opt_in_to_private_proposal_is_offline_reproducible_and_source_read_only) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.350s
+
+OK

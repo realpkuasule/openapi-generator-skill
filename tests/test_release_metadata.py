@@ -6,11 +6,11 @@ import unittest
 from tests.support import REPO_ROOT
 
 
-RELEASE_TAG = "v0.1.0-rc.2"
-PEP440_VERSION = "0.1.0rc2"
+RELEASE_TAG = "v0.1.0-rc.3"
+PEP440_VERSION = "0.1.0rc3"
 README = REPO_ROOT / "README.md"
 CHANGELOG = REPO_ROOT / "CHANGELOG.md"
-RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.0-rc.2.md"
+RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.0-rc.3.md"
 
 
 class ReleaseMetadataTests(unittest.TestCase):
@@ -35,7 +35,7 @@ class ReleaseMetadataTests(unittest.TestCase):
             "--platform claude",
             "--apply",
             "uninstall",
-            "@realpkuasule/openapi-engineering-skill@0.1.0-rc.2",
+            "@realpkuasule/openapi-engineering-skill@0.1.0-rc.3",
             "scripts/verify.py --tier deterministic",
             "multi-turn boundary interview",
             "no-codegen",
@@ -47,7 +47,7 @@ class ReleaseMetadataTests(unittest.TestCase):
     def test_changelog_contains_dated_release_candidate(self) -> None:
         content = CHANGELOG.read_text(encoding="utf-8")
 
-        self.assertIn("## [0.1.0-rc.2] - 2026-07-19", content)
+        self.assertIn("## [0.1.0-rc.3] - 2026-07-19", content)
         self.assertIn("Contract-First", content)
         self.assertIn("Codex", content)
         self.assertIn("Claude Code", content)
@@ -58,9 +58,9 @@ class ReleaseMetadataTests(unittest.TestCase):
         for required in (
             RELEASE_TAG,
             "Contract-First",
-            "OpenAPI 1.1.0",
-            "no schema change",
-            "151/151",
+            "OpenAPI 1.2.0",
+            "additive contract",
+            "serial",
             "rollback",
             "Codex",
             "Claude Code",

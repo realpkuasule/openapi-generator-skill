@@ -1,0 +1,19 @@
+{
+  "finding_id": "finding-8c5f4fbf5d8244f3",
+  "input_sha256": "af039b7dbd93ecfb8360d2edf0c8bd170db86aa0acac3ad58904846fb02e2381",
+  "observed": {
+    "comparator": ">",
+    "metric": "peak_rss_mb",
+    "sample_count": 5,
+    "threshold": 512,
+    "value": 640,
+    "window_days": 30
+  },
+  "period_id": "2026-W29",
+  "requires_secondary_review": true,
+  "rule_id": "SI-RESOURCE-001",
+  "schema_version": 1,
+  "severity": "P1",
+  "status": "open",
+  "threshold_version": 1
+}

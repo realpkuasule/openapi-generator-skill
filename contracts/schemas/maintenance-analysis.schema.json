@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openapi-engineering.local/schemas/maintenance-analysis.schema.json",
+  "title": "OpenAPI Engineering Maintenance Analysis",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "analysis_id",
+    "generated_at",
+    "input_sha256",
+    "finding_ids",
+    "primary",
+    "analyzer_sequence",
+    "secondary_review",
+    "clusters",
+    "confidence",
+    "candidate_causes",
+    "unverified"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "analysis_id": { "type": "string", "pattern": "^analysis-[a-f0-9]{16,64}$" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "input_sha256": { "$ref": "#/$defs/sha256" },
+    "finding_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^finding-[a-f0-9]{16,64}$" }
+    },
+    "primary": { "$ref": "#/$defs/analyzer_result" },
+    "analyzer_sequence": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/analyzer_result" }
+    },
+    "secondary_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "trigger_reasons",
+        "status",
+        "analyzer",
+        "independent",
+        "result",
+        "agreements",
+        "disagreements"
+      ],
+      "properties": {
+        "required": { "type": "boolean" },
+        "trigger_reasons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "safety",
+              "platform-drift",
+              "severity-p0-p1",
+              "low-confidence",
+              "primary-blocked"
+            ]
+          }
+        },
+        "status": { "enum": ["not-required", "pending", "passed", "failed", "blocked"] },
+        "analyzer": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/analyzer_result" }
+          ]
+        },
+        "independent": { "type": "boolean" },
+        "result": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/semantic_result" }
+          ]
+        },
+        "agreements": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 100 }
+        },
+        "disagreements": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 100 }
+        }
+      }
+    },
+    "clusters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "finding_ids"],
+        "properties": {
+          "key": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" },
+          "finding_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^finding-[a-f0-9]{16,64}$" }
+          }
+        }
+      }
+    },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "candidate_causes": { "type": "array", "items": { "type": "string", "minLength": 1, "maxLength": 500 } },
+    "unverified": { "type": "array", "items": { "type": "string", "minLength": 1, "maxLength": 500 } }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "analyzer_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["platform", "session_id", "cli_version", "model", "status", "resources"],
+      "properties": {
+        "platform": { "enum": ["codex", "claude", "fake"] },
+        "session_id": { "type": "string", "pattern": "^analysis-session-[a-f0-9]{16,64}$" },
+        "cli_version": { "type": ["string", "null"], "maxLength": 100 },
+        "model": { "type": ["string", "null"], "maxLength": 100 },
+        "status": { "enum": ["passed", "failed", "blocked"] },
+        "resources": { "$ref": "#/$defs/analyzer_resources" }
+      }
+    },
+    "analyzer_resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "measurement_status",
+        "peak_rss_bytes",
+        "warning_limit_bytes",
+        "hard_limit_bytes",
+        "warning_exceeded",
+        "termination_reason",
+        "duration_ms",
+        "process_group_reclaimed"
+      ],
+      "properties": {
+        "measurement_status": { "enum": ["measured", "unsupported", "not-run"] },
+        "peak_rss_bytes": { "type": ["integer", "null"], "minimum": 0 },
+        "warning_limit_bytes": { "type": "integer", "minimum": 1 },
+        "hard_limit_bytes": { "type": "integer", "minimum": 1 },
+        "warning_exceeded": { "type": "boolean" },
+        "termination_reason": {
+          "enum": [
+            "exited",
+            "timeout",
+            "rss-hard-limit",
+            "measurement-unsupported",
+            "launch-failed",
+            "not-run"
+          ]
+        },
+        "duration_ms": { "type": "integer", "minimum": 0 },
+        "process_group_reclaimed": { "type": "boolean" }
+      }
+    },
+    "semantic_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clusters", "confidence", "candidate_causes", "unverified"],
+      "properties": {
+        "clusters": { "$ref": "#/properties/clusters" },
+        "confidence": { "$ref": "#/properties/confidence" },
+        "candidate_causes": { "$ref": "#/properties/candidate_causes" },
+        "unverified": { "$ref": "#/properties/unverified" }
+      }
+    }
+  }
+}

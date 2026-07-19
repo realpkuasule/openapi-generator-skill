@@ -1,9 +1,13 @@
 # OpenAPI Engineering Skill 需求规格
 
-> 状态：需求基线（待实现）  
-> 日期：2026-07-14  
-> 目标平台：Codex、Claude Code  
+> 状态：已实现需求基线
+> 日期：2026-07-14（2026-07-19 校正状态）
+> 目标平台：Codex、Claude Code
 > 暂定 Skill 名称：`openapi-engineering`
+
+> 受控扩展：个人使用信息采集与自我改进系统的独立需求基线见
+> [OpenAPI Engineering 自我改进系统需求规格](openapi-engineering-self-improvement-requirements.md)。
+> 该扩展不改变本文件 AC-01～AC-12 的既有语义和通过状态。
 
 ## 1. 结论与立场
 
@@ -416,3 +420,14 @@ Skill 应识别：
 6. 最后把 PactFlow、Agentify 或 OpenAPI→MCP 工具作为明确授权的可选执行器，而不是核心依赖。
 
 首版成功标准不是“支持最多生成器”，而是：在不同性质项目上做出不同且可解释的决定，并严格守住问答与授权边界。
+
+## 15. 受控需求扩展
+
+2026-07-19 批准新增独立的个人使用信息采集与自我改进系统。该系统由原
+`openapi-engineering` 运行 Skill、确定性本地脚本和独立的
+`openapi-engineering-maintainer` Skill 组成；默认关闭、私有优先，且不得借由“自我改进”
+绕过本文件规定的交互式边界、明确批准、Contract-First、TDD 或范围扩张重确认。
+
+扩展需求、隐私边界、自动化阈值、三机拓扑和新增 `SI-AC-*` 验收标准统一以
+`docs/openapi-engineering-self-improvement-requirements.md` 为准。实施前必须先更新控制面
+OpenAPI 与权威 JSON Schema；本文件继续作为 OpenAPI 工程决策 Skill 的核心需求基线。

@@ -1,0 +1,356 @@
+command=["npm", "pack", "--dry-run", "--json", "--ignore-scripts"]
+exit_code=0
+stdout:
+[
+  {
+    "id": "@realpkuasule/openapi-engineering-skill@0.1.0-rc.3",
+    "name": "@realpkuasule/openapi-engineering-skill",
+    "version": "0.1.0-rc.3",
+    "size": 91593,
+    "unpackedSize": 389758,
+    "shasum": "b50d783e62173bed8e025f32e72a68161890c5e6",
+    "integrity": "sha512-OJw+fv41yg+YOzYiWmCkVZORg+PoBuNrLSJgUhNmDLcz4RsHOVapVGsMjB4XzFmqZandvRbOizTA9nEjZF6PUw==",
+    "filename": "realpkuasule-openapi-engineering-skill-0.1.0-rc.3.tgz",
+    "files": [
+      {
+        "path": "CHANGELOG.md",
+        "size": 3782,
+        "mode": 420
+      },
+      {
+        "path": "README.md",
+        "size": 7581,
+        "mode": 420
+      },
+      {
+        "path": "bin/openapi-engineering-skill.mjs",
+        "size": 30254,
+        "mode": 493
+      },
+      {
+        "path": "contracts/schemas/maintenance-analysis.schema.json",
+        "size": 5649,
+        "mode": 420
+      },
+      {
+        "path": "contracts/schemas/maintenance-finding.schema.json",
+        "size": 2469,
+        "mode": 420
+      },
+      {
+        "path": "contracts/schemas/maintenance-promotion.schema.json",
+        "size": 2009,
+        "mode": 420
+      },
+      {
+        "path": "contracts/schemas/maintenance-proposal.schema.json",
+        "size": 3759,
+        "mode": 420
+      },
+      {
+        "path": "contracts/schemas/retention-plan.schema.json",
+        "size": 1850,
+        "mode": 420
+      },
+      {
+        "path": "contracts/schemas/usage-config.schema.json",
+        "size": 3178,
+        "mode": 420
+      },
+      {
+        "path": "contracts/schemas/usage-event.schema.json",
+        "size": 9554,
+        "mode": 420
+      },
+      {
+        "path": "contracts/schemas/usage-summary.schema.json",
+        "size": 2757,
+        "mode": 420
+      },
+      {
+        "path": "contracts/schemas/usage-trend.schema.json",
+        "size": 3864,
+        "mode": 420
+      },
+      {
+        "path": "contracts/schemas/user-feedback.schema.json",
+        "size": 2695,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/atomic-files.mjs",
+        "size": 1046,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/canonical-json.mjs",
+        "size": 545,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/config.mjs",
+        "size": 4268,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/due.mjs",
+        "size": 3536,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/events.mjs",
+        "size": 11449,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/feedback.mjs",
+        "size": 5402,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/git-sync.mjs",
+        "size": 9802,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/launchd.mjs",
+        "size": 5820,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/ownership.mjs",
+        "size": 6338,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/paths.mjs",
+        "size": 2796,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/process-watch.mjs",
+        "size": 2294,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/redact.mjs",
+        "size": 1025,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/retention.mjs",
+        "size": 12934,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/session-launcher.mjs",
+        "size": 5623,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/summarize.mjs",
+        "size": 7192,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/thresholds.mjs",
+        "size": 4232,
+        "mode": 420
+      },
+      {
+        "path": "lib/usage/trends.mjs",
+        "size": 7565,
+        "mode": 420
+      },
+      {
+        "path": "package.json",
+        "size": 1871,
+        "mode": 420
+      },
+      {
+        "path": "packaging/launchd/com.realpkuasule.openapi-engineering-maintainer.plist",
+        "size": 971,
+        "mode": 420
+      },
+      {
+        "path": "scripts/maintenance/adapters.py",
+        "size": 11148,
+        "mode": 420
+      },
+      {
+        "path": "scripts/maintenance/analyze_usage.py",
+        "size": 13151,
+        "mode": 420
+      },
+      {
+        "path": "scripts/maintenance/build_proposal.py",
+        "size": 11274,
+        "mode": 420
+      },
+      {
+        "path": "scripts/maintenance/process_watch.py",
+        "size": 7934,
+        "mode": 420
+      },
+      {
+        "path": "scripts/maintenance/promote_candidate.py",
+        "size": 11946,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering-maintainer/agents/openai.yaml",
+        "size": 267,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering-maintainer/evals/ordinary-handoff.yaml",
+        "size": 2076,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering-maintainer/evals/privacy-boundary.yaml",
+        "size": 2260,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering-maintainer/evals/promotion-approval.yaml",
+        "size": 2343,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering-maintainer/evals/risk-secondary-review.yaml",
+        "size": 2273,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering-maintainer/references/analysis-workflow.md",
+        "size": 2719,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering-maintainer/references/privacy-boundary.md",
+        "size": 2175,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering-maintainer/references/promotion-policy.md",
+        "size": 2307,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering-maintainer/SKILL.md",
+        "size": 4571,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/agents/openai.yaml",
+        "size": 273,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/evals/animator.yaml",
+        "size": 4872,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/evals/completion-report.yaml",
+        "size": 2222,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/evals/profile-reuse.yaml",
+        "size": 2398,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/evals/revoice.yaml",
+        "size": 3801,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/evals/scope-expansion.yaml",
+        "size": 3148,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/evals/untrusted-input.yaml",
+        "size": 2554,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/evals/upgrade-gate.yaml",
+        "size": 2542,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/references/boundary-interview.md",
+        "size": 4023,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/references/decision-framework.md",
+        "size": 5244,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/references/generator-evaluation.md",
+        "size": 3491,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/references/governance-gates.md",
+        "size": 4137,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/references/lifecycle-modes.md",
+        "size": 3497,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/references/platform-compatibility.md",
+        "size": 6684,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/scripts/compare_generation.py",
+        "size": 3909,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/scripts/inspect_project.py",
+        "size": 10668,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/scripts/profile_state.py",
+        "size": 12477,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/scripts/run_empirical_gate.py",
+        "size": 34559,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/scripts/scope_snapshot.py",
+        "size": 10550,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/scripts/validate_profile.py",
+        "size": 7746,
+        "mode": 420
+      },
+      {
+        "path": "skills/openapi-engineering/SKILL.md",
+        "size": 10409,
+        "mode": 420
+      }
+    ],
+    "entryCount": 67,
+    "bundled": []
+  }
+]
+
+stderr:

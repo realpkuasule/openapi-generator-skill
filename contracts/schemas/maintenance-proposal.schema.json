@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openapi-engineering.local/schemas/maintenance-proposal.schema.json",
+  "title": "OpenAPI Engineering Maintenance Proposal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "proposal_id",
+    "candidate_id",
+    "generated_at",
+    "input_digests",
+    "skill_version",
+    "skill_sha256",
+    "config_sha256",
+    "contract_impact",
+    "target_files",
+    "artifacts",
+    "open_questions",
+    "failing_tests",
+    "verification",
+    "resources",
+    "rollback",
+    "approval_sha256"
+  ],
+  "properties": {
+    "schema_version": { "const": 2 },
+    "proposal_id": { "type": "string", "pattern": "^proposal-[a-f0-9]{16,64}$" },
+    "candidate_id": { "type": "string", "pattern": "^candidate-[a-f0-9]{16,64}$" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "input_digests": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/sha256" }
+    },
+    "skill_version": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "skill_sha256": { "$ref": "#/$defs/sha256" },
+    "config_sha256": { "$ref": "#/$defs/sha256" },
+    "contract_impact": { "enum": ["none", "compatible", "breaking", "unknown"] },
+    "target_files": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "expected_sha256"],
+        "properties": {
+          "path": { "$ref": "#/$defs/relative_path" },
+          "expected_sha256": {
+            "oneOf": [
+              { "$ref": "#/$defs/sha256" },
+              { "type": "null" }
+            ]
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "path", "media_type", "content_sha256", "content"],
+        "properties": {
+          "kind": {
+            "enum": ["eval-case", "sanitized-fixture", "failing-test", "traceability-candidate"]
+          },
+          "path": { "$ref": "#/$defs/relative_path" },
+          "media_type": { "enum": ["application/json", "text/x-python", "application/yaml"] },
+          "content_sha256": { "$ref": "#/$defs/sha256" },
+          "content": { "type": "string", "minLength": 1, "maxLength": 100000 }
+        }
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "type": "string", "minLength": 1, "maxLength": 500 }
+    },
+    "failing_tests": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/relative_path" } },
+    "verification": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1, "maxLength": 500 } },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["timeout_seconds", "warning_rss_mb", "hard_rss_mb", "max_concurrency"],
+      "properties": {
+        "timeout_seconds": { "type": "integer", "minimum": 1, "maximum": 600 },
+        "warning_rss_mb": { "type": "integer", "minimum": 1 },
+        "hard_rss_mb": { "type": "integer", "minimum": 2 },
+        "max_concurrency": { "const": 1 }
+      }
+    },
+    "rollback": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1, "maxLength": 500 } },
+    "approval_sha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "relative_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+command=["<repo>/.venv/bin/python", "<repo>/skills/openapi-engineering/scripts/scope_snapshot.py", "--help"]
+exit_code=0
+stdout:
+usage: scope_snapshot.py [-h] --root ROOT --snapshot-dir SNAPSHOT_DIR
+                         [--path PATHS] [--manifest MANIFEST]
+                         [--approve APPROVE]
+                         {snapshot,restore}
+
+Create or restore an external scope snapshot
+
+positional arguments:
+  {snapshot,restore}
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT
+  --snapshot-dir SNAPSHOT_DIR
+  --path PATHS
+  --manifest MANIFEST
+  --approve APPROVE
+
+stderr:

@@ -1,0 +1,15 @@
+command=["node", "<repo>/bin/openapi-engineering-skill.mjs", "--help"]
+exit_code=0
+stdout:
+Usage: openapi-engineering-skill <install|verify|uninstall|usage|session|maintenance> [options]
+
+Options:
+  --platform <codex|claude>  Select a platform; repeat for both (default: both)
+  --component <runtime|maintainer> Select a Skill component; repeat (default: runtime)
+  --home <path>              Override the user home directory
+  --apply                    Apply install or uninstall; otherwise dry-run
+  --copy                     Copy platform targets instead of linking
+  --json                     Emit a JSON report
+  --help                     Show this help
+
+stderr:

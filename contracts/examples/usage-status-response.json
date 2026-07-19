@@ -1,0 +1,35 @@
+{
+  "action": "status",
+  "applied": false,
+  "config": {
+    "analysis": {
+      "hard_rss_mb": 1024,
+      "max_events": 50,
+      "primary": "codex",
+      "secondary": "claude",
+      "timeout_seconds": 600,
+      "warning_rss_mb": 512
+    },
+    "branch": null,
+    "config_version": 1,
+    "coordinator": false,
+    "device_alias": null,
+    "feedback": {
+      "successful_sample_every": 5
+    },
+    "local_collection_enabled": false,
+    "remote": null,
+    "retention": {
+      "local_days": 90,
+      "remote_days": 365
+    },
+    "schedule": {
+      "due_check": "daily",
+      "period": "iso-week"
+    },
+    "state_root": "default",
+    "sync_authorization": null,
+    "sync_enabled": false
+  },
+  "status": "ok"
+}

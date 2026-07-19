@@ -14,6 +14,14 @@ name: Verify
         description: Check a fully provisioned release candidate and its existing evidence
         type: boolean
         default: false
+      run_maintainer:
+        description: Run an approved sanitized Maintainer finding bundle serially
+        type: boolean
+        default: false
+      maintenance_bundle_path:
+        description: Absolute runner path to an approved sanitized finding bundle
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -35,6 +43,9 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
       - name: Install locked environment
         run: uv sync --locked
       - name: Run deterministic verification
@@ -46,6 +57,40 @@ jobs:
         if: always()
         with:
           name: deterministic-${{ runner.os }}
+          path: docs/verifications/ci/
+
+  live-maintainer:
+    name: Manual isolated Maintainer analysis
+    if: github.event_name == 'workflow_dispatch' && inputs.run_maintainer
+    runs-on: [self-hosted, openapi-maintainer]
+    environment: live-maintenance
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      CODEX_API_KEY: ${{ secrets.CODEX_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: false
+      - run: uv sync --locked
+      - name: Verify provisioned independent CLIs
+        run: codex --version
+      - name: Verify provisioned Claude Code CLI
+        run: claude --version
+      - name: Run Codex primary then risk-triggered Claude review
+        env:
+          MAINTENANCE_BUNDLE_PATH: ${{ inputs.maintenance_bundle_path }}
+        run: >-
+          uv run python scripts/maintenance/analyze_usage.py
+          --findings "$MAINTENANCE_BUNDLE_PATH"
+          --adapter codex --secondary-adapter claude
+          --output docs/verifications/ci/maintenance-analysis.json
+          --timeout-seconds 600
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: manual-maintainer-evidence
           path: docs/verifications/ci/
 
   live-forward:

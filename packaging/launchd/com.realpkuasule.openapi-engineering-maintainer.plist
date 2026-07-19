@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.realpkuasule.openapi-engineering-maintainer</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__NODE__</string>
+    <string>__CLI__</string>
+    <string>usage</string>
+    <string>due</string>
+    <string>--home</string>
+    <string>__HOME__</string>
+    <string>--json</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>__HOUR__</integer>
+    <key>Minute</key>
+    <integer>__MINUTE__</integer>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>LowPriorityIO</key>
+  <true/>
+  <key>Nice</key>
+  <integer>10</integer>
+  <key>StandardOutPath</key>
+  <string>__STDOUT__</string>
+  <key>StandardErrorPath</key>
+  <string>__STDERR__</string>
+</dict>
+</plist>

@@ -1,0 +1,33 @@
+command=["<repo>/.venv/bin/python", "<repo>/scripts/maintenance/analyze_usage.py", "--help"]
+exit_code=0
+stdout:
+usage: analyze_usage.py [-h] --findings FINDINGS [--adapter {fake,codex}]
+                        [--fake-response FAKE_RESPONSE]
+                        [--fake-platform {fake,codex,claude}]
+                        [--secondary-adapter {none,fake,claude}]
+                        [--secondary-fake-response SECONDARY_FAKE_RESPONSE]
+                        [--secondary-fake-platform {fake,codex,claude}]
+                        --output OUTPUT [--now NOW] [--max-events MAX_EVENTS]
+                        [--timeout-seconds TIMEOUT_SECONDS]
+                        [--rss-warning-mb RSS_WARNING_MB]
+                        [--rss-hard-mb RSS_HARD_MB]
+
+Analyze sanitized maintenance findings.
+
+options:
+  -h, --help            show this help message and exit
+  --findings FINDINGS
+  --adapter {fake,codex}
+  --fake-response FAKE_RESPONSE
+  --fake-platform {fake,codex,claude}
+  --secondary-adapter {none,fake,claude}
+  --secondary-fake-response SECONDARY_FAKE_RESPONSE
+  --secondary-fake-platform {fake,codex,claude}
+  --output OUTPUT
+  --now NOW
+  --max-events MAX_EVENTS
+  --timeout-seconds TIMEOUT_SECONDS
+  --rss-warning-mb RSS_WARNING_MB
+  --rss-hard-mb RSS_HARD_MB
+
+stderr:

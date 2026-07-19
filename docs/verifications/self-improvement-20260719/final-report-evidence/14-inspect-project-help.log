@@ -1,0 +1,19 @@
+command=["<repo>/.venv/bin/python", "<repo>/skills/openapi-engineering/scripts/inspect_project.py", "--help"]
+exit_code=0
+stdout:
+usage: inspect_project.py [-h] --root ROOT [--pretty] [--exclude EXCLUDE]
+                          [--max-files MAX_FILES] [--max-depth MAX_DEPTH]
+
+Inspect project contract and codegen signals.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Project directory to inspect.
+  --pretty              Pretty-print JSON output.
+  --exclude EXCLUDE     Relative path to exclude; repeatable.
+  --max-files MAX_FILES
+                        Maximum files to inspect.
+  --max-depth MAX_DEPTH
+                        Maximum directory depth to inspect.
+
+stderr:

@@ -2,6 +2,33 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.1.0-rc.3] - 2026-07-19
+
+### Added
+
+- Opt-in, privacy-preserving usage collection, feedback, aggregation, thresholds, retention, and
+  deterministic trend/recurrence reports across coordinator and collector devices.
+- Strict launcher and Maintainer analyzer process watchers with timeout, process-group ownership,
+  peak RSS evidence, and serial Codex/Claude risk review.
+- Approval-bound private proposal and promotion workflows with path allowlists, secret scanning,
+  exact target hashes, atomic rollback, and deliberately RED failing-test candidates.
+- Explicit runtime and Maintainer installation for both Codex and Claude Code, including safe
+  migration from verified legacy Git or earlier npm canonical symlinks.
+
+### Contract impact
+
+- The Contract-First behavioral control-plane is OpenAPI 1.2.0.
+- The change is additive for existing OpenAPI engineering operations and introduces new Usage and
+  Maintenance schemas and CLI commands. Maintenance proposal Schema v2 requires artifact bytes
+  and open-question bindings before promotion.
+
+### Safety and release state
+
+- Collection remains disabled by default and requires explicit local and separate sync opt-ins.
+- Model-backed jobs remain manual, serial, environment-approved, and excluded from ordinary CI.
+- `0.1.0-rc.3` is prepared but must not be published or tagged until deterministic, cross-platform,
+  and approved live evidence gates complete.
+
 ## [0.1.0-rc.2] - 2026-07-19
 
 ### Added

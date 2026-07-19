@@ -1,0 +1,6 @@
+command=["<repo>/.venv/bin/python", "<repo>/scripts/install_skill.py", "--home", "/tmp/openapi-engineering-installer-dry-run"]
+exit_code=0
+stdout:
+{"applied": false, "installations": [{"action": "would-link", "component": "runtime", "platform": "codex", "target": "/private/tmp/openapi-engineering-installer-dry-run/.codex/skills/openapi-engineering", "target_digest": null}, {"action": "would-link", "component": "runtime", "platform": "claude", "target": "/private/tmp/openapi-engineering-installer-dry-run/.claude/skills/openapi-engineering", "target_digest": null}], "sources": {"runtime": "<repo>/skills/openapi-engineering"}, "status": "ok"}
+
+stderr:

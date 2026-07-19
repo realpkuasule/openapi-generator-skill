@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openapi-engineering.local/schemas/usage-trend.schema.json",
+  "title": "OpenAPI Engineering Usage Trend Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generated_at",
+    "input_sha256",
+    "comparison_basis",
+    "fix_at",
+    "minimum_samples",
+    "windows",
+    "comparison",
+    "version_segments",
+    "regressions"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "input_sha256": { "$ref": "#/$defs/sha256" },
+    "comparison_basis": { "enum": ["adjacent-30d", "fix-boundary"] },
+    "fix_at": { "type": ["string", "null"], "format": "date-time" },
+    "minimum_samples": { "type": "integer", "minimum": 1 },
+    "windows": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before_30d", "after_30d", "rolling_90d"],
+      "properties": {
+        "before_30d": { "$ref": "#/$defs/window" },
+        "after_30d": { "$ref": "#/$defs/window" },
+        "rolling_90d": { "$ref": "#/$defs/window" }
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reason", "friction_score_delta"],
+      "properties": {
+        "status": { "enum": ["improved", "worsened", "unchanged", "insufficient"] },
+        "reason": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "friction_score_delta": { "type": ["number", "null"], "minimum": -1, "maximum": 1 }
+      }
+    },
+    "version_segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["skill_version", "sample_count"],
+        "properties": {
+          "skill_version": { "type": "string", "minLength": 1, "maxLength": 64 },
+          "sample_count": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "regressions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rule_id", "incident_id", "fingerprint", "event_ids"],
+        "properties": {
+          "rule_id": { "const": "SI-REGRESSION-001" },
+          "incident_id": { "type": "string", "pattern": "^inc-[a-f0-9]{16,64}$" },
+          "fingerprint": { "$ref": "#/$defs/sha256" },
+          "event_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^evt-[a-f0-9]{16,64}$" }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end", "sample_count", "metrics"],
+      "properties": {
+        "start": { "type": "string", "format": "date-time" },
+        "end": { "type": "string", "format": "date-time" },
+        "sample_count": { "type": "integer", "minimum": 0 },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "success_ratio",
+            "nonpassing_ratio",
+            "unverified_ratio",
+            "tool_override_ratio",
+            "friction_score"
+          ],
+          "properties": {
+            "success_ratio": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+            "nonpassing_ratio": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+            "unverified_ratio": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+            "tool_override_ratio": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+            "friction_score": { "type": ["number", "null"], "minimum": 0, "maximum": 1 }
+          }
+        }
+      }
+    }
+  }
+}

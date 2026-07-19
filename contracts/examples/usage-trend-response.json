@@ -1,0 +1,58 @@
+{
+  "comparison": {
+    "friction_score_delta": null,
+    "reason": "At least 5 factual samples are required in each 30-day window.",
+    "status": "insufficient"
+  },
+  "comparison_basis": "fix-boundary",
+  "fix_at": "2026-06-19T18:00:00.000Z",
+  "generated_at": "2026-07-19T18:00:00.000Z",
+  "input_sha256": "3937bbf50a37408b7063b5c3a4b328dfd85ccffbb36e28b17cb390dc1e92ce94",
+  "minimum_samples": 5,
+  "regressions": [],
+  "schema_version": 1,
+  "version_segments": [
+    {
+      "sample_count": 5,
+      "skill_version": "0.1.0-rc.2"
+    }
+  ],
+  "windows": {
+    "after_30d": {
+      "end": "2026-07-19T18:00:00.000Z",
+      "metrics": {
+        "friction_score": 0,
+        "nonpassing_ratio": 0,
+        "success_ratio": 1,
+        "tool_override_ratio": 0,
+        "unverified_ratio": 0
+      },
+      "sample_count": 5,
+      "start": "2026-06-19T18:00:00.000Z"
+    },
+    "before_30d": {
+      "end": "2026-06-19T18:00:00.000Z",
+      "metrics": {
+        "friction_score": null,
+        "nonpassing_ratio": null,
+        "success_ratio": null,
+        "tool_override_ratio": null,
+        "unverified_ratio": null
+      },
+      "sample_count": 0,
+      "start": "2026-05-20T18:00:00.000Z"
+    },
+    "rolling_90d": {
+      "end": "2026-07-19T18:00:00.000Z",
+      "metrics": {
+        "friction_score": 0,
+        "nonpassing_ratio": 0,
+        "success_ratio": 1,
+        "tool_override_ratio": 0,
+        "unverified_ratio": 0
+      },
+      "sample_count": 5,
+      "start": "2026-04-20T18:00:00.000Z"
+    }
+  }
+}

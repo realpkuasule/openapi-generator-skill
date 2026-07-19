@@ -108,6 +108,41 @@ class InstallSkillTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertFalse(payload["applied"])
 
+    def test_cli_can_explicitly_install_runtime_and_maintainer(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(REPO_ROOT / "scripts" / "install_skill.py"),
+                    "--home",
+                    directory,
+                    "--component",
+                    "runtime",
+                    "--component",
+                    "maintainer",
+                    "--apply",
+                ],
+                cwd=REPO_ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            payload = json.loads(result.stdout)
+            home = Path(directory)
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(
+                {(row["platform"], row["component"]) for row in payload["installations"]},
+                {
+                    ("codex", "runtime"),
+                    ("claude", "runtime"),
+                    ("codex", "maintainer"),
+                    ("claude", "maintainer"),
+                },
+            )
+            self.assertTrue((home / ".codex" / "skills" / "openapi-engineering-maintainer").exists())
+            self.assertTrue((home / ".claude" / "skills" / "openapi-engineering-maintainer").exists())
+
 
 if __name__ == "__main__":
     unittest.main()

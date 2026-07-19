@@ -1,0 +1,6 @@
+command=["<repo>/.venv/bin/python", "<repo>/scripts/evals/load_cases.py"]
+exit_code=0
+stdout:
+{"case_ids": ["animator-mixed-boundaries", "completion-report", "profile-reuse", "revoice-no-codegen", "audit-discovers-upgrade", "untrusted-input", "upgrade-gate"], "count": 7, "status": "ok"}
+
+stderr:

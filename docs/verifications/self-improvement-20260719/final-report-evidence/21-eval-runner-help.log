@@ -1,0 +1,26 @@
+command=["<repo>/.venv/bin/python", "<repo>/scripts/run_skill_evals.py", "--help"]
+exit_code=0
+stdout:
+usage: run_skill_evals.py [-h] [--adapter {fake,codex,claude}] [--case CASE]
+                          [--timeout TIMEOUT] [--samples SAMPLES]
+                          [--fake-result-dir FAKE_RESULT_DIR] [--dry-run]
+                          [--report REPORT] [--resume] [--retry-nonpassing]
+                          [--eval-root EVAL_ROOT] [--skill-root SKILL_ROOT]
+
+Run isolated OpenAPI engineering skill evals.
+
+options:
+  -h, --help            show this help message and exit
+  --adapter {fake,codex,claude}
+  --case CASE
+  --timeout TIMEOUT
+  --samples SAMPLES
+  --fake-result-dir FAKE_RESULT_DIR
+  --dry-run
+  --report REPORT
+  --resume
+  --retry-nonpassing
+  --eval-root EVAL_ROOT
+  --skill-root SKILL_ROOT
+
+stderr:

@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openapi-engineering.local/schemas/usage-config.schema.json",
+  "title": "OpenAPI Engineering Usage Configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "config_version",
+    "local_collection_enabled",
+    "sync_enabled",
+    "device_alias",
+    "coordinator",
+    "state_root",
+    "remote",
+    "branch",
+    "sync_authorization",
+    "retention",
+    "feedback",
+    "analysis",
+    "schedule"
+  ],
+  "properties": {
+    "config_version": { "const": 1 },
+    "local_collection_enabled": { "type": "boolean", "default": false },
+    "sync_enabled": { "type": "boolean", "default": false },
+    "device_alias": {
+      "type": ["string", "null"],
+      "pattern": "^[a-z0-9][a-z0-9-]{0,31}$"
+    },
+    "coordinator": { "type": "boolean", "default": false },
+    "state_root": { "type": "string", "minLength": 1, "maxLength": 4096 },
+    "remote": { "type": ["string", "null"], "minLength": 1, "maxLength": 2048 },
+    "branch": {
+      "type": ["string", "null"],
+      "pattern": "^(?!-)(?!.*\\.\\.)(?!.*[~^:?*\\[\\]\\\\])[A-Za-z0-9._/-]{1,200}$"
+    },
+    "sync_authorization": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["binding_sha256", "approved_at"],
+          "properties": {
+            "binding_sha256": { "$ref": "#/$defs/sha256" },
+            "approved_at": { "type": "string", "format": "date-time" }
+          }
+        }
+      ]
+    },
+    "retention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["local_days", "remote_days"],
+      "properties": {
+        "local_days": { "type": "integer", "minimum": 1, "default": 90 },
+        "remote_days": { "type": "integer", "minimum": 1, "default": 365 }
+      }
+    },
+    "feedback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["successful_sample_every"],
+      "properties": {
+        "successful_sample_every": { "type": "integer", "minimum": 1, "default": 5 }
+      }
+    },
+    "analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary",
+        "secondary",
+        "max_events",
+        "timeout_seconds",
+        "warning_rss_mb",
+        "hard_rss_mb"
+      ],
+      "properties": {
+        "primary": { "const": "codex" },
+        "secondary": { "const": "claude" },
+        "max_events": { "type": "integer", "minimum": 1, "maximum": 50, "default": 50 },
+        "timeout_seconds": { "type": "integer", "minimum": 1, "maximum": 600, "default": 600 },
+        "warning_rss_mb": { "type": "integer", "minimum": 1, "default": 512 },
+        "hard_rss_mb": { "type": "integer", "minimum": 2, "default": 1024 }
+      }
+    },
+    "schedule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["due_check", "period"],
+      "properties": {
+        "due_check": { "const": "daily" },
+        "period": { "const": "iso-week" }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

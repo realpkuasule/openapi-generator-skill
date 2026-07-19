@@ -1,0 +1,58 @@
+{
+  "eligible_for_analysis": true,
+  "finding_count": 1,
+  "findings": [
+    {
+      "finding_id": "finding-8c5f4fbf5d8244f3",
+      "input_sha256": "af039b7dbd93ecfb8360d2edf0c8bd170db86aa0acac3ad58904846fb02e2381",
+      "observed": {
+        "comparator": ">",
+        "metric": "peak_rss_mb",
+        "sample_count": 5,
+        "threshold": 512,
+        "value": 640,
+        "window_days": 30
+      },
+      "period_id": "2026-W29",
+      "requires_secondary_review": true,
+      "rule_id": "SI-RESOURCE-001",
+      "schema_version": 1,
+      "severity": "P1",
+      "status": "open",
+      "threshold_version": 1
+    }
+  ],
+  "input_sha256": "af039b7dbd93ecfb8360d2edf0c8bd170db86aa0acac3ad58904846fb02e2381",
+  "period_id": "2026-W29",
+  "status": "due",
+  "summary": {
+    "data_completeness": {
+      "available_measurements": 1,
+      "unavailable_measurements": 9
+    },
+    "device_count": 1,
+    "generated_at": "2026-07-20T00:00:00.000Z",
+    "input_sha256": "af039b7dbd93ecfb8360d2edf0c8bd170db86aa0acac3ad58904846fb02e2381",
+    "metrics": {
+      "interview_max": 4,
+      "interview_median": 4,
+      "outcomes": {
+        "blocked": 0,
+        "failed": 0,
+        "partial": 0,
+        "passed": 5
+      },
+      "peak_rss_baseline_mb": null,
+      "peak_rss_max_mb": 640,
+      "tool_override_ratio": 0,
+      "unverified_ratio": 0
+    },
+    "period_id": "2026-W29",
+    "sample_count": 5,
+    "schema_version": 1,
+    "threshold_version": 1,
+    "triggered_rule_ids": [
+      "SI-RESOURCE-001"
+    ]
+  }
+}

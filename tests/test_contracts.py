@@ -48,6 +48,7 @@ class ContractTests(unittest.TestCase):
     def test_openapi_is_valid_and_operations_are_stable(self) -> None:
         validate_url(OPENAPI_PATH.resolve().as_uri())
         self.assertEqual(self.openapi["openapi"], "3.1.0")
+        self.assertEqual(self.openapi["info"]["version"], "1.2.0")
         self.assertEqual(self.openapi["x-runtime"], "cli-only")
         self.assertNotIn("servers", self.openapi)
         expected = {
@@ -61,6 +62,19 @@ class ContractTests(unittest.TestCase):
             "/v1/acceptance-traceability-checks": "checkAcceptanceTraceability",
             "/v1/scope-snapshots": "manageScopeSnapshot",
             "/v1/evaluation-report-aggregations": "aggregateSkillEvaluations",
+            "/v1/usage/configuration": "configureUsage",
+            "/v1/usage/events": "recordUsageEvent",
+            "/v1/usage/feedback": "recordUsageFeedback",
+            "/v1/usage/synchronizations": "synchronizeUsage",
+            "/v1/usage/summaries": "summarizeUsage",
+            "/v1/usage/due-checks": "checkUsageDue",
+            "/v1/usage/schedulers": "configureUsageScheduler",
+            "/v1/usage/sessions": "runUsageSession",
+            "/v1/usage/cleanups": "cleanupUsageRetention",
+            "/v1/usage/trends": "analyzeUsageTrends",
+            "/v1/maintenance/analyses": "analyzeMaintenanceFindings",
+            "/v1/maintenance/proposals": "buildMaintenanceProposal",
+            "/v1/maintenance/promotions": "promoteMaintenanceProposal",
         }
         observed = {
             path: item["post"]["operationId"]
@@ -94,7 +108,18 @@ class ContractTests(unittest.TestCase):
             "forward-observation.schema.json",
             "governance-profile.schema.json",
             "scope-snapshot.schema.json",
+            "self-improvement-traceability.schema.json",
             "verification-report.schema.json",
+            "usage-config.schema.json",
+            "usage-event.schema.json",
+            "user-feedback.schema.json",
+            "usage-summary.schema.json",
+            "usage-trend.schema.json",
+            "maintenance-finding.schema.json",
+            "maintenance-analysis.schema.json",
+            "maintenance-proposal.schema.json",
+            "maintenance-promotion.schema.json",
+            "retention-plan.schema.json",
         }
         self.assertEqual(set(self.schemas), expected)
         for name, schema in self.schemas.items():
@@ -201,10 +226,20 @@ class ContractTests(unittest.TestCase):
             "generation-comparison-response.json": "GenerationComparisonResponse",
             "empirical-gate-response.json": "EmpiricalGateReport",
             "error-response.json": "ErrorResponse",
+            "usage-status-response.json": "UsageConfigurationResult",
+            "usage-record-response.json": "UsageRecordResult",
+            "usage-summary-response.json": "UsageSummary",
+            "maintenance-finding-response.json": "MaintenanceFinding",
+            "maintenance-proposal-response.json": "MaintenanceProposal",
+            "usage-due-response.json": "UsageDueResult",
         }
-        resolver = RefResolver(
-            base_uri=OPENAPI_PATH.resolve().as_uri(), referrer=self.openapi
-        )
+        external_schema_mapping = {
+            "UsageConfiguration": ("usage-config.schema.json", None),
+            "LocalUsageEvent": ("usage-event.schema.json", "local_event"),
+            "UsageSummary": ("usage-summary.schema.json", None),
+            "MaintenanceFinding": ("maintenance-finding.schema.json", None),
+            "MaintenanceProposal": ("maintenance-proposal.schema.json", None),
+        }
         for filename, schema_name in mapping.items():
             with self.subTest(filename=filename):
                 instance = json.loads((EXAMPLE_ROOT / filename).read_text(encoding="utf-8"))
@@ -215,8 +250,40 @@ class ContractTests(unittest.TestCase):
                             schema, format_checker=FormatChecker()
                         ).iter_errors(instance)
                     )
+                elif schema_name in external_schema_mapping:
+                    filename, definition = external_schema_mapping[schema_name]
+                    schema = self.schemas[filename]
+                    if definition is not None:
+                        schema = {
+                            "$schema": schema["$schema"],
+                            "$ref": f"#/$defs/{definition}",
+                            "$defs": schema["$defs"],
+                        }
+                    errors = list(
+                        Draft202012Validator(
+                            schema, format_checker=FormatChecker()
+                        ).iter_errors(instance)
+                    )
+                elif schema_name == "UsageDueResult":
+                    schema = json.loads(
+                        json.dumps(self.openapi["components"]["schemas"][schema_name])
+                    )
+                    schema["properties"]["summary"] = self.schemas[
+                        "usage-summary.schema.json"
+                    ]
+                    schema["properties"]["findings"]["items"] = self.schemas[
+                        "maintenance-finding.schema.json"
+                    ]
+                    errors = list(
+                        Draft202012Validator(
+                            schema, format_checker=FormatChecker()
+                        ).iter_errors(instance)
+                    )
                 else:
                     schema = self.openapi["components"]["schemas"][schema_name]
+                    resolver = RefResolver(
+                        base_uri=OPENAPI_PATH.resolve().as_uri(), referrer=self.openapi
+                    )
                     with warnings.catch_warnings():
                         warnings.simplefilter("ignore", DeprecationWarning)
                         errors = list(
@@ -272,6 +339,13 @@ class ContractTests(unittest.TestCase):
                 "./examples/profile-validation-response.json",
                 "./examples/profile-state-response.json",
                 "./examples/generation-comparison-response.json",
+                "./examples/usage-status-response.json",
+                "./examples/usage-record-response.json",
+                "./examples/usage-summary-response.json",
+                "./examples/usage-trend-response.json",
+                "./examples/maintenance-proposal-response.json",
+                "./examples/maintenance-promotion-response.json",
+                "./examples/usage-due-response.json",
             },
         )
 

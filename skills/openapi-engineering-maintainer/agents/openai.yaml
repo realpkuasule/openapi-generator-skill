@@ -1,0 +1,4 @@
+interface:
+  display_name: "OpenAPI Engineering Maintainer"
+  short_description: "Analyze private OpenAPI usage and propose safe improvements"
+  default_prompt: "Use $openapi-engineering-maintainer to analyze sanitized usage findings and prepare a private proposal."

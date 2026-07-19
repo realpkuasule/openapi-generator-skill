@@ -84,6 +84,19 @@ To roll back an installation created in the approved scope, first dry-run `pytho
 
 ## Script portability
 
+## Optional usage collector
+
+The completion hook must use an already installed runtime by absolute path. Prefer the
+versioned canonical installation selected by the package installer, or an explicitly
+configured local checkout. Do not invoke `npx`, contact a registry, download a runtime,
+or modify either platform's settings while recording usage.
+
+If no trusted absolute path is available, collection is disabled, the status command
+fails, or the installed version is incompatible, skip collection without changing the
+engineering result. The collector is an observability aid, not an execution dependency.
+
+## Script portability
+
 Invoke scripts with `python3` or the platform's configured Python 3 executable. Keep JSON stdout, stable sorting, and explicit exit codes. Never auto-install PyYAML: JSON profiles work without it, while YAML validation must report the missing optional parser clearly.
 
 Avoid Bash-only logic in core scripts so Windows projects can use the same helpers.
