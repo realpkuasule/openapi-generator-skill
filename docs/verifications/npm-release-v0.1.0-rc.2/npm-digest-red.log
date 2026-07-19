@@ -1,0 +1,9 @@
+Command: python -m unittest tests.test_npm_distribution.NpmDistributionTests.test_apply_installs_versioned_canonical_tree_and_verify_passes -v
+Date: 2026-07-19
+Result: RED
+
+The Node CLI initially reported
+`cbe21b962a9da2359d9bf7521a0fb88ed5de88f88d73db696e719ffdfa618b81`, while the authoritative
+Python installer reported `fe590fed8be092f66d2615f6dd6a65a21585d32efb34833712fbb603968cf6c7`.
+The mismatch came from locale-aware path ordering. A failing equality assertion was added before
+switching the Node digest to deterministic normalized-path ordering.

@@ -1,0 +1,10 @@
+Command: .venv/bin/python -m unittest tests.test_npm_distribution -v
+Date: 2026-07-19
+Result: GREEN
+
+Tests run: 7
+Failures: 0
+Errors: 0
+
+The package manifest, tarball allowlist, dry run, apply, conflict handling, canonical payload,
+copy fallback, cross-installer digest, verification, and rollback contracts all passed.
