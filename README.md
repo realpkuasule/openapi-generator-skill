@@ -11,11 +11,31 @@ generator, an official SDK, contract-governance tooling, MCP integration, or a d
 
 ## Release candidate
 
-The current evaluation release is `v0.1.0-rc.1`. It requires Python 3.11 or newer. This repository
-does not yet declare an open-source license; the release candidate is intended for controlled
-evaluation until the project owner selects one.
+The current evaluation release is `v0.1.0-rc.2`. npm installation requires Node.js 20 or newer;
+repository validation requires Python 3.11 or newer. This repository does not yet declare an
+open-source license, so the release candidate is intended for controlled evaluation until the
+project owner selects one.
 
-## Pinned dual-platform installation
+## Pinned npm installation
+
+Use the exact release on every machine. The first command is a read-only dry run, the second applies
+the installation, and the third verifies the installed digests:
+
+```bash
+npx --yes @realpkuasule/openapi-engineering-skill@0.1.0-rc.2 install \
+  --platform codex --platform claude --json
+npx --yes @realpkuasule/openapi-engineering-skill@0.1.0-rc.2 install \
+  --platform codex --platform claude --apply --json
+npx --yes @realpkuasule/openapi-engineering-skill@0.1.0-rc.2 verify \
+  --platform codex --platform claude --json
+```
+
+The npm CLI copies a versioned canonical payload to
+`~/.local/share/openapi-engineering-skill/0.1.0-rc.2`, then links Codex and Claude Code to that
+immutable tree. It has no `postinstall` script and never writes during `npm install` or the default
+dry run.
+
+## Source installation fallback
 
 Clone and check out the exact release before installing so Codex and Claude Code resolve the same
 canonical skill tree:
@@ -23,7 +43,7 @@ canonical skill tree:
 ```bash
 git clone git@github.com:realpkuasule/openapi-generator-skill.git
 cd openapi-generator-skill
-git checkout v0.1.0-rc.1
+git checkout v0.1.0-rc.2
 python3 scripts/install_skill.py --platform codex --platform claude
 python3 scripts/install_skill.py --platform codex --platform claude --apply
 ```
@@ -45,12 +65,15 @@ are not overwritten.
 Preview removal, then apply it:
 
 ```bash
-python3 scripts/install_skill.py --platform codex --platform claude --uninstall
-python3 scripts/install_skill.py --platform codex --platform claude --uninstall --apply
+npx --yes @realpkuasule/openapi-engineering-skill@0.1.0-rc.2 uninstall \
+  --platform codex --platform claude --json
+npx --yes @realpkuasule/openapi-engineering-skill@0.1.0-rc.2 uninstall \
+  --platform codex --platform claude --apply --json
 ```
 
-The uninstaller removes only managed links or copies that match its safety checks. It does not
-delete the checked-out release source.
+The uninstaller removes only managed links or copies that match its safety checks. It preserves the
+versioned canonical payload for auditing or later reinstallation. Existing divergent targets are
+reported as conflicts and are never overwritten or removed automatically.
 
 ## Validation
 

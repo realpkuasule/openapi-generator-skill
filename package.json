@@ -1,0 +1,46 @@
+{
+  "name": "@realpkuasule/openapi-engineering-skill",
+  "version": "0.1.0-rc.2",
+  "description": "Contract-First OpenAPI engineering skill for Codex and Claude Code",
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "openapi-engineering-skill": "bin/openapi-engineering-skill.mjs"
+  },
+  "files": [
+    "bin/",
+    "skills/openapi-engineering/",
+    "!skills/openapi-engineering/**/__pycache__/",
+    "!skills/openapi-engineering/**/*.pyc",
+    "!skills/openapi-engineering/**/*.pyo",
+    "!skills/openapi-engineering/**/.DS_Store",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "python3 -m unittest tests.test_npm_distribution -v",
+    "prepublishOnly": "npm test"
+  },
+  "dependencies": {},
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/realpkuasule/openapi-generator-skill.git"
+  },
+  "homepage": "https://github.com/realpkuasule/openapi-generator-skill#readme",
+  "bugs": {
+    "url": "https://github.com/realpkuasule/openapi-generator-skill/issues"
+  },
+  "keywords": [
+    "codex",
+    "claude-code",
+    "openapi",
+    "openapi-generator",
+    "skill"
+  ]
+}

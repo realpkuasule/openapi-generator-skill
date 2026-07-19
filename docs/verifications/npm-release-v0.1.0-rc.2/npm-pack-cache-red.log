@@ -1,0 +1,7 @@
+Command: npm pack --dry-run --json
+Date: 2026-07-19
+Result: RED
+
+The first tarball contained seven files under `skills/openapi-engineering/scripts/__pycache__/` and
+was 291,114 bytes unpacked. A failing tarball-content test was added before the package allowlist
+was corrected with explicit negative patterns.

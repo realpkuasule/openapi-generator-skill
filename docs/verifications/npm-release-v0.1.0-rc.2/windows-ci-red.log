@@ -1,0 +1,13 @@
+Run: https://github.com/realpkuasule/openapi-generator-skill/actions/runs/29672143377
+Job: Deterministic (windows-latest)
+Date: 2026-07-19
+Result: RED
+
+The 158-test suite had two Windows-specific failures:
+
+- `npm pack` could not start because Python subprocess resolution requires the `npm.cmd` shim.
+- Node used case-sensitive path ordering while Python `WindowsPath` used case-folded ordering, so
+  their Skill digests differed.
+
+macOS and Ubuntu passed on the same commit. The fix is limited to executable resolution in the test
+and Windows digest ordering in the Node CLI.

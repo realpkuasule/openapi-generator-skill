@@ -1,0 +1,12 @@
+Command: .venv/bin/python -m unittest tests.test_npm_distribution -v
+Date: 2026-07-19
+Result: RED (expected before implementation)
+
+Tests run: 6
+Failures: 3
+Errors: 3
+
+- package.json did not exist
+- bin/openapi-engineering-skill.mjs did not exist
+- docs/plans/npm-release-v0.1.0-rc.2.md did not exist
+- dry-run, apply, conflict, verification, and rollback contracts had no implementation

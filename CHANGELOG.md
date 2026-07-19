@@ -2,6 +2,35 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.1.0-rc.2] - 2026-07-19
+
+### Added
+
+- Public npm distribution through `@realpkuasule/openapi-engineering-skill`.
+- A dependency-free Node.js CLI with dry-run-first `install`, `verify`, and `uninstall` commands.
+- Versioned canonical payload storage shared by Codex and Claude Code installations.
+- Atomic conflict detection, copy fallback, digest verification, and safe rollback without an npm
+  `postinstall` hook.
+
+### Contract impact
+
+- The Contract-First behavioral control-plane remains OpenAPI 1.1.0 with no schema change.
+
+### Verified
+
+- 158/158 repository tests and the 17/17 deterministic gate passed locally.
+- The packed package contains 25 allowlisted files and excludes tests, evidence, caches, and
+  development tooling.
+- Tarball-based dry run, install, digest verification, rollback preview, and rollback application
+  passed in an isolated home.
+- The unchanged Skill digest continues to validate against the existing Codex and Claude Code
+  forward-evaluation evidence.
+
+### Known limitations
+
+- This is a release candidate for controlled evaluation.
+- The npm package and repository are marked `UNLICENSED` until the project owner selects a license.
+
 ## [0.1.0-rc.1] - 2026-07-16
 
 ### Added
