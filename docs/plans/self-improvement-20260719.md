@@ -466,7 +466,7 @@ forward test。
 - P0 已完成：Contract-First Usage/Maintenance Schema、OpenAPI 1.2.0、默认关闭与双重授权、记录/脱敏/反馈/汇总/阈值、私有 Git 同步、Maintainer Skill、离线 E2E。
 - P1 已完成：串行 Codex→风险 Claude 复核、真实 launcher/analyzer RSS 与 timeout、三设备聚合与重放、local/remote retention、launchd、普通 CI 零模型与手动 environment approval。
 - P2 本地开发已完成：proposal Schema v2、精确摘要 promotion、原子回滚、趋势/复发、Maintainer eval、旧 Git/npm canonical 迁移、`0.1.0-rc.3` 发布准备。
-- 最终本地证据：`docs/verifications/self-improvement-20260719/final-report.json` 为 26/26 passed；全量测试 248/248 passed；SI-AC-01～18 `acceptance_complete=true`；峰值 RSS 109,690,880 bytes；0 swaps。
+- 最终本地证据：`docs/verifications/self-improvement-20260719/final-report.json` 为 26/26 passed；全量测试 258/258 passed；SI-AC-01～18 `acceptance_complete=true`；最近一次受监控全量验证峰值 RSS 110,100,480 bytes；0 swaps。
 - 外部边界保持未执行：真实 Codex/Claude、跨平台托管 CI、Git push/PR/tag、GitHub release、npm publish 与真实三机 rc.3 安装；这些仍需负责人单独批准。
 
 ### Contract-First

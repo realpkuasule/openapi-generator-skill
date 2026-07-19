@@ -49,8 +49,17 @@ class VerifyRunnerTests(unittest.TestCase):
         self.assertIn("--ignore-scripts", gates["npm-package-dry-run"].command)
         self.assertIn(
             "skills/openapi-engineering-maintainer/evals",
-            " ".join(gates["maintainer-eval-case-validation"].command),
+            " ".join(gates["maintainer-eval-case-validation"].command).replace("\\", "/"),
         )
+
+    def test_windows_npm_gate_uses_the_cmd_shim_without_a_shell(self) -> None:
+        self.assertEqual(verify.npm_executable("nt"), "npm.cmd")
+        self.assertEqual(verify.npm_executable("posix"), "npm")
+
+    def test_portable_command_normalizes_redacted_windows_separators(self) -> None:
+        command = [str(REPO_ROOT) + "\\tool.py", "--flag"]
+
+        self.assertEqual(verify.portable_command(command), ["<repo>/tool.py", "--flag"])
 
     def test_failed_required_gate_makes_report_failed_and_exit_one(self) -> None:
         gate = verify.Gate("failing", ["fixture-command", "--check"])

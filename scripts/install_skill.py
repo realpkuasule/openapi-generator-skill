@@ -26,10 +26,16 @@ IGNORED_NAMES = {".DS_Store", "__pycache__"}
 def tree_digest(root: Path) -> str:
     actual = root.resolve()
     hasher = hashlib.sha256()
-    for path in sorted(actual.rglob("*")):
-        if not path.is_file() or any(part in IGNORED_NAMES for part in path.parts):
-            continue
-        hasher.update(path.relative_to(actual).as_posix().encode("utf-8"))
+    files = sorted(
+        (
+            (path.relative_to(actual).as_posix(), path)
+            for path in actual.rglob("*")
+            if path.is_file() and not any(part in IGNORED_NAMES for part in path.parts)
+        ),
+        key=lambda item: item[0],
+    )
+    for relative_name, path in files:
+        hasher.update(relative_name.encode("utf-8"))
         hasher.update(b"\0")
         hasher.update(path.read_bytes())
         hasher.update(b"\0")

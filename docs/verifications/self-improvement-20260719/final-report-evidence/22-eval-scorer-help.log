@@ -1,4 +1,4 @@
-command=["<repo>/.venv/bin/python", "<repo>/scripts/evals/score_result.py", "--help"]
+command=["<repo>/.venv/bin/python3", "<repo>/scripts/evals/score_result.py", "--help"]
 exit_code=0
 stdout:
 usage: score_result.py [-h] --case CASE --result RESULT [--output OUTPUT]

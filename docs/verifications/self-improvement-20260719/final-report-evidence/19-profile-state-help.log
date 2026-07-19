@@ -1,4 +1,4 @@
-command=["<repo>/.venv/bin/python", "<repo>/skills/openapi-engineering/scripts/profile_state.py", "--help"]
+command=["<repo>/.venv/bin/python3", "<repo>/skills/openapi-engineering/scripts/profile_state.py", "--help"]
 exit_code=0
 stdout:
 usage: profile_state.py [-h] --profile PROFILE [--inspection INSPECTION]

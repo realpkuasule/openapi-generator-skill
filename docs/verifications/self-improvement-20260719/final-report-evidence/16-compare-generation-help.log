@@ -1,4 +1,4 @@
-command=["<repo>/.venv/bin/python", "<repo>/skills/openapi-engineering/scripts/compare_generation.py", "--help"]
+command=["<repo>/.venv/bin/python3", "<repo>/skills/openapi-engineering/scripts/compare_generation.py", "--help"]
 exit_code=0
 stdout:
 usage: compare_generation.py [-h] [--pretty] baseline candidate

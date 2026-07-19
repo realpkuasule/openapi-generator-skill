@@ -1,4 +1,4 @@
-command=["<repo>/.venv/bin/python", "<repo>/scripts/quick_validate.py", "<repo>/skills/openapi-engineering-maintainer"]
+command=["<repo>/.venv/bin/python3", "<repo>/scripts/quick_validate.py", "<repo>/skills/openapi-engineering-maintainer"]
 exit_code=0
 stdout:
 Skill is valid!

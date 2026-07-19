@@ -87,7 +87,11 @@ def portable_path(path: Path) -> str:
 
 
 def portable_command(command: Sequence[str]) -> list[str]:
-    return [redact_machine_paths(str(argument)) for argument in command]
+    return [redact_machine_paths(str(argument)).replace("\\", "/") for argument in command]
+
+
+def npm_executable(platform: str = os.name) -> str:
+    return "npm.cmd" if platform == "nt" else "npm"
 
 
 def prepare_evidence_dir(path: Path) -> None:
@@ -284,7 +288,7 @@ def deterministic_gates() -> list[Gate]:
         ),
         Gate(
             "npm-package-dry-run",
-            ["npm", "pack", "--dry-run", "--json", "--ignore-scripts"],
+            [npm_executable(), "pack", "--dry-run", "--json", "--ignore-scripts"],
             required_paths=[REPO_ROOT / "package.json"],
             risk="The npm runtime allowlist could not be verified.",
         ),

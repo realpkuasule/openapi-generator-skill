@@ -1,4 +1,4 @@
-command=["<repo>/.venv/bin/python", "<repo>/scripts/maintenance/build_proposal.py", "--help"]
+command=["<repo>/.venv/bin/python3", "<repo>/scripts/maintenance/build_proposal.py", "--help"]
 exit_code=0
 stdout:
 usage: build_proposal.py [-h] --analysis ANALYSIS --candidate CANDIDATE

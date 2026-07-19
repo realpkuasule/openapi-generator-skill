@@ -45,11 +45,11 @@ class UsageConfigTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         payload = json.loads(result.stdout)
         self.assertEqual(
-            payload["config"],
+            payload["config"].replace("\\", "/"),
             "/isolated-home/AppData/Local/openapi-engineering-skill",
         )
         self.assertEqual(
-            payload["state"],
+            payload["state"].replace("\\", "/"),
             "/isolated-home/AppData/Local/openapi-engineering-skill/state",
         )
 

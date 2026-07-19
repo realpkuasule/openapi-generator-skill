@@ -323,19 +323,19 @@ def capture_usage(root: Path) -> dict[str, dict[str, Any]]:
     record["event"]["anonymous_project_id"] = "b" * 64
 
     summary_home = root / "summary-home"
+    summary_state = root / "summary-state"
     run_usage(
         summary_home,
         "enable",
         "--device",
         "m4",
         "--coordinator",
+        "--state-root",
+        str(summary_state),
         "--apply",
     )
     event_log = (
-        summary_home
-        / ".local"
-        / "state"
-        / "openapi-engineering-skill"
+        summary_state
         / "local"
         / "events"
         / "m4"

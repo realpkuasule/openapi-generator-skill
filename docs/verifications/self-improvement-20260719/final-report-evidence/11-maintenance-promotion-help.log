@@ -1,4 +1,4 @@
-command=["<repo>/.venv/bin/python", "<repo>/scripts/maintenance/promote_candidate.py", "--help"]
+command=["<repo>/.venv/bin/python3", "<repo>/scripts/maintenance/promote_candidate.py", "--help"]
 exit_code=0
 stdout:
 usage: promote_candidate.py [-h] --proposal PROPOSAL --target-root TARGET_ROOT

@@ -1,4 +1,4 @@
-command=["<repo>/.venv/bin/python", "<repo>/scripts/run_skill_evals.py", "--help"]
+command=["<repo>/.venv/bin/python3", "<repo>/scripts/run_skill_evals.py", "--help"]
 exit_code=0
 stdout:
 usage: run_skill_evals.py [-h] [--adapter {fake,codex,claude}] [--case CASE]

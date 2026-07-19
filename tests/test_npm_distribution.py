@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shutil
@@ -40,6 +41,22 @@ def run_cli(home: Path, *arguments: str) -> tuple[subprocess.CompletedProcess[st
 
 
 class NpmDistributionTests(unittest.TestCase):
+    def test_python_skill_digest_uses_platform_neutral_relative_name_order(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            nested = root / "a" / "item.txt"
+            nested.parent.mkdir()
+            nested.write_bytes(b"nested")
+            (root / "a0.txt").write_bytes(b"flat")
+            expected = hashlib.sha256()
+            for name, content in (("a/item.txt", b"nested"), ("a0.txt", b"flat")):
+                expected.update(name.encode("utf-8"))
+                expected.update(b"\0")
+                expected.update(content)
+                expected.update(b"\0")
+
+            self.assertEqual(tree_digest(root), expected.hexdigest())
+
     def test_package_manifest_is_pinned_allowlisted_and_has_no_postinstall(self) -> None:
         manifest = json.loads(PACKAGE_JSON.read_text(encoding="utf-8"))
 

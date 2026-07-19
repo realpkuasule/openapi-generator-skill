@@ -1,4 +1,4 @@
-command=["<repo>/.venv/bin/python", "-m", "unittest", "discover", "-s", "tests", "-v"]
+command=["<repo>/.venv/bin/python3", "-m", "unittest", "discover", "-s", "tests", "-v"]
 exit_code=0
 stdout:
 
@@ -133,6 +133,7 @@ test_install_safely_relinks_a_verified_older_npm_canonical (test_npm_distributio
 test_maintainer_component_is_explicit_and_installs_on_both_platforms (test_npm_distribution.NpmDistributionTests.test_maintainer_component_is_explicit_and_installs_on_both_platforms) ... ok
 test_package_manifest_is_pinned_allowlisted_and_has_no_postinstall (test_npm_distribution.NpmDistributionTests.test_package_manifest_is_pinned_allowlisted_and_has_no_postinstall) ... ok
 test_packed_files_exclude_caches_tests_evidence_and_development_tools (test_npm_distribution.NpmDistributionTests.test_packed_files_exclude_caches_tests_evidence_and_development_tools) ... ok
+test_python_skill_digest_uses_platform_neutral_relative_name_order (test_npm_distribution.NpmDistributionTests.test_python_skill_digest_uses_platform_neutral_relative_name_order) ... ok
 test_release_plan_records_contract_impact_publish_and_rollback (test_npm_distribution.NpmDistributionTests.test_release_plan_records_contract_impact_publish_and_rollback) ... ok
 test_claude_adapter_accepts_fenced_json_when_cli_omits_structured_output (test_platform_adapters.PlatformAdapterTests.test_claude_adapter_accepts_fenced_json_when_cli_omits_structured_output) ... ok
 test_claude_adapter_runs_a_resumable_plan_mode_interview (test_platform_adapters.PlatformAdapterTests.test_claude_adapter_runs_a_resumable_plan_mode_interview) ... ok
@@ -256,10 +257,12 @@ test_full_tier_is_blocked_until_every_release_evidence_path_is_supplied (test_ve
 test_junit_output_records_each_gate_without_command_output (test_verify_runner.VerifyRunnerTests.test_junit_output_records_each_gate_without_command_output) ... ok
 test_missing_required_validator_is_blocked_and_exit_two (test_verify_runner.VerifyRunnerTests.test_missing_required_validator_is_blocked_and_exit_two) ... ok
 test_passed_report_conforms_to_schema_and_records_evidence_digest (test_verify_runner.VerifyRunnerTests.test_passed_report_conforms_to_schema_and_records_evidence_digest) ... ok
+test_portable_command_normalizes_redacted_windows_separators (test_verify_runner.VerifyRunnerTests.test_portable_command_normalizes_redacted_windows_separators) ... ok
 test_previous_gate_logs_are_removed_before_a_new_run (test_verify_runner.VerifyRunnerTests.test_previous_gate_logs_are_removed_before_a_new_run) ... ok
 test_report_and_evidence_redact_machine_specific_repository_paths (test_verify_runner.VerifyRunnerTests.test_report_and_evidence_redact_machine_specific_repository_paths) ... ok
+test_windows_npm_gate_uses_the_cmd_shim_without_a_shell (test_verify_runner.VerifyRunnerTests.test_windows_npm_gate_uses_the_cmd_shim_without_a_shell) ... ok
 
 ----------------------------------------------------------------------
-Ran 255 tests in 124.426s
+Ran 258 tests in 125.033s
 
 OK (skipped=2)

@@ -1,4 +1,4 @@
-command=["<repo>/.venv/bin/python", "<repo>/scripts/maintenance/analyze_usage.py", "--help"]
+command=["<repo>/.venv/bin/python3", "<repo>/scripts/maintenance/analyze_usage.py", "--help"]
 exit_code=0
 stdout:
 usage: analyze_usage.py [-h] --findings FINDINGS [--adapter {fake,codex}]
