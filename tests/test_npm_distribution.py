@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -16,6 +17,7 @@ NODE_INSTALLER = REPO_ROOT / "bin" / "openapi-engineering-skill.mjs"
 PACKAGE_NAME = "@realpkuasule/openapi-engineering-skill"
 PACKAGE_VERSION = "0.1.0-rc.2"
 RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.0-rc.2.md"
+NPM = shutil.which("npm") or "npm"
 
 
 def run_cli(home: Path, *arguments: str) -> tuple[subprocess.CompletedProcess[str], dict]:
@@ -69,7 +71,7 @@ class NpmDistributionTests(unittest.TestCase):
 
     def test_packed_files_exclude_caches_tests_evidence_and_development_tools(self) -> None:
         result = subprocess.run(
-            ["npm", "pack", "--dry-run", "--json", "--ignore-scripts"],
+            [NPM, "pack", "--dry-run", "--json", "--ignore-scripts"],
             cwd=REPO_ROOT,
             text=True,
             capture_output=True,

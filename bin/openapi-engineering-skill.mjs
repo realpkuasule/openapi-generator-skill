@@ -123,8 +123,17 @@ async function listFiles(root, directory = root) {
 async function treeDigest(root) {
   const digest = createHash("sha256");
   const files = (await listFiles(root))
-    .map((path) => ({ path, name: relative(root, path).split("\\").join("/") }))
-    .sort((left, right) => (left.name < right.name ? -1 : left.name > right.name ? 1 : 0));
+    .map((path) => {
+      const name = relative(root, path).split("\\").join("/");
+      return {
+        path,
+        name,
+        order: process.platform === "win32" ? name.toLowerCase() : name,
+      };
+    })
+    .sort((left, right) =>
+      left.order < right.order ? -1 : left.order > right.order ? 1 : 0,
+    );
   for (const { path, name } of files) {
     digest.update(name);
     digest.update("\0");

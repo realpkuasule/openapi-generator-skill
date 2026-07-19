@@ -1,5 +1,5 @@
 {
-  "finished_at": "2026-07-19T03:37:58.606139Z",
+  "finished_at": "2026-07-19T03:46:56.582515Z",
   "gates": [
     {
       "command": [
@@ -10,9 +10,9 @@
         "tests.test_environment",
         "-v"
       ],
-      "duration_ms": 786,
+      "duration_ms": 765,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/npm-release-v0.1.0-rc.2/deterministic-report-evidence/01-contract-validation.log",
-      "evidence_sha256": "3fa5b8b0dfb0d7a428315aa098c49e9397cb9d04dce8a8c3312a86dfe89f476e",
+      "evidence_sha256": "181e270ffaf05c08c9f3e144dd70fc5dd74470d1ecaba8fc5450f574ff9d850a",
       "exit_code": 0,
       "name": "contract-validation",
       "risk": null,
@@ -25,7 +25,7 @@
         "/Users/zhichao/codex/openapi-generator/scripts/capture_contract_examples.py",
         "--check"
       ],
-      "duration_ms": 1470,
+      "duration_ms": 1464,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/npm-release-v0.1.0-rc.2/deterministic-report-evidence/02-captured-example-conformance.log",
       "evidence_sha256": "6de9ae518e0dedc187c3c7226e4410fc6ec2e67d87426363fdc6c342a0748127",
       "exit_code": 0,
@@ -44,9 +44,9 @@
         "tests",
         "-v"
       ],
-      "duration_ms": 34719,
+      "duration_ms": 34469,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/npm-release-v0.1.0-rc.2/deterministic-report-evidence/03-unit-test-suite.log",
-      "evidence_sha256": "bb11876f770af8e68e79fcd6df4b23fcd96ea656140057a242850908d2373556",
+      "evidence_sha256": "d8d4933f1000a9dd961e2542ad5dc0b001d9264c51acce9e90822c71217d825d",
       "exit_code": 0,
       "name": "unit-test-suite",
       "risk": null,
@@ -74,7 +74,7 @@
         "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/inspect_project.py",
         "--help"
       ],
-      "duration_ms": 19,
+      "duration_ms": 18,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/npm-release-v0.1.0-rc.2/deterministic-report-evidence/05-inspect-project-help.log",
       "evidence_sha256": "4137ee9b1cabd193ed93f2b7f3a78564920a82e3d35c1ab393b126a94bf0a5ee",
       "exit_code": 0,
@@ -104,7 +104,7 @@
         "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/compare_generation.py",
         "--help"
       ],
-      "duration_ms": 18,
+      "duration_ms": 19,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/npm-release-v0.1.0-rc.2/deterministic-report-evidence/07-compare-generation-help.log",
       "evidence_sha256": "95e55555810103c68de3398b2d0d3d831e1108b3fd8e9b6f7123965d50474540",
       "exit_code": 0,
@@ -134,7 +134,7 @@
         "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/scope_snapshot.py",
         "--help"
       ],
-      "duration_ms": 445,
+      "duration_ms": 443,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/npm-release-v0.1.0-rc.2/deterministic-report-evidence/09-scope-snapshot-help.log",
       "evidence_sha256": "165c699314121cb290ac54fbfcdf9760169349c8c4c745a50d1b37f6a32c701d",
       "exit_code": 0,
@@ -149,7 +149,7 @@
         "/Users/zhichao/codex/openapi-generator/skills/openapi-engineering/scripts/profile_state.py",
         "--help"
       ],
-      "duration_ms": 21,
+      "duration_ms": 20,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/npm-release-v0.1.0-rc.2/deterministic-report-evidence/10-profile-state-help.log",
       "evidence_sha256": "534ac855eead9f001a901ff7b85df1f6e6e9cba0566a7aad9618d41f36dbb0a5",
       "exit_code": 0,
@@ -163,7 +163,7 @@
         "/Users/zhichao/codex/openapi-generator/.venv/bin/python",
         "/Users/zhichao/codex/openapi-generator/scripts/evals/load_cases.py"
       ],
-      "duration_ms": 498,
+      "duration_ms": 488,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/npm-release-v0.1.0-rc.2/deterministic-report-evidence/11-eval-case-validation.log",
       "evidence_sha256": "37657728ec0a0c9b51fc45c6436e4251db95d4e8aaf03d617fb2a3e28683527a",
       "exit_code": 0,
@@ -178,7 +178,7 @@
         "/Users/zhichao/codex/openapi-generator/scripts/run_skill_evals.py",
         "--help"
       ],
-      "duration_ms": 463,
+      "duration_ms": 455,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/npm-release-v0.1.0-rc.2/deterministic-report-evidence/12-eval-runner-help.log",
       "evidence_sha256": "a8be79df7df900619abba575de4ca93bdfdbebe3795705abb10ed785bd4c6a56",
       "exit_code": 0,
@@ -193,7 +193,7 @@
         "/Users/zhichao/codex/openapi-generator/scripts/evals/score_result.py",
         "--help"
       ],
-      "duration_ms": 447,
+      "duration_ms": 443,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/npm-release-v0.1.0-rc.2/deterministic-report-evidence/13-eval-scorer-help.log",
       "evidence_sha256": "9f14e8e7cfce6c573a8440ff0e0b0d02fd5eea2c001e5b6f07c595940ac2a0ca",
       "exit_code": 0,
@@ -208,7 +208,7 @@
         "/Users/zhichao/codex/openapi-generator/scripts/aggregate_forward_evals.py",
         "--help"
       ],
-      "duration_ms": 448,
+      "duration_ms": 439,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/npm-release-v0.1.0-rc.2/deterministic-report-evidence/14-forward-eval-aggregator-help.log",
       "evidence_sha256": "a8a845f6bd493cbea34701fadd02774348cbd2a4449ed9ab924906613304640a",
       "exit_code": 0,
@@ -239,7 +239,7 @@
         "/Users/zhichao/codex/openapi-generator/scripts/tdd_evidence.py",
         "--help"
       ],
-      "duration_ms": 19,
+      "duration_ms": 20,
       "evidence": "/Users/zhichao/codex/openapi-generator/docs/verifications/npm-release-v0.1.0-rc.2/deterministic-report-evidence/16-tdd-evidence-help.log",
       "evidence_sha256": "af59d526cb28bac9bea5e4b010df36f81b8376c7301fa7d6931921fee9971fe6",
       "exit_code": 0,
@@ -266,7 +266,7 @@
     }
   ],
   "report_version": 1,
-  "started_at": "2026-07-19T03:37:19.143965Z",
+  "started_at": "2026-07-19T03:46:17.431206Z",
   "status": "passed",
   "tier": "deterministic"
 }
