@@ -29,6 +29,7 @@ test_upgrade_generates_both_versions_and_accepts_only_explained_diff (test_empir
 test_upgrade_rejects_an_unexplained_generated_diff (test_empirical_gate.EmpiricalGateTests.test_upgrade_rejects_an_unexplained_generated_diff) ... ok
 test_workspace_cleanup_handles_read_only_tool_caches (test_empirical_gate.EmpiricalGateTests.test_workspace_cleanup_handles_read_only_tool_caches) ... ok
 test_ci_has_a_repository_local_skill_validator (test_environment.EnvironmentTests.test_ci_has_a_repository_local_skill_validator) ... ok
+test_git_checkout_normalizes_text_to_lf_on_every_platform (test_environment.EnvironmentTests.test_git_checkout_normalizes_text_to_lf_on_every_platform) ... ok
 test_locked_validation_dependencies_are_available (test_environment.EnvironmentTests.test_locked_validation_dependencies_are_available) ... ok
 test_project_and_lock_files_exist (test_environment.EnvironmentTests.test_project_and_lock_files_exist) ... ok
 test_dry_run_cli_writes_an_explicitly_blocked_report (test_eval_runner.EvalRunnerTests.test_dry_run_cli_writes_an_explicitly_blocked_report) ... ok
@@ -113,6 +114,7 @@ test_stale_hash_and_symlink_are_rejected_without_external_write (test_maintenanc
 test_wrong_digest_open_questions_secret_or_unapproved_path_leave_tree_unchanged (test_maintenance_promotion.MaintenancePromotionTests.test_wrong_digest_open_questions_secret_or_unapproved_path_leave_tree_unchanged) ... ok
 test_any_candidate_change_changes_approval_digest (test_maintenance_proposal.MaintenanceProposalTests.test_any_candidate_change_changes_approval_digest) ... ok
 test_proposal_binds_inputs_targets_and_is_deterministic (test_maintenance_proposal.MaintenanceProposalTests.test_proposal_binds_inputs_targets_and_is_deterministic) ... ok
+test_skill_digest_uses_platform_neutral_relative_name_order (test_maintenance_proposal.MaintenanceProposalTests.test_skill_digest_uses_platform_neutral_relative_name_order) ... ok
 test_traversal_and_symlink_targets_are_blocked_without_output (test_maintenance_proposal.MaintenanceProposalTests.test_traversal_and_symlink_targets_are_blocked_without_output) ... ok
 test_adapter_environment_forwards_only_platform_specific_approved_auth (test_maintenance_resource_watch.MaintenanceResourceWatchTests.test_adapter_environment_forwards_only_platform_specific_approved_auth) ... ok
 test_rss_limit_reclaims_only_owned_process_group (test_maintenance_resource_watch.MaintenanceResourceWatchTests.test_rss_limit_reclaims_only_owned_process_group) ... ok
@@ -263,6 +265,6 @@ test_report_and_evidence_redact_machine_specific_repository_paths (test_verify_r
 test_windows_npm_gate_uses_the_cmd_shim_without_a_shell (test_verify_runner.VerifyRunnerTests.test_windows_npm_gate_uses_the_cmd_shim_without_a_shell) ... ok
 
 ----------------------------------------------------------------------
-Ran 258 tests in 125.033s
+Ran 260 tests in 123.918s
 
 OK (skipped=2)

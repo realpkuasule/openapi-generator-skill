@@ -11,6 +11,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+from scripts.maintenance.build_proposal import tree_sha256
 from tests.support import REPO_ROOT
 
 
@@ -130,6 +131,22 @@ def run_builder(root: Path, analysis_path: Path, candidate_path: Path, output: P
 
 
 class MaintenanceProposalTests(unittest.TestCase):
+    def test_skill_digest_uses_platform_neutral_relative_name_order(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            nested = root / "a" / "item.txt"
+            nested.parent.mkdir()
+            nested.write_bytes(b"nested")
+            (root / "a0.txt").write_bytes(b"flat")
+            expected = hashlib.sha256()
+            for name, content in (("a/item.txt", b"nested"), ("a0.txt", b"flat")):
+                expected.update(name.encode("utf-8"))
+                expected.update(b"\0")
+                expected.update(content)
+                expected.update(b"\0")
+
+            self.assertEqual(tree_sha256(root), expected.hexdigest())
+
     def test_proposal_binds_inputs_targets_and_is_deterministic(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

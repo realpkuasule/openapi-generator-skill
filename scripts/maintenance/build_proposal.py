@@ -78,12 +78,20 @@ def tree_sha256(root: Path) -> str:
     if root.is_symlink() or not root.is_dir():
         raise ProposalBlocked("Skill root is invalid.")
     digest = hashlib.sha256()
-    for path in sorted(item for item in root.rglob("*") if item.is_file()):
+    files = sorted(
+        (
+            (path.relative_to(root).as_posix(), path)
+            for path in root.rglob("*")
+            if path.is_file()
+        ),
+        key=lambda item: item[0],
+    )
+    for relative_name, path in files:
         if path.is_symlink() or "__pycache__" in path.parts or path.name == ".DS_Store":
             if path.is_symlink():
                 raise ProposalBlocked("Skill root contains a symbolic link.")
             continue
-        digest.update(path.relative_to(root).as_posix().encode())
+        digest.update(relative_name.encode())
         digest.update(b"\0")
         digest.update(path.read_bytes())
         digest.update(b"\0")

@@ -24,6 +24,12 @@ class EnvironmentTests(unittest.TestCase):
         validator = REPO_ROOT / "scripts" / "quick_validate.py"
         self.assertTrue(validator.is_file())
 
+    def test_git_checkout_normalizes_text_to_lf_on_every_platform(self) -> None:
+        attributes = REPO_ROOT / ".gitattributes"
+
+        self.assertTrue(attributes.is_file())
+        self.assertIn("* text=auto eol=lf", attributes.read_text(encoding="utf-8").splitlines())
+
 
 if __name__ == "__main__":
     unittest.main()

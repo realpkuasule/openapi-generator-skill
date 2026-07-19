@@ -6,10 +6,10 @@ stdout:
     "id": "@realpkuasule/openapi-engineering-skill@0.1.0-rc.3",
     "name": "@realpkuasule/openapi-engineering-skill",
     "version": "0.1.0-rc.3",
-    "size": 91539,
-    "unpackedSize": 389310,
-    "shasum": "0bec7b77273eae310ea827056e08719086a960e2",
-    "integrity": "sha512-CNu+jn9sx+gH9/9ofC6H/KOVvE/+IGYnWdYAcXiXEGUhw621D7oOzdNjegHaAkL3NOSpw1GEqLzx4CLjCK7zLw==",
+    "size": 91569,
+    "unpackedSize": 389457,
+    "shasum": "2a532390da04cd904681c86d243d495f940af9ca",
+    "integrity": "sha512-jfsAH/rzJTpzvl0bZd86XMzLG92Zv3WJ/2Zh8Bt4qlR/dl4S+PGJ3imSAY9U3t2UxvHLUmvGa++/ELTsBwvKdg==",
     "filename": "realpkuasule-openapi-engineering-skill-0.1.0-rc.3.tgz",
     "files": [
       {
@@ -189,7 +189,7 @@ stdout:
       },
       {
         "path": "scripts/maintenance/build_proposal.py",
-        "size": 11274,
+        "size": 11421,
         "mode": 420
       },
       {
