@@ -29,6 +29,13 @@ All notable changes to this project are documented in this file.
 - `0.1.0-rc.3` is prepared but must not be published or tagged until deterministic, cross-platform,
   and approved live evidence gates complete.
 
+### Verified
+
+- OpenAPI 1.2.0, all JSON Schemas, captured examples, and 261/261 tests pass locally.
+- The actual npm tarball completes isolated install, digest verification, and uninstall without
+  touching real Codex or Claude Code settings.
+- Ubuntu, macOS, and Windows deterministic jobs pass on PR #4.
+
 ## [0.1.0-rc.2] - 2026-07-19
 
 ### Added

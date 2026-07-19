@@ -8,10 +8,11 @@ Prepared release: `0.1.0-rc.3` (not tagged or published)
 
 - Status: `passed`
 - Gates: 26/26 passed
-- Unit and integration tests: 260/260 passed, serial execution (2 Windows-specific assertions skipped locally)
+- Unit and integration tests: 261/261 passed, serial execution (2 Windows-specific assertions skipped locally)
 - SI acceptance: SI-AC-01 through SI-AC-18 passed; `acceptance_complete: true`
 - Contract: OpenAPI 3.1 document version 1.2.0; all Draft 2020-12 Schemas and captured examples passed
-- Packaging: runtime and Maintainer Skill validation passed; npm dry pack allowlist passed
+- Packaging: runtime and Maintainer Skill validation passed; npm dry pack allowlist and isolated
+  real-tarball install, verify, and uninstall lifecycle passed
 - Integrity: protected source-tree digest was unchanged by verification
 - Resource evidence: maximum verifier RSS 110,100,480 bytes; 0 swaps
 
@@ -31,12 +32,16 @@ Authoritative machine reports:
 - 30/90-day factual trend comparison, minimum sample gates, version segments, and resolved-incident recurrence detection.
 - Explicit Maintainer installation and safe relink migration from verified earlier npm or legacy Git canonical symlinks.
 
-## Deliberately external release gates
+## External release gates
 
-The following were not executed by local development and remain separately approval-bound:
+Completed outside the local development run:
 
-- Ubuntu, macOS, and Windows hosted CI results for the prepared commit.
+- PR #4 GitHub-hosted deterministic CI passed on Ubuntu, macOS, and Windows.
+
+The following remain separately approval-bound:
+
 - Live Codex and Claude Code Maintainer evaluation using approved credentials and sanitized input.
-- The Git commit/push/draft-PR delivery step follows this local report; the `v0.1.0-rc.3` tag, GitHub prerelease, npm publish/dist-tag changes, and registry-backed M4/M2/MBP14 acceptance remain separate gates.
+- The `v0.1.0-rc.3` tag, GitHub prerelease, npm publish/dist-tag changes, and registry-backed
+  M4/M2/MBP14 acceptance remain separate gates.
 
 Until those gates pass, `0.1.0-rc.3` is release-ready source, not a published install target.

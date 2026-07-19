@@ -138,6 +138,95 @@ class NpmDistributionTests(unittest.TestCase):
             )
         )
 
+    def test_real_tarball_installs_verifies_and_uninstalls_in_an_isolated_home(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            packages = root / "packages"
+            consumer = root / "consumer"
+            home = root / "home"
+            packages.mkdir()
+            packed = subprocess.run(
+                [
+                    NPM,
+                    "pack",
+                    "--ignore-scripts",
+                    "--json",
+                    "--pack-destination",
+                    str(packages),
+                ],
+                cwd=REPO_ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(packed.returncode, 0, packed.stderr)
+            tarball = packages / json.loads(packed.stdout)[0]["filename"]
+            installed_package = subprocess.run(
+                [
+                    NPM,
+                    "install",
+                    "--ignore-scripts",
+                    "--no-audit",
+                    "--no-fund",
+                    "--offline",
+                    "--package-lock=false",
+                    "--prefix",
+                    str(consumer),
+                    str(tarball),
+                ],
+                cwd=root,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(installed_package.returncode, 0, installed_package.stderr)
+            packaged_cli = (
+                consumer
+                / "node_modules"
+                / "@realpkuasule"
+                / "openapi-engineering-skill"
+                / "bin"
+                / "openapi-engineering-skill.mjs"
+            )
+
+            def packaged(*arguments: str) -> tuple[subprocess.CompletedProcess[str], dict]:
+                result = subprocess.run(
+                    ["node", str(packaged_cli), *arguments, "--home", str(home), "--json"],
+                    cwd=root,
+                    text=True,
+                    capture_output=True,
+                    check=False,
+                )
+                return result, json.loads(result.stdout) if result.stdout else {}
+
+            applied, apply_payload = packaged("install", "--apply")
+            verified, verify_payload = packaged("verify")
+            removed, remove_payload = packaged("uninstall", "--apply")
+
+            self.assertEqual(applied.returncode, 0, applied.stderr)
+            self.assertEqual(verified.returncode, 0, verified.stderr)
+            self.assertEqual(removed.returncode, 0, removed.stderr)
+            self.assertTrue(apply_payload["applied"])
+            self.assertTrue(verify_payload["verified"])
+            self.assertTrue(remove_payload["applied"])
+            self.assertEqual(
+                {row["action"] for row in remove_payload["installations"]},
+                {"remove"},
+            )
+            self.assertFalse((home / ".codex" / "skills" / "openapi-engineering").exists())
+            self.assertFalse((home / ".claude" / "skills" / "openapi-engineering").exists())
+            self.assertTrue(
+                (
+                    home
+                    / ".local"
+                    / "share"
+                    / "openapi-engineering-skill"
+                    / PACKAGE_VERSION
+                    / "skills"
+                    / "openapi-engineering"
+                ).is_dir()
+            )
+
     def test_release_plan_records_contract_impact_publish_and_rollback(self) -> None:
         content = RELEASE_PLAN.read_text(encoding="utf-8")
 

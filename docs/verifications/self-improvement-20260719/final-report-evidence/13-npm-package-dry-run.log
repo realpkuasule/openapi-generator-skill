@@ -6,15 +6,15 @@ stdout:
     "id": "@realpkuasule/openapi-engineering-skill@0.1.0-rc.3",
     "name": "@realpkuasule/openapi-engineering-skill",
     "version": "0.1.0-rc.3",
-    "size": 91569,
-    "unpackedSize": 389457,
-    "shasum": "2a532390da04cd904681c86d243d495f940af9ca",
-    "integrity": "sha512-jfsAH/rzJTpzvl0bZd86XMzLG92Zv3WJ/2Zh8Bt4qlR/dl4S+PGJ3imSAY9U3t2UxvHLUmvGa++/ELTsBwvKdg==",
+    "size": 91638,
+    "unpackedSize": 389764,
+    "shasum": "aef92fca48e8774926e411db2e9434d66c198cd7",
+    "integrity": "sha512-GJ+xobxuS60Br43K1/NLHp61GEbBANizbOZKs9YTGHA0fCdw+IJxdL+Gz6hQ67sdIJtTgu4P2UWXM24RUOxeEQ==",
     "filename": "realpkuasule-openapi-engineering-skill-0.1.0-rc.3.tgz",
     "files": [
       {
         "path": "CHANGELOG.md",
-        "size": 3782,
+        "size": 4089,
         "mode": 420
       },
       {

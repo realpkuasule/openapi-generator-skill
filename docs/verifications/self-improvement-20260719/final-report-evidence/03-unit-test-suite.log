@@ -136,6 +136,7 @@ test_maintainer_component_is_explicit_and_installs_on_both_platforms (test_npm_d
 test_package_manifest_is_pinned_allowlisted_and_has_no_postinstall (test_npm_distribution.NpmDistributionTests.test_package_manifest_is_pinned_allowlisted_and_has_no_postinstall) ... ok
 test_packed_files_exclude_caches_tests_evidence_and_development_tools (test_npm_distribution.NpmDistributionTests.test_packed_files_exclude_caches_tests_evidence_and_development_tools) ... ok
 test_python_skill_digest_uses_platform_neutral_relative_name_order (test_npm_distribution.NpmDistributionTests.test_python_skill_digest_uses_platform_neutral_relative_name_order) ... ok
+test_real_tarball_installs_verifies_and_uninstalls_in_an_isolated_home (test_npm_distribution.NpmDistributionTests.test_real_tarball_installs_verifies_and_uninstalls_in_an_isolated_home) ... ok
 test_release_plan_records_contract_impact_publish_and_rollback (test_npm_distribution.NpmDistributionTests.test_release_plan_records_contract_impact_publish_and_rollback) ... ok
 test_claude_adapter_accepts_fenced_json_when_cli_omits_structured_output (test_platform_adapters.PlatformAdapterTests.test_claude_adapter_accepts_fenced_json_when_cli_omits_structured_output) ... ok
 test_claude_adapter_runs_a_resumable_plan_mode_interview (test_platform_adapters.PlatformAdapterTests.test_claude_adapter_runs_a_resumable_plan_mode_interview) ... ok
@@ -265,6 +266,6 @@ test_report_and_evidence_redact_machine_specific_repository_paths (test_verify_r
 test_windows_npm_gate_uses_the_cmd_shim_without_a_shell (test_verify_runner.VerifyRunnerTests.test_windows_npm_gate_uses_the_cmd_shim_without_a_shell) ... ok
 
 ----------------------------------------------------------------------
-Ran 260 tests in 134.635s
+Ran 261 tests in 121.007s
 
 OK (skipped=2)
