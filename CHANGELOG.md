@@ -2,6 +2,31 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.1.1] - 2026-07-21
+
+### Added
+
+- Privacy-safe, opt-in self-improvement collection, deterministic thresholds, trend analysis,
+  retention, proposal, promotion, and Maintainer Skill workflows.
+- Active CLI session authentication and digest-bound secondary-review recovery for users without
+  separate OpenAI or Anthropic API keys.
+
+### Fixed
+
+- Cross-platform deterministic CI, Windows portability, line-ending stability, and canonical Skill
+  digest consistency across packaging and installation environments.
+
+### Contract impact
+
+- This patch release publishes the additive OpenAPI 1.2.0 Usage and Maintenance control plane
+  prepared on the release-candidate branch; the version bump itself adds no further API change.
+
+### Verified
+
+- Packaged lifecycle verification, 269 local tests, 26 deterministic gates, live serial
+  Codex-to-Claude Maintainer analysis, and Ubuntu/macOS/Windows CI passed before the release bump.
+- npm publication and GitHub Release creation remain separate from this source tag.
+
 ## [0.1.0-rc.3] - 2026-07-19
 
 ### Added

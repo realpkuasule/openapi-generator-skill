@@ -9,36 +9,36 @@ the project, lifecycle stage, and stated intent, it may select OpenAPI Generator
 generator, an official SDK, contract-governance tooling, MCP integration, or a documented
 `no-codegen` decision.
 
-## Release candidate
+## Release
 
-The prepared evaluation release is `v0.1.0-rc.3`. npm installation requires Node.js 20 or newer;
+The prepared patch release is `v0.1.1`. npm installation requires Node.js 20 or newer;
 repository validation requires Python 3.11 or newer. This repository does not yet declare an
-open-source license, so the release candidate is intended for controlled evaluation until the
+open-source license, so the release is intended for controlled evaluation until the
 project owner selects one.
 
 ## Pinned npm installation
 
-`0.1.0-rc.3` is currently prepared, not published. Use these commands only after the npm release
+`0.1.1` is currently prepared, not published. Use these commands only after the npm release
 gate is approved; until then, use the source installation fallback below. Use the exact release on
 every machine. The first command is a read-only dry run, the second applies the installation, and
 the third verifies the installed digests:
 
 ```bash
-npx --yes @realpkuasule/openapi-engineering-skill@0.1.0-rc.3 install \
+npx --yes @realpkuasule/openapi-engineering-skill@0.1.1 install \
   --platform codex --platform claude --json
-npx --yes @realpkuasule/openapi-engineering-skill@0.1.0-rc.3 install \
+npx --yes @realpkuasule/openapi-engineering-skill@0.1.1 install \
   --platform codex --platform claude --apply --json
-npx --yes @realpkuasule/openapi-engineering-skill@0.1.0-rc.3 verify \
+npx --yes @realpkuasule/openapi-engineering-skill@0.1.1 verify \
   --platform codex --platform claude --json
 ```
 
 The npm CLI copies a versioned canonical payload to
-`~/.local/share/openapi-engineering-skill/0.1.0-rc.3`, then links Codex and Claude Code to that
+`~/.local/share/openapi-engineering-skill/0.1.1`, then links Codex and Claude Code to that
 immutable tree. It has no `postinstall` script and never writes during `npm install` or the default
 dry run.
 
 Add `--component maintainer` only on machines where private self-improvement analysis is intended.
-Re-running `install` with a newer pinned RC safely plans and then relinks verified earlier npm or
+Re-running `install` with a newer pinned release safely plans and then relinks verified earlier npm or
 legacy Git canonical symlinks; it preserves the old payload for rollback. Divergent copies remain
 conflicts and are never overwritten.
 
@@ -98,7 +98,7 @@ openapi-engineering-skill maintenance analyze --findings PRIVATE-BUNDLE.json \
   --output PRIVATE-ANALYSIS.json
 openapi-engineering-skill maintenance propose --analysis PRIVATE-ANALYSIS.json \
   --candidate PRIVATE-CANDIDATE.json --target-root "$PWD" --skill-root skills/openapi-engineering \
-  --skill-version 0.1.0-rc.3 --config-sha256 CONFIG_SHA256 --output PRIVATE-PROPOSAL.json
+  --skill-version 0.1.1 --config-sha256 CONFIG_SHA256 --output PRIVATE-PROPOSAL.json
 openapi-engineering-skill maintenance promote --proposal PRIVATE-PROPOSAL.json \
   --target-root "$PWD" --approve APPROVAL_SHA256
 # Repeat the unchanged command with --apply only after reviewing the exact plan.
@@ -131,7 +131,7 @@ canonical skill tree:
 ```bash
 git clone git@github.com:realpkuasule/openapi-generator-skill.git
 cd openapi-generator-skill
-git checkout v0.1.0-rc.3
+git checkout v0.1.1
 python3 scripts/install_skill.py --platform codex --platform claude
 python3 scripts/install_skill.py --platform codex --platform claude --apply
 ```
@@ -153,9 +153,9 @@ are not overwritten.
 Preview removal, then apply it:
 
 ```bash
-npx --yes @realpkuasule/openapi-engineering-skill@0.1.0-rc.3 uninstall \
+npx --yes @realpkuasule/openapi-engineering-skill@0.1.1 uninstall \
   --platform codex --platform claude --json
-npx --yes @realpkuasule/openapi-engineering-skill@0.1.0-rc.3 uninstall \
+npx --yes @realpkuasule/openapi-engineering-skill@0.1.1 uninstall \
   --platform codex --platform claude --apply --json
 ```
 

@@ -1,6 +1,6 @@
 {
   "name": "@realpkuasule/openapi-engineering-skill",
-  "version": "0.1.0-rc.3",
+  "version": "0.1.1",
   "description": "Contract-First OpenAPI engineering skill for Codex and Claude Code",
   "license": "UNLICENSED",
   "type": "module",

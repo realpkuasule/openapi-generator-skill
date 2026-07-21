@@ -16,8 +16,8 @@ from tests.support import REPO_ROOT, SKILL_ROOT, snapshot_tree
 PACKAGE_JSON = REPO_ROOT / "package.json"
 NODE_INSTALLER = REPO_ROOT / "bin" / "openapi-engineering-skill.mjs"
 PACKAGE_NAME = "@realpkuasule/openapi-engineering-skill"
-PACKAGE_VERSION = "0.1.0-rc.3"
-RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.0-rc.3.md"
+PACKAGE_VERSION = "0.1.1"
+RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.1.md"
 NPM = shutil.which("npm") or "npm"
 
 
