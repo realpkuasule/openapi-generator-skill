@@ -66,12 +66,16 @@ class MaintainerSkillTests(unittest.TestCase):
             self.assertIn(phrase, body)
         self.assertIn("never run analyzers concurrently", body)
         self.assertIn("at most 50", body)
+        self.assertIn("standing authorization", body)
+        self.assertIn("max 2", body)
+        self.assertIn("fixed notification", body)
 
     def test_references_are_one_hop_and_cover_analysis_privacy_and_promotion(self) -> None:
         expected = {
             "analysis-workflow.md",
             "privacy-boundary.md",
             "promotion-policy.md",
+            "unattended-cycle.md",
         }
         observed = {path.name for path in (MAINTAINER_ROOT / "references").glob("*.md")}
         self.assertEqual(observed, expected)

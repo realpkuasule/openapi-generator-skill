@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: OpenAPI Engineering Control Plane
-  version: 1.2.0
+  version: 1.3.0
   description: >-
     Platform-neutral contracts for helpers bundled with the openapi-engineering
     skill. Discovery, comparison, and proposal operations are read-only; the
@@ -648,6 +648,92 @@ paths:
                 $ref: '#/components/schemas/MaintenanceAnalysis'
         '400':
           $ref: '#/components/responses/InvalidRequest'
+  /v1/maintenance/automation:
+    post:
+      operationId: configureMaintenanceAutomation
+      x-cli-command: >-
+        openapi-engineering-skill maintenance automation <status|configure|disable>
+        [--credential-mode active-cli-session] [--python <absolute-executable>]
+        [--notify <none|macos>]
+        [--approve <sha256>] [--apply]
+      x-cli-arguments:
+        action: status, configure, or disable
+        credentialMode: configure requires active-cli-session
+        pythonExecutable: configure requires a Python 3.11+ absolute path that imports jsonschema
+        notification: terminal-report notification policy; macos is coordinator-only
+        approvalSha256: exact digest emitted by the unchanged configure dry-run
+        apply: omitted for status and dry-run; required with the exact digest to persist configure
+      x-cli-exit-codes:
+        '0': status returned, dry-run planned, or exact authorized configuration applied
+        '1': approval digest or an existing authorization is stale
+        '2': invalid coordinator, configuration, credential mode, notification, or unsafe state
+      tags: [Maintenance]
+      summary: Configure revocable unattended maintenance authorization
+      description: >-
+        Stores no credential. A configure dry-run qualifies and binds an explicit Python runtime,
+        coordinator identity, sync binding, Skill version and digest, analyzer order, resource
+        limits, retry limit, and notification policy. Apply requires that exact digest. Any later
+        runtime or configuration drift invalidates the authorization.
+        Disable is independent and never deletes reports or usage history.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaintenanceAutomationRequest'
+      responses:
+        '200':
+          description: Current automation state or a dry-run/apply result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaintenanceAutomationResult'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/maintenance/cycles:
+    post:
+      operationId: runMaintenanceCycle
+      x-cli-command: >-
+        openapi-engineering-skill maintenance cycle [--now <timestamp>]
+        [--adapter <codex|fake>] [--fake-response <path>]
+        [--secondary-adapter <claude|fake|none>] [--secondary-fake-response <path>] [--json]
+      x-cli-arguments:
+        requestedAt: --now; optional deterministic clock override
+        adapter: --adapter; codex in production, fake only for deterministic offline validation
+        fakeResponse: --fake-response; deterministic primary semantic-result fixture
+        secondaryAdapter: --secondary-adapter; claude in production, fake/none only for validation
+        secondaryFakeResponse: --secondary-fake-response; deterministic secondary fixture
+      x-cli-exit-codes:
+        '0': no finding, duplicate, or completed private analysis
+        '1': analyzer failed after producing terminal private evidence
+        '2': authorization, sync, input, credential, timeout, or resource gate blocked the cycle
+      tags: [Maintenance]
+      summary: Run one authorized unattended coordinator maintenance cycle
+      description: >-
+        Validates the standing authorization, synchronizes the approved private Git partition,
+        performs the idempotent weekly due check, and starts Codex only when a deterministic finding
+        exists. Risk-required Claude review runs strictly after Codex. The same
+        period/input/authorization has at most two serialized attempts and one immutable terminal
+        report. A terminal report is written atomically as private JSON and Markdown before a fixed,
+        content-free macOS notification is attempted. No proposal or public write occurs.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaintenanceCycleRequest'
+      responses:
+        '200':
+          description: Cycle result; inspect the private report only when report_id is non-null.
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/maintenance-cycle.schema.json'
+              examples:
+                completedAnalysis:
+                  externalValue: './examples/maintenance-cycle-response.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
   /v1/usage/schedulers:
     post:
       operationId: configureUsageScheduler
@@ -664,10 +750,11 @@ paths:
         '1': existing scheduler file is divergent
         '2': non-macOS, non-coordinator, invalid time, or unsafe target
       tags: [Usage]
-      summary: Manage the M4 daily launchd due check with dry-run-first semantics
+      summary: Manage the M4 daily maintenance cycle with dry-run-first semantics
       description: >-
-        Installs one low-cost daily due check with RunAtLoad catch-up. It manages only
-        the exact digest-matched plist it created and never installs on collector nodes.
+        Installs one daily maintenance cycle with RunAtLoad catch-up. The cycle remains a zero-model
+        due check unless a valid standing authorization and deterministic finding both exist. It
+        manages only the exact digest-matched plist it created and never installs on collector nodes.
       requestBody:
         required: true
         content:
@@ -1346,6 +1433,10 @@ components:
       $ref: './schemas/maintenance-finding.schema.json'
     MaintenanceAnalysis:
       $ref: './schemas/maintenance-analysis.schema.json'
+    MaintenanceCycle:
+      $ref: './schemas/maintenance-cycle.schema.json'
+    MaintenanceReport:
+      $ref: './schemas/maintenance-report.schema.json'
     MaintenanceProposal:
       $ref: './schemas/maintenance-proposal.schema.json'
     UsageConfigurationCommand:
@@ -1497,6 +1588,50 @@ components:
         timeout_seconds: { type: integer, minimum: 1, maximum: 600, default: 600 }
         warning_rss_mb: { type: integer, minimum: 1, default: 512 }
         hard_rss_mb: { type: integer, minimum: 2, default: 1024 }
+    MaintenanceAutomationRequest:
+      type: object
+      additionalProperties: false
+      required: [action, apply]
+      properties:
+        action: { enum: [status, configure, disable] }
+        credential_mode:
+          type: [string, 'null']
+          enum: [active-cli-session, null]
+          default: null
+        python_executable:
+          type: [string, 'null']
+          minLength: 1
+          maxLength: 4096
+          default: null
+        notification: { enum: [none, macos], default: none }
+        approval_sha256: { type: [string, 'null'], pattern: '^[a-f0-9]{64}$' }
+        apply: { type: boolean, default: false }
+      allOf:
+        - if:
+            properties:
+              action: { const: configure }
+          then:
+            required: [credential_mode, python_executable]
+            properties:
+              credential_mode: { const: active-cli-session }
+              python_executable: { type: string }
+    MaintenanceAutomationResult:
+      type: object
+      additionalProperties: false
+      required: [status, action, applied, approval_sha256, config]
+      properties:
+        status: { enum: [ok, stale] }
+        action: { enum: [status, configure, disable] }
+        applied: { type: boolean }
+        approval_sha256: { type: [string, 'null'], pattern: '^[a-f0-9]{64}$' }
+        config:
+          $ref: './schemas/usage-config.schema.json'
+    MaintenanceCycleRequest:
+      type: object
+      additionalProperties: false
+      required: [requested_at]
+      properties:
+        requested_at: { type: string, format: date-time }
     MaintenancePromotionRequest:
       type: object
       additionalProperties: false

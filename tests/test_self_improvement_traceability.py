@@ -45,7 +45,7 @@ def write_manifest(path: Path, mutate) -> None:
 
 
 class SelfImprovementTraceabilityTests(unittest.TestCase):
-    def test_all_eighteen_are_loaded_enforced_and_freshly_executed(self) -> None:
+    def test_all_twenty_four_are_loaded_enforced_and_freshly_executed(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             report = Path(directory) / "report.json"
             result = run_traceability("--manifest", str(MANIFEST), "--report", str(report))
@@ -56,7 +56,7 @@ class SelfImprovementTraceabilityTests(unittest.TestCase):
             self.assertTrue(payload["acceptance_complete"])
             self.assertEqual(
                 [row["id"] for row in payload["requirements"]],
-                [f"SI-AC-{index:02d}" for index in range(1, 19)],
+                [f"SI-AC-{index:02d}" for index in range(1, 25)],
             )
             self.assertTrue(
                 all(

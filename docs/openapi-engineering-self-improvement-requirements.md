@@ -46,9 +46,15 @@
 10. 自动触发使用确定性平衡档阈值；AI不能自行扩大触发范围。
 11. 默认由 Codex 主分析；仅在风险条件下串行调用 Claude Code 独立复核。
 12. M4 是唯一协调节点；M2、MBP14 只采集和同步，M4 离线时不转移 AI 权限。
-13. M4 使用 `launchd` 每日执行低资源 due 检查，每个 ISO 周最多一次正式汇总。
+13. M4 使用 `launchd` 每日执行低资源 maintenance cycle，每个 ISO 周最多一次正式汇总和一次
+    同输入终态分析。
 14. P0 交付端到端最小闭环，P1 加固双平台/launcher/恢复，P2 完成 promoted eval 与趋势优化。
 15. 私有候选进入正式项目前必须批准绑定完整输入和文件范围的不可变 SHA-256 proposal。
+16. M4 可在负责人通过 dry-run 和精确 digest 授予可撤销 standing authorization 后，无人值守地
+    使用 `active-cli-session`。授权只绑定协调节点、Skill/config digest、分析器顺序、资源限制和
+    报告策略；任一字段漂移都必须停止分析，不得自动续权。
+17. 后台分析只在结束后写入私有 JSON/Markdown 终态报告，并发送不含 finding、路径或分析正文的
+    macOS 通知。中间过程不打扰负责人；blocked/failed 也必须如实形成终态报告。
 
 ## 3. 目标与非目标
 
@@ -125,16 +131,18 @@ best-effort begin（可用时）
 ### 5.3 周期维护
 
 ```text
-launchd due check
+launchd maintenance cycle
+  → 校验 standing authorization 与协调节点身份
+  → 同步并校验脱敏事件
   → 周期是否已处理
-  → 拉取并校验脱敏事件
   → 生成确定性 summary
   → 计算 trigger findings
   → 无命中：完成，不调用 AI
   → 有命中：Codex 主分析
   → 风险条件命中：Claude 串行复核
-  → 写私有 analysis/candidate/proposal
-  → 等待负责人批准精确 digest
+  → 原子写私有 JSON/Markdown 终态报告
+  → 发送不含内容的 macOS 完成通知
+  → 等待负责人查看报告并决定是否另行生成 candidate/proposal
 ```
 
 每个周期使用 `YYYY-Www` ISO week ID 与输入 digest。相同周期和输入必须幂等；M4 离线后只在
@@ -200,7 +208,7 @@ launcher 不成为普通 Skill 的强制入口。
 最低字段：
 
 ```yaml
-config_version: 1
+config_version: 2
 local_collection_enabled: false
 sync_enabled: false
 device_alias: null
@@ -214,9 +222,15 @@ retention:
 feedback:
   successful_sample_every: 5
 analysis:
+  enabled: false
+  credential_mode: null
+  python_runtime: null
+  notification: none
+  authorization: null
   primary: codex
   secondary: claude
   max_events: 50
+  max_attempts_per_input: 2
   timeout_seconds: 600
   warning_rss_mb: 512
   hard_rss_mb: 1024
@@ -409,6 +423,10 @@ openapi-engineering-skill usage due
 openapi-engineering-skill usage cleanup [--apply]
 openapi-engineering-skill maintenance analyze --findings <path> \
   [--credential-mode <environment|active-cli-session>] [--resume-analysis <path>]
+openapi-engineering-skill maintenance automation <status|configure|disable> \
+  [--credential-mode active-cli-session] [--python <absolute-python>] \
+  [--notify macos] [--approve <sha256>] [--apply]
+openapi-engineering-skill maintenance cycle [--now <timestamp>] [--json]
 openapi-engineering-skill maintenance propose --analysis <path>
 openapi-engineering-skill maintenance promote --proposal <path> --approve <sha256>
 openapi-engineering-skill session run --agent <codex|claude> --project-alias <alias> -- <argv>
@@ -420,8 +438,8 @@ openapi-engineering-skill session run --agent <codex|claude> --project-alias <al
 
 ## 15. Contract-First 要求
 
-实现前必须将控制面 `info.version` 从 `1.1.0` 提升到 `1.2.0`，新增 Usage 与 Maintenance tags
-及下列 operation 语义：
+无人值守维护实现前必须将控制面 `info.version` 从 `1.2.0` 提升到 `1.3.0`，保留 Usage 与
+Maintenance tags 及下列 operation 语义：
 
 - usage configuration；
 - usage event/feedback recording；
@@ -429,7 +447,8 @@ openapi-engineering-skill session run --agent <codex|claude> --project-alias <al
 - summary and due checks；
 - deterministic trigger findings；
 - maintenance analysis/proposal；
-- approval-bound promotion。
+- approval-bound promotion；
+- standing automation authorization、maintenance cycle 和 private terminal report。
 
 Usage、feedback、summary、trigger、analysis、proposal 和配置结构由独立 JSON Schema 成为唯一
 权威。示例必须由真实确定性 CLI fixture 捕获，不手写一份漂移的输出。若实现发现契约缺口，先改
@@ -447,6 +466,8 @@ Schema/OpenAPI/示例和失败测试，再改实现。
 - **可回滚**：授权、scheduler、maintainer 安装和 promotion 都有 dry-run 与精确回退范围。
 - **渐进披露**：Maintainer `SKILL.md` 保持精简，详细策略放一跳 references，机械工作放脚本。
 - **无隐式网络**：只有已批准 Git sync 和阈值触发 AI 可以联网；普通 record/summarize 离线可用。
+- **后台授权可撤销**：standing authorization 不包含凭据，任一绑定字段漂移即失效，disable 不删除报告。
+- **终态后通知**：后台周期只在 completed/blocked/failed 后通知，通知正文不得携带分析内容。
 
 ## 17. 功能性验收标准
 
@@ -477,6 +498,17 @@ Schema/OpenAPI/示例和失败测试，再改实现。
   和一跳 reference 校验。
 - **SI-AC-18**：P0 端到端 fixture 能证明 opt-in → record → redact → local Git sync → due → finding
   → fake/Codex analysis → private proposal，全程公开源码树 hash 不变。
+- **SI-AC-19**：旧 config v1 只读迁移为默认关闭的 config v2；安装或查询状态不得隐式启用后台 AI。
+- **SI-AC-20**：standing active-session 授权必须 dry-run-first、绑定精确 digest 且可独立撤销；设备、
+  Skill、配置、已验证 Python/jsonschema runtime、模型顺序、资源或通知策略漂移后不得启动模型。
+- **SI-AC-21**：M4 周期严格按 sync → due → Codex → 条件式 Claude 执行；sync blocked 或零 finding
+  时模型进程数为零，M2/MBP14 永远不能执行该周期。
+- **SI-AC-22**：同一 period/input/authorization 最多产生一个终态 analysis；失败重试有界且保留每次
+  evidence，不并发、不静默覆盖失败。
+- **SI-AC-23**：JSON/Markdown 报告只写私有 state root，原子且 Schema 合法；凭据、绝对路径、用户
+  名、主机名、remote URL、原始文本和 secret canary 均不得出现。
+- **SI-AC-24**：macOS 通知只含固定完成/失败状态和不敏感标识；proposal、源码、GitHub、npm 和目标
+  项目保持零自动写入。
 
 ## 18. 成功指标
 

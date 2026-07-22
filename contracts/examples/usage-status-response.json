@@ -3,15 +3,21 @@
   "applied": false,
   "config": {
     "analysis": {
+      "authorization": null,
+      "credential_mode": null,
+      "enabled": false,
       "hard_rss_mb": 1024,
+      "max_attempts_per_input": 2,
       "max_events": 50,
+      "notification": "none",
       "primary": "codex",
+      "python_runtime": null,
       "secondary": "claude",
       "timeout_seconds": 600,
       "warning_rss_mb": 512
     },
     "branch": null,
-    "config_version": 1,
+    "config_version": 2,
     "coordinator": false,
     "device_alias": null,
     "feedback": {

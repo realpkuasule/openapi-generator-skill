@@ -21,7 +21,7 @@ from referencing import Registry, Resource
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_ROOT = REPO_ROOT / "contracts" / "schemas"
 TRACEABILITY_SCHEMA = SCHEMA_ROOT / "self-improvement-traceability.schema.json"
-EXPECTED_IDS = tuple(f"SI-AC-{index:02d}" for index in range(1, 19))
+EXPECTED_IDS = tuple(f"SI-AC-{index:02d}" for index in range(1, 25))
 
 
 def utc_now() -> str:
@@ -103,7 +103,7 @@ def load_manifest(path: Path) -> tuple[dict[str, Any], str]:
     validate_with(manifest, manifest_schema, "self-improvement traceability manifest")
     ids = tuple(item["id"] for item in manifest["requirements"])
     if ids != EXPECTED_IDS:
-        raise ValueError("manifest must contain SI-AC-01 through SI-AC-18 in order")
+        raise ValueError("manifest must contain SI-AC-01 through SI-AC-24 in order")
     return manifest, sha256_bytes(raw)
 
 
@@ -336,7 +336,7 @@ def build_report(manifest: dict[str, Any], manifest_sha256: str) -> dict[str, An
         "requirements": requirements,
         "completion_report": {
             "outcome": (
-                "All 18 self-improvement acceptance requirements are complete."
+                "All 24 self-improvement acceptance requirements are complete."
                 if not incomplete
                 else "Traceability is valid; incomplete requirements: " + ", ".join(incomplete)
             ),
@@ -390,7 +390,7 @@ def normalize_volatile(actual: dict[str, Any], stored: dict[str, Any]) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Verify SI-AC-01 through SI-AC-18 contracts and fresh automated tests."
+        description="Verify SI-AC-01 through SI-AC-24 contracts and fresh automated tests."
     )
     parser.add_argument("--manifest", type=Path, required=True)
     output = parser.add_mutually_exclusive_group(required=True)

@@ -46,8 +46,9 @@ class LaunchdInstallationTests(unittest.TestCase):
             content = target.read_text(encoding="utf-8")
             self.assertIn("<integer>4</integer>", content)
             self.assertIn("<integer>30</integer>", content)
-            self.assertIn("<string>usage</string>", content)
-            self.assertIn("<string>due</string>", content)
+            self.assertIn("<string>maintenance</string>", content)
+            self.assertIn("<string>cycle</string>", content)
+            self.assertNotIn("<string>due</string>", content)
             self.assertIn("<key>RunAtLoad</key>", content)
 
             repeated, repeated_payload = run_usage(

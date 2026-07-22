@@ -179,3 +179,70 @@ requirements:
     evidence:
       - kind: automated-test
         path: tests.test_self_improvement_e2e.SelfImprovementE2ETests.test_opt_in_to_private_proposal_is_offline_reproducible_and_source_read_only
+  - id: SI-AC-19
+    description: Version-one usage configuration migrates read-only to disabled version two.
+    phase: P0
+    status: passed
+    contracts: [contracts/schemas/usage-config.schema.json]
+    tests: [tests.test_usage_config.UsageConfigTests.test_v1_config_is_read_only_migrated_to_disabled_v2]
+    evidence:
+      - kind: automated-test
+        path: tests.test_usage_config.UsageConfigTests.test_v1_config_is_read_only_migrated_to_disabled_v2
+  - id: SI-AC-20
+    description: Standing active-session authorization is exact-digest-bound, revocable, and drift-sensitive.
+    phase: P0
+    status: passed
+    contracts:
+      - contracts/schemas/usage-config.schema.json
+      - contracts/openapi-engineering.openapi.yaml#/paths/~1v1~1maintenance~1automation
+    tests:
+      - tests.test_usage_config.UsageConfigTests.test_automation_is_exact_digest_bound_revocable_and_drift_sensitive
+      - tests.test_usage_config.UsageConfigTests.test_automation_rejects_missing_or_unqualified_python_runtime
+    evidence:
+      - kind: automated-test
+        path: tests.test_usage_config.UsageConfigTests.test_automation_is_exact_digest_bound_revocable_and_drift_sensitive
+      - kind: automated-test
+        path: tests.test_usage_config.UsageConfigTests.test_automation_rejects_missing_or_unqualified_python_runtime
+  - id: SI-AC-21
+    description: The coordinator runs sync and due before any serial analyzer while collectors remain blocked.
+    phase: P1
+    status: passed
+    contracts: [contracts/schemas/maintenance-cycle.schema.json]
+    tests:
+      - tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_sync_blocked_and_no_findings_never_read_analyzer_inputs
+      - tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_python_runtime_drift_blocks_before_sync_or_analyzer
+      - tests.test_usage_config.UsageConfigTests.test_collector_cannot_authorize_unattended_analysis
+    evidence:
+      - kind: automated-test
+        path: tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_sync_blocked_and_no_findings_never_read_analyzer_inputs
+      - kind: automated-test
+        path: tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_python_runtime_drift_blocks_before_sync_or_analyzer
+      - kind: automated-test
+        path: tests.test_usage_config.UsageConfigTests.test_collector_cannot_authorize_unattended_analysis
+  - id: SI-AC-22
+    description: A period/input/authorization has one terminal analysis and at most two serialized attempts.
+    phase: P1
+    status: passed
+    contracts: [contracts/schemas/maintenance-cycle.schema.json]
+    tests: [tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_failed_analysis_retries_once_then_reports_exhaustion]
+    evidence:
+      - kind: automated-test
+        path: tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_failed_analysis_retries_once_then_reports_exhaustion
+  - id: SI-AC-23
+    description: Terminal JSON and Markdown reports remain private, atomic, Schema-valid, and redacted.
+    phase: P1
+    status: passed
+    contracts: [contracts/schemas/maintenance-report.schema.json]
+    tests: [tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_finding_runs_serial_analysis_once_and_writes_private_terminal_report]
+    evidence:
+      - kind: automated-test
+        path: tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_finding_runs_serial_analysis_once_and_writes_private_terminal_report
+  - id: SI-AC-24
+    description: Terminal macOS notification is fixed and contains no report content.
+    phase: P2
+    status: passed
+    contracts: [contracts/openapi-engineering.openapi.yaml#/paths/~1v1~1maintenance~1cycles]
+    tests: [tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_notification_payload_is_fixed_and_contains_no_report_content]
+    evidence:
+      - kind: automated-test
+        path: tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_notification_payload_is_fixed_and_contains_no_report_content

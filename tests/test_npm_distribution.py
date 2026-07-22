@@ -16,8 +16,8 @@ from tests.support import REPO_ROOT, SKILL_ROOT, snapshot_tree
 PACKAGE_JSON = REPO_ROOT / "package.json"
 NODE_INSTALLER = REPO_ROOT / "bin" / "openapi-engineering-skill.mjs"
 PACKAGE_NAME = "@realpkuasule/openapi-engineering-skill"
-PACKAGE_VERSION = "0.1.1"
-RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.1.md"
+PACKAGE_VERSION = "0.1.2"
+RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.2.md"
 NPM = shutil.which("npm") or "npm"
 
 
@@ -120,12 +120,22 @@ class NpmDistributionTests(unittest.TestCase):
         self.assertIn("skills/openapi-engineering/SKILL.md", paths)
         self.assertIn("skills/openapi-engineering-maintainer/SKILL.md", paths)
         self.assertIn("lib/usage/config.mjs", paths)
+        self.assertIn("lib/usage/maintenance-cycle.mjs", paths)
+        self.assertIn("lib/usage/maintenance-report.mjs", paths)
         self.assertIn(
             "packaging/launchd/com.realpkuasule.openapi-engineering-maintainer.plist", paths
         )
         self.assertIn("scripts/maintenance/analyze_usage.py", paths)
         self.assertIn("contracts/schemas/usage-event.schema.json", paths)
+        self.assertIn("contracts/schemas/maintenance-cycle.schema.json", paths)
+        self.assertIn("contracts/schemas/maintenance-report.schema.json", paths)
         self.assertIn("contracts/schemas/retention-plan.schema.json", paths)
+        self.assertIn(
+            "skills/openapi-engineering-maintainer/references/unattended-cycle.md", paths
+        )
+        self.assertIn(
+            "skills/openapi-engineering-maintainer/evals/unattended-cycle.yaml", paths
+        )
         self.assertIn("scripts/maintenance/process_watch.py", paths)
         self.assertFalse(any("__pycache__" in path for path in paths))
         self.assertFalse(any(path.endswith((".pyc", ".pyo")) for path in paths))
@@ -234,7 +244,7 @@ class NpmDistributionTests(unittest.TestCase):
             PACKAGE_NAME,
             PACKAGE_VERSION,
             "Contract-First",
-            "OpenAPI 1.2.0",
+            "OpenAPI 1.3.0",
             "additive contract",
             "npm publish",
             "rollback",

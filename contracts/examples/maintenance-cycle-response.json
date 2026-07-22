@@ -1,0 +1,19 @@
+{
+  "analysis_status": "completed",
+  "attempt": 1,
+  "authorization_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "cycle_id": "cycle-0123456789abcdef",
+  "cycle_version": 1,
+  "finding_count": 1,
+  "input_sha256": "af039b7dbd93ecfb8360d2edf0c8bd170db86aa0acac3ad58904846fb02e2381",
+  "notification": "skipped",
+  "period_id": "2026-W29",
+  "report_id": "report-0123456789abcdef",
+  "status": "completed",
+  "sync": {
+    "pending": 0,
+    "reason_code": null,
+    "status": "ok",
+    "synchronized": 0
+  }
+}

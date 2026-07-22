@@ -161,4 +161,6 @@ A missing runtime or disabled collection is a silent skip. A recording failure d
 When the record response sets `feedback_required`, ask one short, optional feedback
 question and pass only the resulting enum value to `usage feedback`; keep any note local.
 Do not run maintenance analysis from this hook. Analysis remains an explicit maintainer
-action or a separately configured scheduler responsibility.
+action or a separately configured, exact-digest-authorized scheduler responsibility. The
+scheduler must validate its standing boundary before every model call and may only write
+private terminal reports; it never inherits authority to propose, promote, or edit a project.

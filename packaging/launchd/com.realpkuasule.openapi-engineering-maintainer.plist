@@ -8,8 +8,8 @@
   <array>
     <string>__NODE__</string>
     <string>__CLI__</string>
-    <string>usage</string>
-    <string>due</string>
+    <string>maintenance</string>
+    <string>cycle</string>
     <string>--home</string>
     <string>__HOME__</string>
     <string>--json</string>

@@ -48,7 +48,7 @@ class ContractTests(unittest.TestCase):
     def test_openapi_is_valid_and_operations_are_stable(self) -> None:
         validate_url(OPENAPI_PATH.resolve().as_uri())
         self.assertEqual(self.openapi["openapi"], "3.1.0")
-        self.assertEqual(self.openapi["info"]["version"], "1.2.0")
+        self.assertEqual(self.openapi["info"]["version"], "1.3.0")
         self.assertEqual(self.openapi["x-runtime"], "cli-only")
         self.assertNotIn("servers", self.openapi)
         expected = {
@@ -73,6 +73,8 @@ class ContractTests(unittest.TestCase):
             "/v1/usage/cleanups": "cleanupUsageRetention",
             "/v1/usage/trends": "analyzeUsageTrends",
             "/v1/maintenance/analyses": "analyzeMaintenanceFindings",
+            "/v1/maintenance/automation": "configureMaintenanceAutomation",
+            "/v1/maintenance/cycles": "runMaintenanceCycle",
             "/v1/maintenance/proposals": "buildMaintenanceProposal",
             "/v1/maintenance/promotions": "promoteMaintenanceProposal",
         }
@@ -135,6 +137,8 @@ class ContractTests(unittest.TestCase):
             "usage-trend.schema.json",
             "maintenance-finding.schema.json",
             "maintenance-analysis.schema.json",
+            "maintenance-cycle.schema.json",
+            "maintenance-report.schema.json",
             "maintenance-proposal.schema.json",
             "maintenance-promotion.schema.json",
             "retention-plan.schema.json",
@@ -250,12 +254,14 @@ class ContractTests(unittest.TestCase):
             "maintenance-finding-response.json": "MaintenanceFinding",
             "maintenance-proposal-response.json": "MaintenanceProposal",
             "usage-due-response.json": "UsageDueResult",
+            "maintenance-cycle-response.json": "MaintenanceCycle",
         }
         external_schema_mapping = {
             "UsageConfiguration": ("usage-config.schema.json", None),
             "LocalUsageEvent": ("usage-event.schema.json", "local_event"),
             "UsageSummary": ("usage-summary.schema.json", None),
             "MaintenanceFinding": ("maintenance-finding.schema.json", None),
+            "MaintenanceCycle": ("maintenance-cycle.schema.json", None),
             "MaintenanceProposal": ("maintenance-proposal.schema.json", None),
         }
         for filename, schema_name in mapping.items():
@@ -363,6 +369,7 @@ class ContractTests(unittest.TestCase):
                 "./examples/usage-trend-response.json",
                 "./examples/maintenance-proposal-response.json",
                 "./examples/maintenance-promotion-response.json",
+                "./examples/maintenance-cycle-response.json",
                 "./examples/usage-due-response.json",
             },
         )

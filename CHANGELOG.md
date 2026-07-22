@@ -2,6 +2,39 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+## [0.1.2] - 2026-07-22
+
+### Added
+
+- Exact-digest standing authorization for coordinator-only unattended maintenance using an active
+  Codex/Claude Code CLI session without storing credentials, including a qualified absolute
+  Python/jsonschema runtime so launchd does not rely on its restricted `PATH`.
+- A serial `maintenance cycle` that synchronizes private evidence, evaluates deterministic due
+  findings, runs Codex and risk-required Claude with at most two attempts, and writes idempotent
+  private JSON/Markdown terminal reports with an optional content-free macOS notification.
+- Contract-First OpenAPI 1.3.0 operations and strict JSON Schemas for automation, cycles, reports,
+  config v2, plus SI-AC-19 through SI-AC-24 traceability.
+
+### Changed
+
+- The managed launchd job now runs the complete maintenance cycle instead of stopping after
+  `usage due`.
+
+### Safety
+
+- Collection and unattended analysis remain disabled by default. Binding drift, sync failure, or
+  invalid input blocks before model invocation. Scheduled execution cannot create proposals,
+  promote candidates, edit public source, use GitHub, or publish npm.
+
+### Verified
+
+- The deterministic Contract-First suite, complete unit suite, acceptance traceability, captured
+  examples, and isolated npm package lifecycle pass before publication.
+- The retained live active-session smoke remains an honest failed verification; this patch does not
+  claim that the isolated Codex primary analysis path passed live.
+
 ## [0.1.1] - 2026-07-21
 
 ### Added

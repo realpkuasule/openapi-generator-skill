@@ -1,5 +1,5 @@
 {
-  "approval_sha256": "f3bd8332e65051a30914b5d54b4687b17bc2e86cefa9e8d78babdedc242320e2",
+  "approval_sha256": "6068d36096fbf961139b99212d0dabfb2602fd5a69c99e864dbf489684ac51f2",
   "artifacts": [
     {
       "content": "def test_approved_candidate_remains_red():\n    assert False\n",
@@ -32,8 +32,8 @@
     "Remove only the approved candidate fixture if its digest still matches."
   ],
   "schema_version": 2,
-  "skill_sha256": "82e51ccb688c327d1400e5a4393b488ac8748b58d2392e7593a8cba76f7f0e48",
-  "skill_version": "0.1.1",
+  "skill_sha256": "dd520db50387f60f69787cb6c9f13101d18a6bc933fb3d961ce5f0f8fddff6f6",
+  "skill_version": "0.1.2",
   "target_files": [
     {
       "expected_sha256": null,

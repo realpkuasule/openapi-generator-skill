@@ -29,6 +29,7 @@ EXAMPLE_NAMES = (
     "usage-due-response.json",
     "usage-trend-response.json",
     "maintenance-finding-response.json",
+    "maintenance-cycle-response.json",
     "maintenance-proposal-response.json",
     "maintenance-promotion-response.json",
 )
@@ -86,6 +87,13 @@ def run_command_json(command: list[str], expected_exit: int = 0) -> dict[str, An
 def run_usage(home: Path, *arguments: str) -> dict[str, Any]:
     return run_command_json(
         ["node", str(CLI), "usage", *arguments, "--home", str(home), "--json"]
+    )
+
+
+def run_maintenance(home: Path, *arguments: str, expected_exit: int = 0) -> dict[str, Any]:
+    return run_command_json(
+        ["node", str(CLI), "maintenance", *arguments, "--home", str(home), "--json"],
+        expected_exit=expected_exit,
     )
 
 
@@ -379,6 +387,119 @@ def capture_usage(root: Path) -> dict[str, dict[str, Any]]:
     }
 
 
+def capture_maintenance_cycle(root: Path) -> dict[str, Any]:
+    home = root / "home"
+    state = root / "state"
+    remote = root / "private.git"
+    home.mkdir(parents=True)
+    initialized = subprocess.run(
+        ["git", "init", "--bare", str(remote)],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if initialized.returncode != 0:
+        raise RuntimeError(f"git init exited {initialized.returncode}: {initialized.stderr.strip()}")
+    run_usage(
+        home,
+        "enable",
+        "--device",
+        "m4",
+        "--coordinator",
+        "--state-root",
+        str(state),
+        "--apply",
+    )
+    run_usage(
+        home,
+        "sync",
+        "configure",
+        "--remote",
+        str(remote),
+        "--branch",
+        "usage",
+        "--apply",
+        "--now",
+        "2026-07-19T12:00:00Z",
+    )
+    planned = run_maintenance(
+        home,
+        "automation",
+        "configure",
+        "--credential-mode",
+        "active-cli-session",
+        "--python",
+        sys.executable,
+        "--notify",
+        "none",
+        "--now",
+        "2026-07-19T12:00:00Z",
+    )
+    run_maintenance(
+        home,
+        "automation",
+        "configure",
+        "--credential-mode",
+        "active-cli-session",
+        "--python",
+        sys.executable,
+        "--notify",
+        "none",
+        "--approve",
+        planned["approval_sha256"],
+        "--apply",
+        "--now",
+        "2026-07-19T12:00:00Z",
+    )
+    event_log = state / "local" / "events" / "m4" / "2026-07.jsonl"
+    write_text(
+        event_log,
+        "".join(
+            json.dumps(
+                fixture_usage_event(index, peak_rss_mb=640 if index == 5 else None),
+                sort_keys=True,
+            )
+            + "\n"
+            for index in range(1, 6)
+        ),
+    )
+    primary = root / "primary.json"
+    secondary = root / "secondary.json"
+    semantic = {
+        "clusters": [],
+        "confidence": 0.9,
+        "candidate_causes": ["A bounded deterministic resource cause."],
+        "unverified": [],
+    }
+    write_text(primary, json.dumps(semantic, sort_keys=True))
+    write_text(secondary, json.dumps(semantic, sort_keys=True))
+    cycle = run_maintenance(
+        home,
+        "cycle",
+        "--state-root",
+        str(state),
+        "--now",
+        "2026-07-19T18:00:00Z",
+        "--adapter",
+        "fake",
+        "--fake-platform",
+        "codex",
+        "--fake-response",
+        str(primary),
+        "--secondary-adapter",
+        "fake",
+        "--secondary-fake-platform",
+        "claude",
+        "--secondary-fake-response",
+        str(secondary),
+    )
+    cycle["cycle_id"] = "cycle-0123456789abcdef"
+    cycle["authorization_sha256"] = "a" * 64
+    cycle["report_id"] = "report-0123456789abcdef"
+    return cycle
+
+
 def capture_maintenance_proposal(root: Path) -> tuple[dict[str, Any], dict[str, Any]]:
     target = root / "target"
     target.mkdir(parents=True)
@@ -471,7 +592,7 @@ def capture_maintenance_proposal(root: Path) -> tuple[dict[str, Any], dict[str, 
             "--skill-root",
             str(REPO_ROOT / "skills" / "openapi-engineering"),
             "--skill-version",
-            "0.1.1",
+            "0.1.2",
             "--config-sha256",
             "b" * 64,
             "--output",
@@ -520,6 +641,9 @@ def capture_examples(output: Path) -> None:
                 expected_exit=2,
             ),
             **usage_examples,
+            "maintenance-cycle-response.json": capture_maintenance_cycle(
+                root / "maintenance-cycle"
+            ),
             "maintenance-proposal-response.json": proposal,
             "maintenance-promotion-response.json": promotion,
         }

@@ -27,7 +27,7 @@ Build sanitized objects from an explicit field allowlist. Never assume string re
 
 Permit automatic writes only under the configured private state/Git areas:
 
-- `summaries/`, `findings/`, `analyses/`, `proposals/`, and approved per-device event/feedback partitions;
+- `summaries/`, `findings/`, `analysis-bundles/`, `analyses/`, `checkpoints/`, `reports/`, `proposals/`, and approved per-device event/feedback partitions;
 - temporary isolated analyzer directories that are reclaimed after the run.
 
 An explicitly approved active CLI session credential may be used only as authentication material
@@ -38,6 +38,8 @@ and any request to copy or load a complete Codex or Claude configuration tree.
 Treat every remote object as untrusted. Validate path ownership, Schema, canonical digest, privacy canaries, and symlinks before reading or merging it. Disable local Git hooks and execute Git with explicit argv; never run repository scripts.
 
 Never automatically write public source, contracts, tests, CI, target projects, Issues, branches, pull requests, releases, npm state, Codex configuration, or Claude configuration.
+
+An unattended terminal notification has one fixed, content-free payload. It may identify only the product and terminal status and direct the user to the private local report; it must not contain rule IDs, findings, causes, paths, project identifiers, model output, or retry detail.
 
 ## Leakage response
 

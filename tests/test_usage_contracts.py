@@ -20,6 +20,8 @@ SCHEMA_NAMES = (
     "usage-trend.schema.json",
     "maintenance-finding.schema.json",
     "maintenance-analysis.schema.json",
+    "maintenance-cycle.schema.json",
+    "maintenance-report.schema.json",
     "maintenance-proposal.schema.json",
     "maintenance-promotion.schema.json",
 )
@@ -53,7 +55,7 @@ class UsageContractTests(unittest.TestCase):
 
     def test_config_defaults_are_explicit_and_collection_is_disabled(self) -> None:
         config = {
-            "config_version": 1,
+            "config_version": 2,
             "local_collection_enabled": False,
             "sync_enabled": False,
             "device_alias": None,
@@ -65,9 +67,15 @@ class UsageContractTests(unittest.TestCase):
             "retention": {"local_days": 90, "remote_days": 365},
             "feedback": {"successful_sample_every": 5},
             "analysis": {
+                "enabled": False,
+                "credential_mode": None,
+                "python_runtime": None,
+                "notification": "none",
+                "authorization": None,
                 "primary": "codex",
                 "secondary": "claude",
                 "max_events": 50,
+                "max_attempts_per_input": 2,
                 "timeout_seconds": 600,
                 "warning_rss_mb": 512,
                 "hard_rss_mb": 1024,

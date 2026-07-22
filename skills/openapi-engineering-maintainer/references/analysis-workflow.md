@@ -28,7 +28,7 @@ Run in an isolated temporary home with the narrowest available read-only mode. F
 Authentication has two explicit modes:
 
 - `environment` (default): forward only the platform-specific approved API-key variables.
-- `active-cli-session`: copy only Codex `auth.json` into its temporary home. For Claude Code, parse a regular, owner-matched, private, bounded user settings file and forward only allowlisted `ANTHROPIC_*` authentication, compatible endpoint, and model fields. Never load the settings file itself, hooks, plugins, permissions, MCP state, history, projects, rules, or other user content. Record a compatible provider's actual model and never call it Anthropic model evidence. Remove staged credentials with the temporary home and never fall back to the real user home.
+- `active-cli-session`: copy only Codex `auth.json` into its temporary home. For Claude Code, parse a regular, owner-matched, private, bounded user settings file and forward only allowlisted `ANTHROPIC_*` authentication, compatible endpoint, and model fields. A manual run requires current explicit approval. A scheduled run requires the exact standing authorization defined in `unattended-cycle.md`; any binding drift blocks before credential access. Never load the settings file itself, hooks, plugins, permissions, MCP state, history, projects, rules, or other user content. Record a compatible provider's actual model and never call it Anthropic model evidence. Remove staged credentials with the temporary home and never fall back to the real user home.
 
 ## Secondary review
 
@@ -68,4 +68,4 @@ Use these terminal states:
 - `failed`: an analyzer ran but failed, returned malformed output, or contradicted immutable evidence;
 - `blocked`: authorization, independent platform, timeout, resource, or prerequisite prevented required work.
 
-On timeout or RSS hard limit, terminate the complete child process group, retain bounded evidence, remove both temporary directories, and verify no child survived. Never terminate a user-owned process by name.
+On timeout or RSS hard limit, terminate the complete child process group, retain bounded evidence, remove both temporary directories, and verify no child survived. Never terminate a user-owned process by name. An unattended cycle may make at most two serial attempts for one immutable input; after that it must write a terminal `retry-exhausted` report and wait for a different input or renewed authorization.

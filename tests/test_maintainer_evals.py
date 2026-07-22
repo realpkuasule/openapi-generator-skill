@@ -18,11 +18,12 @@ EXPECTED = {
     "maintainer-risk-secondary-review",
     "maintainer-privacy-boundary",
     "maintainer-promotion-approval",
+    "maintainer-unattended-cycle",
 }
 
 
 class MaintainerEvalTests(unittest.TestCase):
-    def test_four_maintainer_cases_validate_and_cover_required_safety_scenarios(self) -> None:
+    def test_five_maintainer_cases_validate_and_cover_required_safety_scenarios(self) -> None:
         cases = {item["id"]: item for item in load_cases(EVAL_ROOT)}
 
         self.assertEqual(set(cases), EXPECTED)
@@ -33,6 +34,8 @@ class MaintainerEvalTests(unittest.TestCase):
             "sanitized",
             "exact digest",
             "public source",
+            "standing authorization",
+            "fixed notification",
         ):
             self.assertIn(phrase, combined)
         for case in cases.values():
@@ -68,7 +71,7 @@ class MaintainerEvalTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertEqual(payload["status"], "blocked")
         self.assertEqual(set(payload["case_ids"]), EXPECTED)
-        self.assertEqual(payload["requested_results"], 4)
+        self.assertEqual(payload["requested_results"], 5)
 
 
 if __name__ == "__main__":

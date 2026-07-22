@@ -16,7 +16,11 @@ import { homedir } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
-import { configureUsage, loadUsageConfig } from "../lib/usage/config.mjs";
+import {
+  configureMaintenanceAutomation,
+  configureUsage,
+  loadUsageConfig,
+} from "../lib/usage/config.mjs";
 import { loadUsageEvents, recordUsage } from "../lib/usage/events.mjs";
 import { recordFeedback } from "../lib/usage/feedback.mjs";
 import { configuredStateRoot, usageStatePaths } from "../lib/usage/paths.mjs";
@@ -28,6 +32,7 @@ import { runUsageSession } from "../lib/usage/session-launcher.mjs";
 import { cleanupUsage } from "../lib/usage/retention.mjs";
 import { buildUsageTrends } from "../lib/usage/trends.mjs";
 import { treeDigest } from "../lib/usage/tree-digest.mjs";
+import { runMaintenanceCycle } from "../lib/usage/maintenance-cycle.mjs";
 
 const PACKAGE_ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const PACKAGE = JSON.parse(
@@ -77,10 +82,34 @@ async function runMaintenance(argv) {
     promote: "promote_candidate.py",
   };
   const command = argv[0];
+  if (command === "automation" || command === "cycle") {
+    const options = parseMaintenanceArguments(argv);
+    const skillSha256 = await treeDigest(BUNDLED_SKILL);
+    if (command === "automation") {
+      const configured = await configureMaintenanceAutomation({
+        home: options.home,
+        action: options.action,
+        options,
+        packageVersion: PACKAGE.version,
+        skillSha256,
+      });
+      return { ...configured, json: options.json, passthrough: false };
+    }
+    const config = await loadUsageConfig(options.home);
+    const cycle = await runMaintenanceCycle({
+      home: options.home,
+      config,
+      options,
+      packageVersion: PACKAGE.version,
+      skillSha256,
+      packageRoot: PACKAGE_ROOT,
+    });
+    return { ...cycle, json: options.json, passthrough: false };
+  }
   if (!scripts[command]) throw new Error("Unsupported maintenance command.");
   const executable = process.env.OPENAPI_ENGINEERING_PYTHON || "python3";
   const script = join(PACKAGE_ROOT, "scripts", "maintenance", scripts[command]);
-  return await new Promise((resolvePromise, rejectPromise) => {
+  const exitCode = await new Promise((resolvePromise, rejectPromise) => {
     const child = spawn(executable, [script, ...argv.slice(1)], {
       cwd: process.cwd(),
       env: process.env,
@@ -92,6 +121,84 @@ async function runMaintenance(argv) {
       else resolvePromise(Number.isInteger(code) ? code : 2);
     });
   });
+  return { exitCode, passthrough: true };
+}
+
+function parseMaintenanceArguments(argv) {
+  const command = argv[0];
+  let start = 1;
+  let action = null;
+  if (command === "automation") {
+    action = argv[1];
+    if (!new Set(["status", "configure", "disable"]).has(action)) {
+      throw new Error("Unsupported maintenance automation action.");
+    }
+    start = 2;
+  }
+  const options = {
+    command,
+    action,
+    home: homedir(),
+    stateRoot: null,
+    now: null,
+    credentialMode: null,
+    pythonExecutable: null,
+    notification: "none",
+    approve: null,
+    apply: false,
+    json: false,
+    adapter: "codex",
+    fakeResponse: null,
+    fakePlatform: "codex",
+    secondaryAdapter: "claude",
+    secondaryFakeResponse: null,
+    secondaryFakePlatform: "claude",
+  };
+  const values = new Map([
+    ["--home", "home"],
+    ["--state-root", "stateRoot"],
+    ["--now", "now"],
+    ["--credential-mode", "credentialMode"],
+    ["--python", "pythonExecutable"],
+    ["--notify", "notification"],
+    ["--approve", "approve"],
+    ["--adapter", "adapter"],
+    ["--fake-response", "fakeResponse"],
+    ["--fake-platform", "fakePlatform"],
+    ["--secondary-adapter", "secondaryAdapter"],
+    ["--secondary-fake-response", "secondaryFakeResponse"],
+    ["--secondary-fake-platform", "secondaryFakePlatform"],
+  ]);
+  for (let index = start; index < argv.length; index += 1) {
+    const argument = argv[index];
+    if (values.has(argument)) {
+      const value = argv[index + 1];
+      if (!value || value.startsWith("--")) throw new Error(`${argument} requires a value`);
+      options[values.get(argument)] = value;
+      index += 1;
+    } else if (argument === "--apply") {
+      options.apply = true;
+    } else if (argument === "--json") {
+      options.json = true;
+    } else {
+      throw new Error(`Unsupported maintenance option: ${argument}`);
+    }
+  }
+  if (command === "cycle") {
+    if (!new Set(["codex", "fake"]).has(options.adapter)) {
+      throw new Error("Unsupported maintenance analyzer adapter.");
+    }
+    if (!new Set(["claude", "fake", "none"]).has(options.secondaryAdapter)) {
+      throw new Error("Unsupported maintenance secondary adapter.");
+    }
+  }
+  options.home = resolve(options.home);
+  if (options.stateRoot) options.stateRoot = resolve(options.stateRoot);
+  if (options.fakeResponse) options.fakeResponse = resolve(options.fakeResponse);
+  if (options.secondaryFakeResponse) {
+    options.secondaryFakeResponse = resolve(options.secondaryFakeResponse);
+  }
+  return options;
 }
 
 function parseSessionArguments(argv) {
@@ -588,6 +695,8 @@ async function atomicCopyCanonical(versionRoot) {
       "usage-trend.schema.json",
       "maintenance-finding.schema.json",
       "maintenance-analysis.schema.json",
+      "maintenance-cycle.schema.json",
+      "maintenance-report.schema.json",
       "maintenance-proposal.schema.json",
       "maintenance-promotion.schema.json",
       "retention-plan.schema.json",
@@ -832,7 +941,12 @@ async function main() {
       return exitCode;
     }
     if (process.argv[2] === "maintenance") {
-      return await runMaintenance(process.argv.slice(3));
+      const maintenance = await runMaintenance(process.argv.slice(3));
+      if (!maintenance.passthrough) {
+        if (maintenance.json) console.log(JSON.stringify(maintenance.report ?? maintenance.result));
+        else console.log(JSON.stringify(maintenance.report ?? maintenance.result, null, 2));
+      }
+      return maintenance.exitCode;
     }
     const options = parseArguments(process.argv.slice(2));
     if (options.help) {
