@@ -16,9 +16,20 @@ from tests.support import REPO_ROOT, SKILL_ROOT, snapshot_tree
 PACKAGE_JSON = REPO_ROOT / "package.json"
 NODE_INSTALLER = REPO_ROOT / "bin" / "openapi-engineering-skill.mjs"
 PACKAGE_NAME = "@realpkuasule/openapi-engineering-skill"
-PACKAGE_VERSION = "0.1.2"
-RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.2.md"
+PACKAGE_VERSION = "0.1.3"
+RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.3.md"
 NPM = shutil.which("npm") or "npm"
+
+
+def nested_npm_environment(
+    environment: dict[str, str] | None = None,
+) -> dict[str, str]:
+    sanitized = dict(os.environ if environment is None else environment)
+    for key in tuple(sanitized):
+        if key.casefold() == "npm_config_dry_run":
+            sanitized.pop(key)
+    sanitized["npm_config_dry_run"] = "false"
+    return sanitized
 
 
 def run_cli(home: Path, *arguments: str) -> tuple[subprocess.CompletedProcess[str], dict]:
@@ -41,6 +52,15 @@ def run_cli(home: Path, *arguments: str) -> tuple[subprocess.CompletedProcess[st
 
 
 class NpmDistributionTests(unittest.TestCase):
+    def test_nested_npm_commands_disable_parent_dry_run(self) -> None:
+        environment = nested_npm_environment(
+            {"PATH": "/test/bin", "NPM_CONFIG_DRY_RUN": "true"}
+        )
+
+        self.assertEqual(environment["PATH"], "/test/bin")
+        self.assertEqual(environment["npm_config_dry_run"], "false")
+        self.assertNotIn("NPM_CONFIG_DRY_RUN", environment)
+
     def test_python_skill_digest_uses_platform_neutral_relative_name_order(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -168,6 +188,7 @@ class NpmDistributionTests(unittest.TestCase):
                 text=True,
                 capture_output=True,
                 check=False,
+                env=nested_npm_environment(),
             )
             self.assertEqual(packed.returncode, 0, packed.stderr)
             tarball = packages / json.loads(packed.stdout)[0]["filename"]
@@ -188,6 +209,7 @@ class NpmDistributionTests(unittest.TestCase):
                 text=True,
                 capture_output=True,
                 check=False,
+                env=nested_npm_environment(),
             )
             self.assertEqual(installed_package.returncode, 0, installed_package.stderr)
             packaged_cli = (

@@ -87,6 +87,7 @@ def probe_cli(binary: str) -> AdapterCapability:
     try:
         completed = subprocess.run(
             [resolved, "--version"],
+            stdin=subprocess.DEVNULL,
             text=True,
             capture_output=True,
             check=False,

@@ -4,6 +4,18 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-07-22
+
+### Fixed
+
+- CLI capability probes now close inherited standard input, preventing fake or third-party version
+  commands from blocking when deterministic verification runs inside an interactive npm lifecycle.
+
+### Contract impact
+
+- The Contract-First behavioral control-plane remains OpenAPI 1.3.0; this patch changes only probe
+  process isolation and release metadata.
+
 ## [0.1.2] - 2026-07-22
 
 ### Added

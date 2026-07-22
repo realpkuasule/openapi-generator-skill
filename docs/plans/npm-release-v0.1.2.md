@@ -8,6 +8,9 @@ Version: `0.1.2`
 
 Baseline tag: `v0.1.1`
 
+Outcome: source tag pushed; npm publication blocked by the interactive-stdin probe defect fixed in
+`v0.1.3`. Version `0.1.2` was never published to npm and the immutable Git tag was not rewritten.
+
 ## Included change log
 
 - Add exact-digest standing authorization for unattended coordinator maintenance without storing

@@ -39,7 +39,7 @@
     "schema_version": 1,
     "session_id": "ses-0123456789abcdef",
     "skill_sha256": "dd520db50387f60f69787cb6c9f13101d18a6bc933fb3d961ce5f0f8fddff6f6",
-    "skill_version": "0.1.2",
+    "skill_version": "0.1.3",
     "termination_reason": "not-reported",
     "tool_overridden": false,
     "tool_strategy": "governance-only"

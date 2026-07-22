@@ -11,27 +11,27 @@ generator, an official SDK, contract-governance tooling, MCP integration, or a d
 
 ## Release
 
-The current patch release is `v0.1.2`. npm installation requires Node.js 20 or newer;
+The current patch release is `v0.1.3`. npm installation requires Node.js 20 or newer;
 repository validation requires Python 3.11 or newer. This repository does not yet declare an
 open-source license, so the release is intended for controlled evaluation until the
 project owner selects one.
 
 ## Pinned npm installation
 
-Use the exact `0.1.2` release on every machine. The first command is a read-only dry run, the second
+Use the exact `0.1.3` release on every machine. The first command is a read-only dry run, the second
 applies the installation, and the third verifies the installed digests:
 
 ```bash
-npx --yes @realpkuasule/openapi-engineering-skill@0.1.2 install \
+npx --yes @realpkuasule/openapi-engineering-skill@0.1.3 install \
   --platform codex --platform claude --json
-npx --yes @realpkuasule/openapi-engineering-skill@0.1.2 install \
+npx --yes @realpkuasule/openapi-engineering-skill@0.1.3 install \
   --platform codex --platform claude --apply --json
-npx --yes @realpkuasule/openapi-engineering-skill@0.1.2 verify \
+npx --yes @realpkuasule/openapi-engineering-skill@0.1.3 verify \
   --platform codex --platform claude --json
 ```
 
 The npm CLI copies a versioned canonical payload to
-`~/.local/share/openapi-engineering-skill/0.1.2`, then links Codex and Claude Code to that
+`~/.local/share/openapi-engineering-skill/0.1.3`, then links Codex and Claude Code to that
 immutable tree. It has no `postinstall` script and never writes during `npm install` or the default
 dry run.
 
@@ -136,7 +136,7 @@ openapi-engineering-skill maintenance analyze --findings PRIVATE-BUNDLE.json \
   --output PRIVATE-ANALYSIS.json
 openapi-engineering-skill maintenance propose --analysis PRIVATE-ANALYSIS.json \
   --candidate PRIVATE-CANDIDATE.json --target-root "$PWD" --skill-root skills/openapi-engineering \
-  --skill-version 0.1.2 --config-sha256 CONFIG_SHA256 --output PRIVATE-PROPOSAL.json
+  --skill-version 0.1.3 --config-sha256 CONFIG_SHA256 --output PRIVATE-PROPOSAL.json
 openapi-engineering-skill maintenance promote --proposal PRIVATE-PROPOSAL.json \
   --target-root "$PWD" --approve APPROVAL_SHA256
 # Repeat the unchanged command with --apply only after reviewing the exact plan.
@@ -172,7 +172,7 @@ canonical skill tree:
 ```bash
 git clone git@github.com:realpkuasule/openapi-generator-skill.git
 cd openapi-generator-skill
-git checkout v0.1.2
+git checkout v0.1.3
 python3 scripts/install_skill.py --platform codex --platform claude
 python3 scripts/install_skill.py --platform codex --platform claude --apply
 ```
@@ -194,9 +194,9 @@ are not overwritten.
 Preview removal, then apply it:
 
 ```bash
-npx --yes @realpkuasule/openapi-engineering-skill@0.1.2 uninstall \
+npx --yes @realpkuasule/openapi-engineering-skill@0.1.3 uninstall \
   --platform codex --platform claude --json
-npx --yes @realpkuasule/openapi-engineering-skill@0.1.2 uninstall \
+npx --yes @realpkuasule/openapi-engineering-skill@0.1.3 uninstall \
   --platform codex --platform claude --apply --json
 ```
 
