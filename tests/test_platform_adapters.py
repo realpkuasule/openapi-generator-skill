@@ -4,6 +4,7 @@ import json
 import os
 import signal
 import stat
+import subprocess
 import sys
 import tempfile
 import time
@@ -18,6 +19,7 @@ from scripts.evals.adapters.cli_protocol import (
     clean_environment,
     final_observation_prompt,
     normalize_observation,
+    probe_cli,
 )
 from scripts.evals.adapters.codex_cli import CodexCliAdapter
 
@@ -132,6 +134,20 @@ def create_fake_cli(root: Path, *, platform: str = os.name) -> Path:
 
 
 class PlatformAdapterTests(unittest.TestCase):
+    @mock.patch("scripts.evals.adapters.cli_protocol.subprocess.run")
+    def test_probe_closes_inherited_stdin(self, run: mock.Mock) -> None:
+        run.return_value = subprocess.CompletedProcess(
+            args=["fake-cli", "--version"],
+            returncode=0,
+            stdout="fake 1.2.3\n",
+            stderr="",
+        )
+
+        capability = probe_cli(sys.executable)
+
+        self.assertTrue(capability.available)
+        self.assertIs(run.call_args.kwargs.get("stdin"), subprocess.DEVNULL)
+
     def test_claude_batch_launcher_avoids_inline_json_schema(self) -> None:
         self.assertEqual(
             structured_output_arguments("claude.cmd", platform="nt"),

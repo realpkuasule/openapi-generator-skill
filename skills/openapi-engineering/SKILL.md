@@ -147,3 +147,20 @@ Read [platform compatibility](references/platform-compatibility.md) when install
 ## Completion report
 
 Lead with the decision or completed outcome. Include changed files, actual validation results, unverified items, risks, rollback, and governance-profile changes. If the correct decision is no-codegen, say so explicitly and provide the smaller maintenance strategy.
+
+### Opt-in completion hook
+
+After the task outcome is already determined, an installed runtime may collect one
+bounded usage fact. First run `usage status` through the installed, absolute CLI path
+described in [platform compatibility](references/platform-compatibility.md). Continue
+only when collection is explicitly enabled. Record structured facts from the completion
+report; never copy source files, prompts, free-text notes, credentials, or generated
+payloads.
+
+A missing runtime or disabled collection is a silent skip. A recording failure does not change the task outcome and must not turn a successful engineering task into a failure.
+When the record response sets `feedback_required`, ask one short, optional feedback
+question and pass only the resulting enum value to `usage feedback`; keep any note local.
+Do not run maintenance analysis from this hook. Analysis remains an explicit maintainer
+action or a separately configured, exact-digest-authorized scheduler responsibility. The
+scheduler must validate its standing boundary before every model call and may only write
+private terminal reports; it never inherits authority to propose, promote, or edit a project.

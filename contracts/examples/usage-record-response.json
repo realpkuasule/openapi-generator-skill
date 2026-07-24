@@ -1,0 +1,51 @@
+{
+  "event": {
+    "anonymous_project_id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "boundary_revisions": 0,
+    "capture_mode": "best-effort",
+    "device_alias": "m4",
+    "duration_ms": {
+      "availability": "unavailable",
+      "source": "best-effort"
+    },
+    "event_id": "evt-582c66f451c17f0b",
+    "exit_code": {
+      "availability": "unavailable",
+      "source": "best-effort"
+    },
+    "feedback_status": "unknown",
+    "gates": {
+      "failed": 0,
+      "passed": 1,
+      "unverified": 0
+    },
+    "incident_ids": [],
+    "interview_turns": 4,
+    "lifecycle_modes": [
+      "governance-hardening"
+    ],
+    "outcome": "passed",
+    "peak_rss_mb": {
+      "availability": "unavailable",
+      "source": "best-effort"
+    },
+    "platform": "codex",
+    "platform_drift": false,
+    "platform_version": null,
+    "project_alias": "openapi-generator-skill",
+    "recorded_at": "2026-07-19T12:00:00.000Z",
+    "resource_anomaly": false,
+    "safety_violation": false,
+    "schema_version": 1,
+    "session_id": "ses-0123456789abcdef",
+    "skill_sha256": "dd520db50387f60f69787cb6c9f13101d18a6bc933fb3d961ce5f0f8fddff6f6",
+    "skill_version": "0.1.5",
+    "termination_reason": "not-reported",
+    "tool_overridden": false,
+    "tool_strategy": "governance-only"
+  },
+  "feedback_required": false,
+  "outbound_queued": true,
+  "recorded": true,
+  "status": "ok"
+}

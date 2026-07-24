@@ -1,0 +1,6 @@
+command=["<repo>/.venv/bin/python3", "<repo>/scripts/capture_contract_examples.py", "--check"]
+exit_code=0
+stdout:
+{"checked": ["error-response.json", "empirical-gate-response.json", "generation-comparison-response.json", "inspect-response.json", "profile-state-response.json", "profile-validation-response.json", "usage-status-response.json", "usage-record-response.json", "usage-summary-response.json", "usage-due-response.json", "usage-trend-response.json", "maintenance-finding-response.json", "maintenance-proposal-response.json", "maintenance-promotion-response.json"], "status": "ok"}
+
+stderr:

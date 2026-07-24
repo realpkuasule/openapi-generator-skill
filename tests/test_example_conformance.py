@@ -34,12 +34,39 @@ class ExampleCaptureTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             output = Path(directory)
+            for example in output.glob("*.json"):
+                with self.subTest(example=example.name):
+                    self.assertNotIn(b"\r\n", example.read_bytes())
             inspection = json.loads((output / "inspect-response.json").read_text())
             comparison = json.loads(
                 (output / "generation-comparison-response.json").read_text()
             )
             empirical = json.loads(
                 (output / "empirical-gate-response.json").read_text()
+            )
+            usage_status = json.loads(
+                (output / "usage-status-response.json").read_text()
+            )
+            usage_record = json.loads(
+                (output / "usage-record-response.json").read_text()
+            )
+            usage_summary = json.loads(
+                (output / "usage-summary-response.json").read_text()
+            )
+            usage_due = json.loads(
+                (output / "usage-due-response.json").read_text()
+            )
+            usage_trend = json.loads(
+                (output / "usage-trend-response.json").read_text()
+            )
+            maintenance_finding = json.loads(
+                (output / "maintenance-finding-response.json").read_text()
+            )
+            maintenance_proposal = json.loads(
+                (output / "maintenance-proposal-response.json").read_text()
+            )
+            maintenance_promotion = json.loads(
+                (output / "maintenance-promotion-response.json").read_text()
             )
             self.assertEqual(inspection["root"], "/workspace/project")
             self.assertEqual(sum(comparison["summary"].values()), len(comparison["files"]))
@@ -48,6 +75,14 @@ class ExampleCaptureTests(unittest.TestCase):
                 empirical["unverified"],
                 [gate["name"] for gate in empirical["gates"]],
             )
+            self.assertFalse(usage_status["config"]["local_collection_enabled"])
+            self.assertTrue(usage_record["recorded"])
+            self.assertEqual(usage_summary["period_id"], "2026-W29")
+            self.assertEqual(usage_due["findings"], [maintenance_finding])
+            self.assertEqual(usage_trend["comparison"]["status"], "insufficient")
+            self.assertRegex(maintenance_proposal["approval_sha256"], r"^[a-f0-9]{64}$")
+            self.assertEqual(maintenance_promotion["action"], "would-promote")
+            self.assertFalse(maintenance_promotion["applied"])
 
     def test_checked_in_examples_match_capture(self) -> None:
         result = subprocess.run(

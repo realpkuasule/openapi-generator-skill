@@ -1,0 +1,268 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openapi-engineering.local/schemas/usage-event.schema.json",
+  "title": "OpenAPI Engineering Usage Event",
+  "oneOf": [
+    { "$ref": "#/$defs/local_event" },
+    { "$ref": "#/$defs/sanitized_event" }
+  ],
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "identifier": { "type": "string", "pattern": "^[a-z]+-[a-f0-9]{16,64}$" },
+    "device_alias": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,31}$" },
+    "lifecycle_mode": {
+      "enum": [
+        "assess-select",
+        "initial-design",
+        "first-integration",
+        "daily-evolution",
+        "audit-drift",
+        "upgrade-migration",
+        "troubleshoot",
+        "governance-hardening",
+        "reselect-decommission"
+      ]
+    },
+    "tool_strategy": {
+      "enum": [
+        "openapi-generator",
+        "language-native",
+        "official-sdk",
+        "governance-only",
+        "mcp",
+        "no-codegen",
+        "undecided"
+      ]
+    },
+    "gate_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passed", "failed", "unverified"],
+      "properties": {
+        "passed": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 },
+        "unverified": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "measurement": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["availability", "source", "value"],
+          "properties": {
+            "availability": { "const": "available" },
+            "source": { "enum": ["launcher", "completion-report", "system"] },
+            "value": { "type": "number", "minimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["availability", "source"],
+          "properties": {
+            "availability": { "const": "unavailable" },
+            "source": { "enum": ["best-effort", "not-reported", "unsupported"] }
+          }
+        }
+      ]
+    },
+    "exit_measurement": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["availability", "source", "value"],
+          "properties": {
+            "availability": { "const": "available" },
+            "source": { "const": "launcher" },
+            "value": { "type": "integer", "minimum": 0, "maximum": 255 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["availability", "source"],
+          "properties": {
+            "availability": { "const": "unavailable" },
+            "source": { "enum": ["best-effort", "killed", "spawn-failed", "unsupported"] }
+          }
+        }
+      ]
+    },
+    "launcher_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "report_version",
+        "status",
+        "agent",
+        "command_sha256",
+        "started_at",
+        "finished_at",
+        "duration_ms",
+        "peak_rss_mb",
+        "exit_code",
+        "termination_reason",
+        "warning_exceeded",
+        "hard_limit_exceeded",
+        "process_group_reclaimed"
+      ],
+      "properties": {
+        "report_version": { "const": 1 },
+        "status": { "enum": ["passed", "failed", "blocked"] },
+        "agent": { "enum": ["codex", "claude"] },
+        "command_sha256": { "$ref": "#/$defs/sha256" },
+        "started_at": { "type": "string", "format": "date-time" },
+        "finished_at": { "type": "string", "format": "date-time" },
+        "duration_ms": { "type": "number", "minimum": 0 },
+        "peak_rss_mb": { "$ref": "#/$defs/measurement" },
+        "exit_code": { "$ref": "#/$defs/exit_measurement" },
+        "termination_reason": {
+          "enum": ["completed", "nonzero-exit", "timeout", "rss-limit", "signal", "spawn-failed", "unsupported"]
+        },
+        "warning_exceeded": { "type": "boolean" },
+        "hard_limit_exceeded": { "type": "boolean" },
+        "process_group_reclaimed": { "type": "boolean" }
+      }
+    },
+    "local_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "event_id",
+        "session_id",
+        "recorded_at",
+        "device_alias",
+        "skill_version",
+        "skill_sha256",
+        "platform",
+        "platform_version",
+        "capture_mode",
+        "anonymous_project_id",
+        "project_alias",
+        "lifecycle_modes",
+        "tool_strategy",
+        "outcome",
+        "interview_turns",
+        "boundary_revisions",
+        "tool_overridden",
+        "gates",
+        "duration_ms",
+        "peak_rss_mb",
+        "exit_code",
+        "termination_reason",
+        "feedback_status",
+        "safety_violation",
+        "resource_anomaly",
+        "platform_drift",
+        "incident_ids"
+      ],
+      "properties": {
+        "schema_version": { "const": 1 },
+        "event_id": { "$ref": "#/$defs/identifier" },
+        "session_id": { "$ref": "#/$defs/identifier" },
+        "recorded_at": { "type": "string", "format": "date-time" },
+        "device_alias": { "$ref": "#/$defs/device_alias" },
+        "skill_version": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "skill_sha256": { "$ref": "#/$defs/sha256" },
+        "platform": { "enum": ["codex", "claude", "unknown"] },
+        "platform_version": { "type": ["string", "null"], "maxLength": 80 },
+        "capture_mode": { "enum": ["best-effort", "launcher"] },
+        "anonymous_project_id": { "$ref": "#/$defs/sha256" },
+        "project_alias": { "type": ["string", "null"], "maxLength": 80 },
+        "lifecycle_modes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/lifecycle_mode" }
+        },
+        "tool_strategy": { "$ref": "#/$defs/tool_strategy" },
+        "outcome": { "enum": ["passed", "partial", "failed", "blocked"] },
+        "interview_turns": { "type": "integer", "minimum": 0 },
+        "boundary_revisions": { "type": "integer", "minimum": 0 },
+        "tool_overridden": { "type": "boolean" },
+        "gates": { "$ref": "#/$defs/gate_counts" },
+        "duration_ms": { "$ref": "#/$defs/measurement" },
+        "peak_rss_mb": { "$ref": "#/$defs/measurement" },
+        "exit_code": { "$ref": "#/$defs/exit_measurement" },
+        "termination_reason": {
+          "enum": ["completed", "nonzero-exit", "timeout", "rss-limit", "signal", "spawn-failed", "unsupported", "not-reported"]
+        },
+        "feedback_status": { "enum": ["unknown", "pending", "answered", "skipped"] },
+        "safety_violation": { "type": "boolean" },
+        "resource_anomaly": { "type": "boolean" },
+        "platform_drift": { "type": "boolean" },
+        "incident_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^inc-[a-f0-9]{16,64}$" }
+        }
+      }
+    },
+    "sanitized_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "event_id",
+        "session_id",
+        "recorded_at",
+        "device_alias",
+        "skill_version",
+        "skill_sha256",
+        "platform",
+        "capture_mode",
+        "anonymous_project_id",
+        "lifecycle_modes",
+        "tool_strategy",
+        "outcome",
+        "interview_turns",
+        "boundary_revisions",
+        "tool_overridden",
+        "gates",
+        "duration_ms",
+        "peak_rss_mb",
+        "exit_code",
+        "termination_reason",
+        "feedback_status",
+        "safety_violation",
+        "resource_anomaly",
+        "platform_drift"
+      ],
+      "properties": {
+        "schema_version": { "const": 1 },
+        "event_id": { "$ref": "#/$defs/identifier" },
+        "session_id": { "$ref": "#/$defs/identifier" },
+        "recorded_at": { "type": "string", "format": "date-time" },
+        "device_alias": { "$ref": "#/$defs/device_alias" },
+        "skill_version": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "skill_sha256": { "$ref": "#/$defs/sha256" },
+        "platform": { "enum": ["codex", "claude", "unknown"] },
+        "capture_mode": { "enum": ["best-effort", "launcher"] },
+        "anonymous_project_id": { "$ref": "#/$defs/sha256" },
+        "lifecycle_modes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/lifecycle_mode" }
+        },
+        "tool_strategy": { "$ref": "#/$defs/tool_strategy" },
+        "outcome": { "enum": ["passed", "partial", "failed", "blocked"] },
+        "interview_turns": { "type": "integer", "minimum": 0 },
+        "boundary_revisions": { "type": "integer", "minimum": 0 },
+        "tool_overridden": { "type": "boolean" },
+        "gates": { "$ref": "#/$defs/gate_counts" },
+        "duration_ms": { "$ref": "#/$defs/measurement" },
+        "peak_rss_mb": { "$ref": "#/$defs/measurement" },
+        "exit_code": { "$ref": "#/$defs/exit_measurement" },
+        "termination_reason": {
+          "enum": ["completed", "nonzero-exit", "timeout", "rss-limit", "signal", "spawn-failed", "unsupported", "not-reported"]
+        },
+        "feedback_status": { "enum": ["unknown", "pending", "answered", "skipped"] },
+        "safety_violation": { "type": "boolean" },
+        "resource_anomaly": { "type": "boolean" },
+        "platform_drift": { "type": "boolean" }
+      }
+    }
+  }
+}

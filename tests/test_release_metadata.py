@@ -1,20 +1,24 @@
 from __future__ import annotations
 
+import json
 import tomllib
 import unittest
 
 from tests.support import REPO_ROOT
 
 
-RELEASE_TAG = "v0.1.0-rc.2"
-PEP440_VERSION = "0.1.0rc2"
+RELEASE_TAG = "v0.1.5"
+NPM_VERSION = "0.1.5"
+PEP440_VERSION = "0.1.5"
+PUBLISHED_NPM_VERSION = "0.1.5"
 README = REPO_ROOT / "README.md"
 CHANGELOG = REPO_ROOT / "CHANGELOG.md"
-RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.0-rc.2.md"
+RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.5.md"
 
 
 class ReleaseMetadataTests(unittest.TestCase):
-    def test_project_and_lock_versions_match_release_candidate(self) -> None:
+    def test_package_project_and_lock_versions_match_release(self) -> None:
+        package = json.loads((REPO_ROOT / "package.json").read_text(encoding="utf-8"))
         project = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
         lock = tomllib.loads((REPO_ROOT / "uv.lock").read_text(encoding="utf-8"))
         locked_project = next(
@@ -23,6 +27,7 @@ class ReleaseMetadataTests(unittest.TestCase):
             if package["name"] == "openapi-engineering-skill"
         )
 
+        self.assertEqual(package["version"], NPM_VERSION)
         self.assertEqual(project["project"]["version"], PEP440_VERSION)
         self.assertEqual(locked_project["version"], PEP440_VERSION)
 
@@ -35,7 +40,8 @@ class ReleaseMetadataTests(unittest.TestCase):
             "--platform claude",
             "--apply",
             "uninstall",
-            "@realpkuasule/openapi-engineering-skill@0.1.0-rc.2",
+            f"@realpkuasule/openapi-engineering-skill@{PUBLISHED_NPM_VERSION}",
+            f"npm `latest` is also `{PUBLISHED_NPM_VERSION}`",
             "scripts/verify.py --tier deterministic",
             "multi-turn boundary interview",
             "no-codegen",
@@ -44,10 +50,10 @@ class ReleaseMetadataTests(unittest.TestCase):
 
         self.assertNotIn("scripts/run_deterministic_suite.py", content)
 
-    def test_changelog_contains_dated_release_candidate(self) -> None:
+    def test_changelog_contains_dated_release(self) -> None:
         content = CHANGELOG.read_text(encoding="utf-8")
 
-        self.assertIn("## [0.1.0-rc.2] - 2026-07-19", content)
+        self.assertIn("## [0.1.5] - 2026-07-24", content)
         self.assertIn("Contract-First", content)
         self.assertIn("Codex", content)
         self.assertIn("Claude Code", content)
@@ -58,9 +64,9 @@ class ReleaseMetadataTests(unittest.TestCase):
         for required in (
             RELEASE_TAG,
             "Contract-First",
-            "OpenAPI 1.1.0",
-            "no schema change",
-            "151/151",
+            "OpenAPI 1.3.0",
+            "additive contract",
+            "serial",
             "rollback",
             "Codex",
             "Claude Code",

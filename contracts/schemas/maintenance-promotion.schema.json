@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openapi-engineering.local/schemas/maintenance-promotion.schema.json",
+  "title": "OpenAPI Engineering Maintenance Promotion Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "action",
+    "applied",
+    "proposal_id",
+    "approval_sha256",
+    "plan_sha256",
+    "target_files"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "status": { "const": "ok" },
+    "action": { "enum": ["would-promote", "promoted"] },
+    "applied": { "type": "boolean" },
+    "proposal_id": { "type": "string", "pattern": "^proposal-[a-f0-9]{16,64}$" },
+    "approval_sha256": { "$ref": "#/$defs/sha256" },
+    "plan_sha256": { "$ref": "#/$defs/sha256" },
+    "target_files": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "path",
+          "expected_sha256",
+          "current_sha256",
+          "content_sha256",
+          "state"
+        ],
+        "properties": {
+          "kind": {
+            "enum": ["eval-case", "sanitized-fixture", "failing-test", "traceability-candidate"]
+          },
+          "path": { "$ref": "#/$defs/relative_path" },
+          "expected_sha256": {
+            "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }]
+          },
+          "current_sha256": {
+            "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }]
+          },
+          "content_sha256": { "$ref": "#/$defs/sha256" },
+          "state": { "enum": ["would-create", "would-replace", "created", "replaced"] }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "relative_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"
+    }
+  }
+}

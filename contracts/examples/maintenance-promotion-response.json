@@ -1,0 +1,19 @@
+{
+  "action": "would-promote",
+  "applied": false,
+  "approval_sha256": "a356bdd6f3288c17635fd67d05ac068a378bc85092078fa1af12275e758eb81d",
+  "plan_sha256": "e2c0b741f09a76ee6e21f3e74ff91c3e9d1400be6371aa3f43fbb20050a6fab3",
+  "proposal_id": "proposal-6513a40962cd5cb2",
+  "schema_version": 1,
+  "status": "ok",
+  "target_files": [
+    {
+      "content_sha256": "0e97882577a9114584ad76e808e8e69bf79342cf1317436ef1f1c2795fa98d4e",
+      "current_sha256": null,
+      "expected_sha256": null,
+      "kind": "failing-test",
+      "path": "tests/test_maintenance_candidate_usage_resource.py",
+      "state": "would-create"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+command=["<repo>/.venv/bin/python3", "<repo>/scripts/aggregate_forward_evals.py", "--help"]
+exit_code=0
+stdout:
+usage: aggregate_forward_evals.py [-h] [--codex-report CODEX_REPORT]
+                                  [--claude-report CLAUDE_REPORT]
+                                  [--report REPORT]
+                                  [--check-report CHECK_REPORT]
+                                  [--minimum-samples MINIMUM_SAMPLES]
+
+Aggregate fresh Codex and Claude Code forward-evaluation reports.
+
+options:
+  -h, --help            show this help message and exit
+  --codex-report CODEX_REPORT
+  --claude-report CLAUDE_REPORT
+  --report REPORT
+  --check-report CHECK_REPORT
+                        Validate an existing combined report without invoking
+                        a model platform.
+  --minimum-samples MINIMUM_SAMPLES
+
+stderr:

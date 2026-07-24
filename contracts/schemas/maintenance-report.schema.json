@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openapi-engineering.local/schemas/maintenance-report.schema.json",
+  "title": "OpenAPI Engineering Private Maintenance Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "report_version",
+    "report_id",
+    "cycle_id",
+    "status",
+    "period_id",
+    "input_sha256",
+    "authorization_sha256",
+    "attempt",
+    "started_at",
+    "finished_at",
+    "finding_ids",
+    "analysis",
+    "reason_code"
+  ],
+  "properties": {
+    "report_version": { "const": 1 },
+    "report_id": { "type": "string", "pattern": "^report-[a-f0-9]{16,64}$" },
+    "cycle_id": { "type": "string", "pattern": "^cycle-[a-f0-9]{16,64}$" },
+    "status": { "enum": ["completed", "blocked", "failed"] },
+    "period_id": { "type": "string", "pattern": "^[0-9]{4}-W[0-9]{2}$" },
+    "input_sha256": { "$ref": "#/$defs/sha256" },
+    "authorization_sha256": { "$ref": "#/$defs/sha256" },
+    "attempt": { "type": "integer", "minimum": 1, "maximum": 2 },
+    "started_at": { "type": "string", "format": "date-time" },
+    "finished_at": { "type": "string", "format": "date-time" },
+    "finding_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^finding-[a-f0-9]{16,64}$" }
+    },
+    "analysis": {
+      "oneOf": [
+        { "$ref": "https://openapi-engineering.local/schemas/maintenance-analysis.schema.json" },
+        { "type": "null" }
+      ]
+    },
+    "reason_code": {
+      "type": ["string", "null"],
+      "enum": [
+        null,
+        "analyzer-blocked",
+        "analyzer-failed",
+        "authorization-stale",
+        "retry-exhausted",
+        "report-invalid"
+      ]
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

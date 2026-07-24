@@ -1,0 +1,248 @@
+schema_version: 1
+requirements:
+  - id: SI-AC-01
+    description: Disabled defaults create no usage state, network traffic, or model work.
+    phase: P0
+    status: passed
+    contracts: [contracts/schemas/usage-config.schema.json]
+    tests: [tests.test_usage_config.UsageConfigTests.test_status_is_read_only_and_defaults_to_disabled]
+    evidence:
+      - kind: automated-test
+        path: tests.test_usage_config.UsageConfigTests.test_status_is_read_only_and_defaults_to_disabled
+  - id: SI-AC-02
+    description: Collection and synchronization have separate dry-run authorization boundaries.
+    phase: P0
+    status: passed
+    contracts: [contracts/schemas/usage-config.schema.json]
+    tests: [tests.test_usage_config.UsageConfigTests.test_sync_authorization_is_separate_and_device_change_invalidates_it]
+    evidence:
+      - kind: automated-test
+        path: tests.test_usage_config.UsageConfigTests.test_sync_authorization_is_separate_and_device_change_invalidates_it
+  - id: SI-AC-03
+    description: Local events exclude raw dialogue, source, command output, environment, and secrets.
+    phase: P0
+    status: passed
+    contracts: [contracts/schemas/usage-event.schema.json]
+    tests: [tests.test_usage_recording.UsageRecordingTests.test_record_writes_local_event_and_rebuilt_sanitized_outbound]
+    evidence:
+      - kind: automated-test
+        path: tests.test_usage_recording.UsageRecordingTests.test_record_writes_local_event_and_rebuilt_sanitized_outbound
+  - id: SI-AC-04
+    description: Remote envelopes are allowlist rebuilt and exclude local identifiers and free text.
+    phase: P0
+    status: passed
+    contracts: [contracts/schemas/usage-event.schema.json#/$defs/sanitized_event]
+    tests: [tests.test_usage_security.UsageSecurityTests.test_outbound_envelope_contains_only_digest_and_sanitized_payload]
+    evidence:
+      - kind: automated-test
+        path: tests.test_usage_security.UsageSecurityTests.test_outbound_envelope_contains_only_digest_and_sanitized_payload
+  - id: SI-AC-05
+    description: Feedback sampling is deterministic and explicit user feedback remains immutable.
+    phase: P0
+    status: passed
+    contracts: [contracts/schemas/user-feedback.schema.json]
+    tests: [tests.test_usage_recording.UsageRecordingTests.test_normal_success_samples_every_fifth_event_and_anomalies_always_ask]
+    evidence:
+      - kind: automated-test
+        path: tests.test_usage_recording.UsageRecordingTests.test_normal_success_samples_every_fifth_event_and_anomalies_always_ask
+  - id: SI-AC-06
+    description: Best-effort is explicit and strict launcher evidence contains measured process facts.
+    phase: P1
+    status: passed
+    contracts: [contracts/schemas/usage-event.schema.json#/$defs/measurement]
+    tests: [tests.test_usage_launcher.UsageLauncherTests.test_launcher_record_uses_bounded_report_facts_and_rejects_manual_spoofing]
+    evidence:
+      - kind: automated-test
+        path: tests.test_usage_launcher.UsageLauncherTests.test_launcher_record_uses_bounded_report_facts_and_rejects_manual_spoofing
+  - id: SI-AC-07
+    description: Collector devices own event partitions while only the coordinator runs due work.
+    phase: P0
+    status: passed
+    contracts: [contracts/schemas/usage-config.schema.json]
+    tests: [tests.test_usage_due.UsageDueTests.test_non_coordinator_is_blocked_without_creating_state]
+    evidence:
+      - kind: automated-test
+        path: tests.test_usage_due.UsageDueTests.test_non_coordinator_is_blocked_without_creating_state
+  - id: SI-AC-08
+    description: Git failure preserves outbound data and never runs remote hooks.
+    phase: P0
+    status: passed
+    contracts: [contracts/openapi-engineering.openapi.yaml#/paths/~1v1~1usage~1synchronizations]
+    tests: [tests.test_usage_git_sync.UsageGitSyncTests.test_remote_failure_never_drops_outbound]
+    evidence:
+      - kind: automated-test
+        path: tests.test_usage_git_sync.UsageGitSyncTests.test_remote_failure_never_drops_outbound
+  - id: SI-AC-09
+    description: A weekly due checkpoint is deterministic and idempotent.
+    phase: P0
+    status: passed
+    contracts: [contracts/openapi-engineering.openapi.yaml#/paths/~1v1~1usage~1due-checks]
+    tests: [tests.test_usage_due.UsageDueTests.test_no_findings_checkpoint_is_idempotent]
+    evidence:
+      - kind: automated-test
+        path: tests.test_usage_due.UsageDueTests.test_no_findings_checkpoint_is_idempotent
+  - id: SI-AC-10
+    description: Eight fixed threshold rules are deterministic at their exact boundaries.
+    phase: P0
+    status: passed
+    contracts: [contracts/schemas/maintenance-finding.schema.json]
+    tests: [tests.test_usage_thresholds.UsageThresholdTests.test_interview_and_resource_boundaries_are_strict]
+    evidence:
+      - kind: automated-test
+        path: tests.test_usage_thresholds.UsageThresholdTests.test_interview_and_resource_boundaries_are_strict
+  - id: SI-AC-11
+    description: Codex is primary and Claude review is serial and risk-triggered.
+    phase: P1
+    status: passed
+    contracts: [contracts/schemas/maintenance-analysis.schema.json]
+    tests: [tests.test_maintenance_secondary_review.MaintenanceSecondaryReviewTests.test_p1_finding_runs_codex_then_independent_claude_and_preserves_disagreement]
+    evidence:
+      - kind: automated-test
+        path: tests.test_maintenance_secondary_review.MaintenanceSecondaryReviewTests.test_p1_finding_runs_codex_then_independent_claude_and_preserves_disagreement
+  - id: SI-AC-12
+    description: Automatic analysis accepts at most fifty sanitized events and no target details.
+    phase: P0
+    status: passed
+    contracts: [contracts/schemas/maintenance-analysis.schema.json]
+    tests: [tests.test_maintenance_analysis.MaintenanceAnalysisTests.test_more_than_fifty_events_is_blocked_before_adapter]
+    evidence:
+      - kind: automated-test
+        path: tests.test_maintenance_analysis.MaintenanceAnalysisTests.test_more_than_fifty_events_is_blocked_before_adapter
+  - id: SI-AC-13
+    description: Controlled analyzer and launcher process groups enforce timeout and RSS limits.
+    phase: P1
+    status: passed
+    contracts:
+      - docs/openapi-engineering-self-improvement-requirements.md
+      - contracts/schemas/maintenance-analysis.schema.json
+    tests:
+      - tests.test_maintenance_resource_watch.MaintenanceResourceWatchTests.test_rss_limit_reclaims_only_owned_process_group
+      - tests.test_maintenance_resource_watch.MaintenanceResourceWatchTests.test_timeout_reclaims_owned_group_without_touching_unrelated_process
+    evidence:
+      - kind: automated-test
+        path: tests.test_maintenance_resource_watch.MaintenanceResourceWatchTests.test_rss_limit_reclaims_only_owned_process_group
+      - kind: automated-test
+        path: tests.test_maintenance_resource_watch.MaintenanceResourceWatchTests.test_timeout_reclaims_owned_group_without_touching_unrelated_process
+  - id: SI-AC-14
+    description: Automatic output remains private and protected public source is unchanged.
+    phase: P0
+    status: passed
+    contracts: [skills/openapi-engineering-maintainer/references/privacy-boundary.md]
+    tests: [tests.test_self_improvement_e2e.SelfImprovementE2ETests.test_opt_in_to_private_proposal_is_offline_reproducible_and_source_read_only]
+    evidence:
+      - kind: automated-test
+        path: tests.test_self_improvement_e2e.SelfImprovementE2ETests.test_opt_in_to_private_proposal_is_offline_reproducible_and_source_read_only
+  - id: SI-AC-15
+    description: Proposal approval binds every input and stale target digest before promotion.
+    phase: P2
+    status: passed
+    contracts:
+      - contracts/schemas/maintenance-proposal.schema.json
+      - contracts/schemas/maintenance-promotion.schema.json
+    tests:
+      - tests.test_maintenance_promotion.MaintenancePromotionTests.test_dry_run_is_zero_write_and_exact_approval_atomically_promotes_red_test
+      - tests.test_maintenance_promotion.MaintenancePromotionTests.test_stale_hash_and_symlink_are_rejected_without_external_write
+      - tests.test_maintenance_promotion.MaintenancePromotionTests.test_partial_replace_failure_restores_all_target_snapshots
+    evidence:
+      - kind: automated-test
+        path: tests.test_maintenance_promotion.MaintenancePromotionTests.test_dry_run_is_zero_write_and_exact_approval_atomically_promotes_red_test
+      - kind: automated-test
+        path: tests.test_maintenance_promotion.MaintenancePromotionTests.test_stale_hash_and_symlink_are_rejected_without_external_write
+      - kind: automated-test
+        path: tests.test_maintenance_promotion.MaintenancePromotionTests.test_partial_replace_failure_restores_all_target_snapshots
+      - kind: static-contract
+        path: skills/openapi-engineering-maintainer/references/promotion-policy.md
+  - id: SI-AC-16
+    description: Retention is dry-run-first and preserves long-lived promoted or held objects.
+    phase: P1
+    status: passed
+    contracts: [contracts/schemas/retention-plan.schema.json]
+    tests: [tests.test_usage_retention.UsageRetentionTests.test_remote_cleanup_deletes_only_expired_event_rows_and_preserves_durable_paths]
+    evidence:
+      - kind: automated-test
+        path: tests.test_usage_retention.UsageRetentionTests.test_remote_cleanup_deletes_only_expired_event_rows_and_preserves_durable_paths
+  - id: SI-AC-17
+    description: Both platforms share one runtime Skill while Maintainer installation is explicit.
+    phase: P0
+    status: passed
+    contracts: [skills/openapi-engineering-maintainer/SKILL.md]
+    tests: [tests.test_npm_distribution.NpmDistributionTests.test_maintainer_component_is_explicit_and_installs_on_both_platforms]
+    evidence:
+      - kind: automated-test
+        path: tests.test_npm_distribution.NpmDistributionTests.test_maintainer_component_is_explicit_and_installs_on_both_platforms
+  - id: SI-AC-18
+    description: Offline P0 E2E reaches a private approval-bound proposal without changing source.
+    phase: P0
+    status: passed
+    contracts: [contracts/openapi-engineering.openapi.yaml]
+    tests: [tests.test_self_improvement_e2e.SelfImprovementE2ETests.test_opt_in_to_private_proposal_is_offline_reproducible_and_source_read_only]
+    evidence:
+      - kind: automated-test
+        path: tests.test_self_improvement_e2e.SelfImprovementE2ETests.test_opt_in_to_private_proposal_is_offline_reproducible_and_source_read_only
+  - id: SI-AC-19
+    description: Version-one usage configuration migrates read-only to disabled version two.
+    phase: P0
+    status: passed
+    contracts: [contracts/schemas/usage-config.schema.json]
+    tests: [tests.test_usage_config.UsageConfigTests.test_v1_config_is_read_only_migrated_to_disabled_v2]
+    evidence:
+      - kind: automated-test
+        path: tests.test_usage_config.UsageConfigTests.test_v1_config_is_read_only_migrated_to_disabled_v2
+  - id: SI-AC-20
+    description: Standing active-session authorization is exact-digest-bound, revocable, and drift-sensitive.
+    phase: P0
+    status: passed
+    contracts:
+      - contracts/schemas/usage-config.schema.json
+      - contracts/openapi-engineering.openapi.yaml#/paths/~1v1~1maintenance~1automation
+    tests:
+      - tests.test_usage_config.UsageConfigTests.test_automation_is_exact_digest_bound_revocable_and_drift_sensitive
+      - tests.test_usage_config.UsageConfigTests.test_automation_rejects_missing_or_unqualified_python_runtime
+    evidence:
+      - kind: automated-test
+        path: tests.test_usage_config.UsageConfigTests.test_automation_is_exact_digest_bound_revocable_and_drift_sensitive
+      - kind: automated-test
+        path: tests.test_usage_config.UsageConfigTests.test_automation_rejects_missing_or_unqualified_python_runtime
+  - id: SI-AC-21
+    description: The coordinator runs sync and due before any serial analyzer while collectors remain blocked.
+    phase: P1
+    status: passed
+    contracts: [contracts/schemas/maintenance-cycle.schema.json]
+    tests:
+      - tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_sync_blocked_and_no_findings_never_read_analyzer_inputs
+      - tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_python_runtime_drift_blocks_before_sync_or_analyzer
+      - tests.test_usage_config.UsageConfigTests.test_collector_cannot_authorize_unattended_analysis
+    evidence:
+      - kind: automated-test
+        path: tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_sync_blocked_and_no_findings_never_read_analyzer_inputs
+      - kind: automated-test
+        path: tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_python_runtime_drift_blocks_before_sync_or_analyzer
+      - kind: automated-test
+        path: tests.test_usage_config.UsageConfigTests.test_collector_cannot_authorize_unattended_analysis
+  - id: SI-AC-22
+    description: A period/input/authorization has one terminal analysis and at most two serialized attempts.
+    phase: P1
+    status: passed
+    contracts: [contracts/schemas/maintenance-cycle.schema.json]
+    tests: [tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_failed_analysis_retries_once_then_reports_exhaustion]
+    evidence:
+      - kind: automated-test
+        path: tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_failed_analysis_retries_once_then_reports_exhaustion
+  - id: SI-AC-23
+    description: Terminal JSON and Markdown reports remain private, atomic, Schema-valid, and redacted.
+    phase: P1
+    status: passed
+    contracts: [contracts/schemas/maintenance-report.schema.json]
+    tests: [tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_finding_runs_serial_analysis_once_and_writes_private_terminal_report]
+    evidence:
+      - kind: automated-test
+        path: tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_finding_runs_serial_analysis_once_and_writes_private_terminal_report
+  - id: SI-AC-24
+    description: Terminal macOS notification is fixed and contains no report content.
+    phase: P2
+    status: passed
+    contracts: [contracts/openapi-engineering.openapi.yaml#/paths/~1v1~1maintenance~1cycles]
+    tests: [tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_notification_payload_is_fixed_and_contains_no_report_content]
+    evidence:
+      - kind: automated-test
+        path: tests.test_unattended_maintenance.UnattendedMaintenanceTests.test_notification_payload_is_fixed_and_contains_no_report_content

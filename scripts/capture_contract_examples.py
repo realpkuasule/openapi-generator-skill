@@ -14,6 +14,8 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SKILL_SCRIPTS = REPO_ROOT / "skills" / "openapi-engineering" / "scripts"
 EXAMPLE_ROOT = REPO_ROOT / "contracts" / "examples"
+CLI = REPO_ROOT / "bin" / "openapi-engineering-skill.mjs"
+MAINTENANCE_SCRIPTS = REPO_ROOT / "scripts" / "maintenance"
 EXAMPLE_NAMES = (
     "error-response.json",
     "empirical-gate-response.json",
@@ -21,6 +23,15 @@ EXAMPLE_NAMES = (
     "inspect-response.json",
     "profile-state-response.json",
     "profile-validation-response.json",
+    "usage-status-response.json",
+    "usage-record-response.json",
+    "usage-summary-response.json",
+    "usage-due-response.json",
+    "usage-trend-response.json",
+    "maintenance-finding-response.json",
+    "maintenance-cycle-response.json",
+    "maintenance-proposal-response.json",
+    "maintenance-promotion-response.json",
 )
 
 
@@ -49,6 +60,41 @@ def run_json(script: str, *arguments: str, expected_exit: int = 0) -> dict[str, 
     if not isinstance(payload, dict):
         raise RuntimeError(f"{script} did not emit a JSON object.")
     return payload
+
+
+def run_command_json(command: list[str], expected_exit: int = 0) -> dict[str, Any]:
+    result = subprocess.run(
+        command,
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode != expected_exit:
+        raise RuntimeError(
+            f"{command[0]} exited {result.returncode}, expected {expected_exit}: "
+            f"{result.stderr.strip()}"
+        )
+    try:
+        payload = json.loads(result.stdout)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"{command[0]} did not emit JSON.") from exc
+    if not isinstance(payload, dict):
+        raise RuntimeError(f"{command[0]} did not emit a JSON object.")
+    return payload
+
+
+def run_usage(home: Path, *arguments: str) -> dict[str, Any]:
+    return run_command_json(
+        ["node", str(CLI), "usage", *arguments, "--home", str(home), "--json"]
+    )
+
+
+def run_maintenance(home: Path, *arguments: str, expected_exit: int = 0) -> dict[str, Any]:
+    return run_command_json(
+        ["node", str(CLI), "maintenance", *arguments, "--home", str(home), "--json"],
+        expected_exit=expected_exit,
+    )
 
 
 def make_inspection_fixture(root: Path) -> Path:
@@ -197,10 +243,385 @@ def capture_empirical(root: Path) -> dict[str, Any]:
     return payload
 
 
+def fixture_usage_event(index: int, *, peak_rss_mb: int | None = None) -> dict[str, Any]:
+    peak = (
+        {"availability": "available", "source": "launcher", "value": peak_rss_mb}
+        if peak_rss_mb is not None
+        else {"availability": "unavailable", "source": "best-effort"}
+    )
+    return {
+        "schema_version": 1,
+        "event_id": f"evt-{index:016x}",
+        "session_id": f"ses-{index:016x}",
+        "recorded_at": f"2026-07-{14 + index:02d}T12:00:00Z",
+        "device_alias": "m4",
+        "skill_version": "0.1.0-rc.2",
+        "skill_sha256": "a" * 64,
+        "platform": "codex",
+        "platform_version": None,
+        "capture_mode": "best-effort",
+        "anonymous_project_id": "b" * 64,
+        "project_alias": "openapi-generator-skill",
+        "lifecycle_modes": ["governance-hardening"],
+        "tool_strategy": "governance-only",
+        "outcome": "passed",
+        "interview_turns": 4,
+        "boundary_revisions": 0,
+        "tool_overridden": False,
+        "gates": {"passed": 1, "failed": 0, "unverified": 0},
+        "duration_ms": {"availability": "unavailable", "source": "best-effort"},
+        "peak_rss_mb": peak,
+        "exit_code": {"availability": "unavailable", "source": "best-effort"},
+        "termination_reason": "not-reported",
+        "feedback_status": "unknown",
+        "safety_violation": False,
+        "resource_anomaly": peak_rss_mb is not None and peak_rss_mb > 512,
+        "platform_drift": False,
+        "incident_ids": [],
+    }
+
+
+def capture_usage(root: Path) -> dict[str, dict[str, Any]]:
+    record_home = root / "record-home"
+    status = run_usage(record_home, "status")
+    run_usage(record_home, "enable", "--device", "m4", "--apply")
+    completion = root / "completion-report.json"
+    write_text(
+        completion,
+        json.dumps(
+            {
+                "outcome": "passed",
+                "changed_files": [],
+                "commands": [],
+                "results": ["contract gate passed"],
+                "unverified": [],
+                "risks": [],
+                "rollback": [],
+                "profile_changes": [],
+            },
+            sort_keys=True,
+        ),
+    )
+    record = run_usage(
+        record_home,
+        "record",
+        "--completion-report",
+        str(completion),
+        "--capture-mode",
+        "best-effort",
+        "--platform",
+        "codex",
+        "--project-alias",
+        "openapi-generator-skill",
+        "--session",
+        "ses-0123456789abcdef",
+        "--lifecycle",
+        "governance-hardening",
+        "--tool-strategy",
+        "governance-only",
+        "--interview-turns",
+        "4",
+        "--boundary-revisions",
+        "0",
+        "--now",
+        "2026-07-19T12:00:00Z",
+    )
+    # The local salt is intentionally random; replace only its derived pseudonym so the
+    # checked-in example remains reproducible while retaining the actual CLI structure.
+    record["event"]["anonymous_project_id"] = "b" * 64
+
+    summary_home = root / "summary-home"
+    summary_state = root / "summary-state"
+    run_usage(
+        summary_home,
+        "enable",
+        "--device",
+        "m4",
+        "--coordinator",
+        "--state-root",
+        str(summary_state),
+        "--apply",
+    )
+    event_log = (
+        summary_state
+        / "local"
+        / "events"
+        / "m4"
+        / "2026-07.jsonl"
+    )
+    write_text(
+        event_log,
+        "".join(
+            json.dumps(
+                fixture_usage_event(index, peak_rss_mb=640 if index == 5 else None),
+                sort_keys=True,
+            )
+            + "\n"
+            for index in range(1, 6)
+        ),
+    )
+    summary = run_usage(
+        summary_home,
+        "summarize",
+        "--period",
+        "iso-week",
+        "--now",
+        "2026-07-19T18:00:00Z",
+    )
+    due = run_usage(summary_home, "due", "--now", "2026-07-19T18:00:00Z")
+    trends = run_usage(
+        summary_home,
+        "trends",
+        "--now",
+        "2026-07-19T18:00:00Z",
+        "--fix-at",
+        "2026-06-19T18:00:00Z",
+    )
+    return {
+        "usage-status-response.json": status,
+        "usage-record-response.json": record,
+        "usage-summary-response.json": summary,
+        "usage-due-response.json": due,
+        "usage-trend-response.json": trends,
+        "maintenance-finding-response.json": due["findings"][0],
+    }
+
+
+def capture_maintenance_cycle(root: Path) -> dict[str, Any]:
+    home = root / "home"
+    state = root / "state"
+    remote = root / "private.git"
+    home.mkdir(parents=True)
+    initialized = subprocess.run(
+        ["git", "init", "--bare", str(remote)],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if initialized.returncode != 0:
+        raise RuntimeError(f"git init exited {initialized.returncode}: {initialized.stderr.strip()}")
+    run_usage(
+        home,
+        "enable",
+        "--device",
+        "m4",
+        "--coordinator",
+        "--state-root",
+        str(state),
+        "--apply",
+    )
+    run_usage(
+        home,
+        "sync",
+        "configure",
+        "--remote",
+        str(remote),
+        "--branch",
+        "usage",
+        "--apply",
+        "--now",
+        "2026-07-19T12:00:00Z",
+    )
+    planned = run_maintenance(
+        home,
+        "automation",
+        "configure",
+        "--credential-mode",
+        "active-cli-session",
+        "--python",
+        sys.executable,
+        "--notify",
+        "none",
+        "--now",
+        "2026-07-19T12:00:00Z",
+    )
+    run_maintenance(
+        home,
+        "automation",
+        "configure",
+        "--credential-mode",
+        "active-cli-session",
+        "--python",
+        sys.executable,
+        "--notify",
+        "none",
+        "--approve",
+        planned["approval_sha256"],
+        "--apply",
+        "--now",
+        "2026-07-19T12:00:00Z",
+    )
+    event_log = state / "local" / "events" / "m4" / "2026-07.jsonl"
+    write_text(
+        event_log,
+        "".join(
+            json.dumps(
+                fixture_usage_event(index, peak_rss_mb=640 if index == 5 else None),
+                sort_keys=True,
+            )
+            + "\n"
+            for index in range(1, 6)
+        ),
+    )
+    primary = root / "primary.json"
+    secondary = root / "secondary.json"
+    semantic = {
+        "clusters": [],
+        "confidence": 0.9,
+        "candidate_causes": ["A bounded deterministic resource cause."],
+        "unverified": [],
+    }
+    write_text(primary, json.dumps(semantic, sort_keys=True))
+    write_text(secondary, json.dumps(semantic, sort_keys=True))
+    cycle = run_maintenance(
+        home,
+        "cycle",
+        "--state-root",
+        str(state),
+        "--now",
+        "2026-07-19T18:00:00Z",
+        "--adapter",
+        "fake",
+        "--fake-platform",
+        "codex",
+        "--fake-response",
+        str(primary),
+        "--secondary-adapter",
+        "fake",
+        "--secondary-fake-platform",
+        "claude",
+        "--secondary-fake-response",
+        str(secondary),
+    )
+    cycle["cycle_id"] = "cycle-0123456789abcdef"
+    cycle["authorization_sha256"] = "a" * 64
+    cycle["report_id"] = "report-0123456789abcdef"
+    return cycle
+
+
+def capture_maintenance_proposal(root: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+    target = root / "target"
+    target.mkdir(parents=True)
+    resources = {
+        "measurement_status": "not-run",
+        "peak_rss_bytes": None,
+        "warning_limit_bytes": 512 * 1024 * 1024,
+        "hard_limit_bytes": 1024 * 1024 * 1024,
+        "warning_exceeded": False,
+        "termination_reason": "not-run",
+        "duration_ms": 0,
+        "process_group_reclaimed": False,
+    }
+    analysis = {
+        "schema_version": 1,
+        "analysis_id": "analysis-0123456789abcdef",
+        "generated_at": "2026-07-19T12:00:00Z",
+        "input_sha256": "a" * 64,
+        "finding_ids": ["finding-0123456789abcdef"],
+        "primary": {
+            "platform": "fake",
+            "session_id": "analysis-session-0123456789abcdef",
+            "cli_version": "test",
+            "model": "fake",
+            "status": "passed",
+            "resources": resources,
+        },
+        "analyzer_sequence": [
+            {
+                "platform": "fake",
+                "session_id": "analysis-session-0123456789abcdef",
+                "cli_version": "test",
+                "model": "fake",
+                "status": "passed",
+                "resources": resources,
+            }
+        ],
+        "secondary_review": {
+            "required": False,
+            "trigger_reasons": [],
+            "status": "not-required",
+            "analyzer": None,
+            "independent": False,
+            "result": None,
+            "agreements": [],
+            "disagreements": [],
+        },
+        "clusters": [
+            {
+                "key": "resource-regression",
+                "finding_ids": ["finding-0123456789abcdef"],
+            }
+        ],
+        "confidence": 0.9,
+        "candidate_causes": ["A deterministic candidate cause."],
+        "unverified": [],
+    }
+    candidate = {
+        "candidate_id": "candidate-0123456789abcdef",
+        "contract_impact": "compatible",
+        "target_files": ["tests/test_maintenance_candidate_usage_resource.py"],
+        "artifacts": [
+            {
+                "kind": "failing-test",
+                "path": "tests/test_maintenance_candidate_usage_resource.py",
+                "media_type": "text/x-python",
+                "content": "def test_approved_candidate_remains_red():\n    assert False\n",
+            }
+        ],
+        "open_questions": [],
+        "failing_tests": ["tests/test_maintenance_candidate_usage_resource.py"],
+        "verification": ["Run the new failing test before implementation."],
+        "rollback": ["Remove only the approved candidate fixture if its digest still matches."],
+    }
+    analysis_path = root / "analysis.json"
+    candidate_path = root / "candidate.json"
+    output_path = root / "proposal.json"
+    write_text(analysis_path, json.dumps(analysis, sort_keys=True))
+    write_text(candidate_path, json.dumps(candidate, sort_keys=True))
+    proposal = run_command_json(
+        [
+            sys.executable,
+            str(MAINTENANCE_SCRIPTS / "build_proposal.py"),
+            "--analysis",
+            str(analysis_path),
+            "--candidate",
+            str(candidate_path),
+            "--target-root",
+            str(target),
+            "--skill-root",
+            str(REPO_ROOT / "skills" / "openapi-engineering"),
+            "--skill-version",
+            "0.1.4",
+            "--config-sha256",
+            "b" * 64,
+            "--output",
+            str(output_path),
+            "--now",
+            "2026-07-19T12:00:00Z",
+        ]
+    )
+    promotion = run_command_json(
+        [
+            sys.executable,
+            str(MAINTENANCE_SCRIPTS / "promote_candidate.py"),
+            "--proposal",
+            str(output_path),
+            "--target-root",
+            str(target),
+            "--approve",
+            proposal["approval_sha256"],
+        ]
+    )
+    return proposal, promotion
+
+
 def capture_examples(output: Path) -> None:
     output.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as directory:
         root = Path(directory)
+        usage_examples = capture_usage(root / "usage")
+        proposal, promotion = capture_maintenance_proposal(root / "maintenance-proposal")
         examples = {
             "inspect-response.json": capture_inspection(root / "inspection"),
             "generation-comparison-response.json": capture_comparison(root / "comparison"),
@@ -219,11 +640,17 @@ def capture_examples(output: Path) -> None:
                 "--pretty",
                 expected_exit=2,
             ),
+            **usage_examples,
+            "maintenance-cycle-response.json": capture_maintenance_cycle(
+                root / "maintenance-cycle"
+            ),
+            "maintenance-proposal-response.json": proposal,
+            "maintenance-promotion-response.json": promotion,
         }
     for name, payload in examples.items():
-        (output / name).write_text(
+        write_text(
+            output / name,
             json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-            encoding="utf-8",
         )
 
 

@@ -1,0 +1,30 @@
+{
+  "data_completeness": {
+    "available_measurements": 1,
+    "unavailable_measurements": 9
+  },
+  "device_count": 1,
+  "generated_at": "2026-07-20T00:00:00.000Z",
+  "input_sha256": "af039b7dbd93ecfb8360d2edf0c8bd170db86aa0acac3ad58904846fb02e2381",
+  "metrics": {
+    "interview_max": 4,
+    "interview_median": 4,
+    "outcomes": {
+      "blocked": 0,
+      "failed": 0,
+      "partial": 0,
+      "passed": 5
+    },
+    "peak_rss_baseline_mb": null,
+    "peak_rss_max_mb": 640,
+    "tool_override_ratio": 0,
+    "unverified_ratio": 0
+  },
+  "period_id": "2026-W29",
+  "sample_count": 5,
+  "schema_version": 1,
+  "threshold_version": 1,
+  "triggered_rule_ids": [
+    "SI-RESOURCE-001"
+  ]
+}

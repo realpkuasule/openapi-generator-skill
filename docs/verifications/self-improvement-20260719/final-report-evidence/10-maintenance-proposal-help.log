@@ -1,0 +1,22 @@
+command=["<repo>/.venv/bin/python3", "<repo>/scripts/maintenance/build_proposal.py", "--help"]
+exit_code=0
+stdout:
+usage: build_proposal.py [-h] --analysis ANALYSIS --candidate CANDIDATE
+                         --target-root TARGET_ROOT --skill-root SKILL_ROOT
+                         --skill-version SKILL_VERSION --config-sha256
+                         CONFIG_SHA256 --output OUTPUT [--now NOW]
+
+Build an immutable maintenance proposal.
+
+options:
+  -h, --help            show this help message and exit
+  --analysis ANALYSIS
+  --candidate CANDIDATE
+  --target-root TARGET_ROOT
+  --skill-root SKILL_ROOT
+  --skill-version SKILL_VERSION
+  --config-sha256 CONFIG_SHA256
+  --output OUTPUT
+  --now NOW
+
+stderr:

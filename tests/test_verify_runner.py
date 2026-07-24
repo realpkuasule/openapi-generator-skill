@@ -18,6 +18,49 @@ REPORT_SCHEMA = REPO_ROOT / "contracts" / "schemas" / "verification-report.schem
 
 
 class VerifyRunnerTests(unittest.TestCase):
+    def test_deterministic_gates_include_runtime_help_packaging_and_si_traceability(self) -> None:
+        gates = {gate.name: gate for gate in verify.deterministic_gates()}
+
+        self.assertIn("maintainer-skill-quick-validation", gates)
+        self.assertIn("self-improvement-usage-e2e", gates)
+        self.assertIn("self-improvement-traceability", gates)
+        self.assertIn("usage-cli-help", gates)
+        self.assertIn("maintenance-analysis-help", gates)
+        self.assertIn("maintenance-proposal-help", gates)
+        self.assertIn("maintenance-promotion-help", gates)
+        self.assertIn("maintainer-eval-case-validation", gates)
+        self.assertIn("npm-package-dry-run", gates)
+        self.assertIn(
+            "skills/openapi-engineering-maintainer",
+            " ".join(
+                str(item).replace("\\", "/")
+                for item in gates["maintainer-skill-quick-validation"].command
+            ),
+        )
+        self.assertIn(
+            "tests.test_self_improvement_e2e",
+            " ".join(gates["self-improvement-usage-e2e"].command),
+        )
+        self.assertIn(
+            "--verify",
+            gates["self-improvement-traceability"].command,
+        )
+        self.assertEqual(gates["usage-cli-help"].command[0], "node")
+        self.assertIn("--ignore-scripts", gates["npm-package-dry-run"].command)
+        self.assertIn(
+            "skills/openapi-engineering-maintainer/evals",
+            " ".join(gates["maintainer-eval-case-validation"].command).replace("\\", "/"),
+        )
+
+    def test_windows_npm_gate_uses_the_cmd_shim_without_a_shell(self) -> None:
+        self.assertEqual(verify.npm_executable("nt"), "npm.cmd")
+        self.assertEqual(verify.npm_executable("posix"), "npm")
+
+    def test_portable_command_normalizes_redacted_windows_separators(self) -> None:
+        command = [str(REPO_ROOT) + "\\tool.py", "--flag"]
+
+        self.assertEqual(verify.portable_command(command), ["<repo>/tool.py", "--flag"])
+
     def test_failed_required_gate_makes_report_failed_and_exit_one(self) -> None:
         gate = verify.Gate("failing", ["fixture-command", "--check"])
         completed = subprocess.CompletedProcess(gate.command, 7, "out", "err")
@@ -78,6 +121,40 @@ class VerifyRunnerTests(unittest.TestCase):
         self.assertEqual(errors, [], [error.message for error in errors])
         _, kwargs = run.call_args
         self.assertFalse(kwargs.get("shell", False))
+
+    def test_report_and_evidence_redact_machine_specific_repository_paths(self) -> None:
+        repository_path = str(REPO_ROOT)
+        gate = verify.Gate(
+            "portable-evidence",
+            [str(REPO_ROOT / ".venv" / "bin" / "python"), str(REPO_ROOT / "tool.py")],
+        )
+        completed = subprocess.CompletedProcess(
+            gate.command,
+            0,
+            f"repository={repository_path}\n",
+            "",
+        )
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "scripts.verify.subprocess.run", return_value=completed
+        ):
+            report, exit_code = verify.run_verification(
+                "deterministic", Path(directory) / "report.json", gates=[gate]
+            )
+            evidence = Path(report["gates"][0]["evidence"])
+            evidence_text = evidence.read_text(encoding="utf-8")
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(
+            report["gates"][0]["command"],
+            ["<repo>/.venv/bin/python", "<repo>/tool.py"],
+        )
+        self.assertNotIn(repository_path, evidence_text)
+        self.assertIn("repository=<repo>", evidence_text)
+
+    def test_external_evidence_path_remains_absolute_and_readable(self) -> None:
+        external = Path.home() / ".openapi-engineering-test" / "evidence.log"
+
+        self.assertEqual(verify.portable_path(external), str(external.resolve()))
 
     def test_forward_tier_is_blocked_without_combined_report(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

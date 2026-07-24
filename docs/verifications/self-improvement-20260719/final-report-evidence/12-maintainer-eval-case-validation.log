@@ -1,0 +1,6 @@
+command=["<repo>/.venv/bin/python3", "<repo>/scripts/evals/load_cases.py", "--root", "<repo>/skills/openapi-engineering-maintainer/evals"]
+exit_code=0
+stdout:
+{"case_ids": ["maintainer-ordinary-handoff", "maintainer-privacy-boundary", "maintainer-promotion-approval", "maintainer-risk-secondary-review"], "count": 4, "status": "ok"}
+
+stderr:

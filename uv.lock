@@ -177,7 +177,7 @@ wheels = [
 
 [[package]]
 name = "openapi-engineering-skill"
-version = "0.1.0rc2"
+version = "0.1.5"
 source = { virtual = "." }
 dependencies = [
     { name = "jsonschema", extra = ["format-nongpl"] },

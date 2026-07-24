@@ -18,13 +18,24 @@ from typing import Any, Sequence
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SKILL_ROOT = REPO_ROOT / "skills" / "openapi-engineering"
+MAINTAINER_ROOT = REPO_ROOT / "skills" / "openapi-engineering-maintainer"
 SKILL_SCRIPTS = SKILL_ROOT / "scripts"
 REPORT_SCHEMA = REPO_ROOT / "contracts" / "schemas" / "verification-report.schema.json"
 TRACEABILITY_MANIFEST = REPO_ROOT / "contracts" / "acceptance-traceability.yaml"
+SELF_IMPROVEMENT_MANIFEST = (
+    REPO_ROOT / "contracts" / "self-improvement-acceptance-traceability.yaml"
+)
 DEFAULT_QUICK_VALIDATE = (
     REPO_ROOT / "scripts" / "quick_validate.py"
 )
-PROTECTED_ROOTS = (REPO_ROOT / "contracts", SKILL_ROOT, REPO_ROOT / "scripts")
+PROTECTED_ROOTS = (
+    REPO_ROOT / "bin",
+    REPO_ROOT / "contracts",
+    REPO_ROOT / "lib",
+    REPO_ROOT / "packaging",
+    REPO_ROOT / "scripts",
+    REPO_ROOT / "skills",
+)
 IGNORED_PARTS = {"__pycache__", ".DS_Store"}
 
 
@@ -56,6 +67,33 @@ def safe_name(value: str) -> str:
     return normalized or "gate"
 
 
+def redact_machine_paths(value: str) -> str:
+    replacements = (
+        (str(REPO_ROOT.resolve()), "<repo>"),
+        (str(Path.home().resolve()), "~"),
+    )
+    redacted = value
+    for source, replacement in replacements:
+        redacted = redacted.replace(source, replacement)
+    return redacted
+
+
+def portable_path(path: Path) -> str:
+    resolved = path.expanduser().resolve()
+    try:
+        return resolved.relative_to(REPO_ROOT.resolve()).as_posix()
+    except ValueError:
+        return str(resolved)
+
+
+def portable_command(command: Sequence[str]) -> list[str]:
+    return [redact_machine_paths(str(argument)).replace("\\", "/") for argument in command]
+
+
+def npm_executable(platform: str = os.name) -> str:
+    return "npm.cmd" if platform == "nt" else "npm"
+
+
 def prepare_evidence_dir(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
     for evidence_log in path.glob("*.log"):
@@ -79,17 +117,18 @@ def source_digest() -> str:
 
 
 def run_gate(gate: Gate, evidence_path: Path) -> dict[str, Any]:
-    missing = [str(path) for path in gate.required_paths if not path.is_file()]
+    display_command = portable_command(gate.command)
+    missing = [portable_path(path) for path in gate.required_paths if not path.is_file()]
     if missing:
         content = "Required path is missing:\n" + "\n".join(missing) + "\n"
         digest = write_evidence(evidence_path, content)
         return {
             "name": gate.name,
-            "command": gate.command,
+            "command": display_command,
             "exit_code": None,
             "status": "blocked",
             "duration_ms": 0,
-            "evidence": str(evidence_path.resolve()),
+            "evidence": portable_path(evidence_path),
             "evidence_sha256": digest,
             "risk": gate.risk or "A required verification capability is unavailable.",
             "rollback": gate.rollback,
@@ -107,22 +146,25 @@ def run_gate(gate: Gate, evidence_path: Path) -> dict[str, Any]:
         )
     except OSError as exc:
         duration_ms = int((time.monotonic() - started) * 1000)
-        digest = write_evidence(evidence_path, f"Unable to start command: {exc}\n")
+        digest = write_evidence(
+            evidence_path,
+            redact_machine_paths(f"Unable to start command: {exc}\n"),
+        )
         return {
             "name": gate.name,
-            "command": gate.command,
+            "command": display_command,
             "exit_code": None,
             "status": "blocked",
             "duration_ms": duration_ms,
-            "evidence": str(evidence_path.resolve()),
+            "evidence": portable_path(evidence_path),
             "evidence_sha256": digest,
             "risk": gate.risk or "The verification command could not be started.",
             "rollback": gate.rollback,
         }
 
     duration_ms = int((time.monotonic() - started) * 1000)
-    content = (
-        f"command={json.dumps(gate.command, ensure_ascii=False)}\n"
+    content = redact_machine_paths(
+        f"command={json.dumps(display_command, ensure_ascii=False)}\n"
         f"exit_code={result.returncode}\n"
         "stdout:\n"
         f"{result.stdout}"
@@ -132,11 +174,11 @@ def run_gate(gate: Gate, evidence_path: Path) -> dict[str, Any]:
     digest = write_evidence(evidence_path, content)
     return {
         "name": gate.name,
-        "command": gate.command,
+        "command": display_command,
         "exit_code": result.returncode,
         "status": "passed" if result.returncode == 0 else "failed",
         "duration_ms": duration_ms,
-        "evidence": str(evidence_path.resolve()),
+        "evidence": portable_path(evidence_path),
         "evidence_sha256": digest,
         "risk": gate.risk if result.returncode else None,
         "rollback": gate.rollback,
@@ -161,7 +203,7 @@ def internal_integrity_gate(before: str, evidence_path: Path) -> dict[str, Any]:
         "exit_code": 0 if passed else 1,
         "status": "passed" if passed else "failed",
         "duration_ms": 0,
-        "evidence": str(evidence_path.resolve()),
+        "evidence": portable_path(evidence_path),
         "evidence_sha256": digest,
         "risk": None if passed else "A verification gate modified protected source files.",
         "rollback": None,
@@ -191,6 +233,64 @@ def deterministic_gates() -> list[Gate]:
             [python, str(quick_validate), str(SKILL_ROOT)],
             required_paths=[quick_validate],
             risk="Skill packaging cannot be certified without the canonical validator.",
+        ),
+        Gate(
+            "maintainer-skill-quick-validation",
+            [python, str(quick_validate), str(MAINTAINER_ROOT)],
+            required_paths=[quick_validate, MAINTAINER_ROOT / "SKILL.md"],
+            risk="Maintainer Skill packaging cannot be certified without the canonical validator.",
+        ),
+        Gate(
+            "self-improvement-usage-e2e",
+            [python, "-m", "unittest", "tests.test_self_improvement_e2e", "-v"],
+        ),
+        Gate(
+            "self-improvement-traceability",
+            [
+                python,
+                str(REPO_ROOT / "scripts" / "check_self_improvement_traceability.py"),
+                "--manifest",
+                str(SELF_IMPROVEMENT_MANIFEST),
+                "--verify",
+            ],
+            required_paths=[
+                REPO_ROOT / "scripts" / "check_self_improvement_traceability.py",
+                SELF_IMPROVEMENT_MANIFEST,
+            ],
+        ),
+        Gate(
+            "usage-cli-help",
+            ["node", str(REPO_ROOT / "bin" / "openapi-engineering-skill.mjs"), "--help"],
+            required_paths=[REPO_ROOT / "bin" / "openapi-engineering-skill.mjs"],
+            risk="The packaged Node usage runtime is unavailable.",
+        ),
+        Gate(
+            "maintenance-analysis-help",
+            [python, str(REPO_ROOT / "scripts" / "maintenance" / "analyze_usage.py"), "--help"],
+        ),
+        Gate(
+            "maintenance-proposal-help",
+            [python, str(REPO_ROOT / "scripts" / "maintenance" / "build_proposal.py"), "--help"],
+        ),
+        Gate(
+            "maintenance-promotion-help",
+            [python, str(REPO_ROOT / "scripts" / "maintenance" / "promote_candidate.py"), "--help"],
+        ),
+        Gate(
+            "maintainer-eval-case-validation",
+            [
+                python,
+                str(REPO_ROOT / "scripts" / "evals" / "load_cases.py"),
+                "--root",
+                str(MAINTAINER_ROOT / "evals"),
+            ],
+            required_paths=[MAINTAINER_ROOT / "evals" / "ordinary-handoff.yaml"],
+        ),
+        Gate(
+            "npm-package-dry-run",
+            [npm_executable(), "pack", "--dry-run", "--json", "--ignore-scripts"],
+            required_paths=[REPO_ROOT / "package.json"],
+            risk="The npm runtime allowlist could not be verified.",
         ),
         Gate(
             "inspect-project-help",
@@ -277,7 +377,7 @@ def blocked_tier_gate(tier: str, evidence_path: Path) -> dict[str, Any]:
         "exit_code": None,
         "status": "blocked",
         "duration_ms": 0,
-        "evidence": str(evidence_path.resolve()),
+        "evidence": portable_path(evidence_path),
         "evidence_sha256": digest,
         "risk": risk,
         "rollback": None,

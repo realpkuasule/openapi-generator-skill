@@ -129,6 +129,18 @@ class SkillPackageTests(unittest.TestCase):
         forbidden = {"README.md", "INSTALLATION_GUIDE.md", "QUICK_REFERENCE.md", "CHANGELOG.md"}
         self.assertFalse(forbidden & {path.name for path in SKILL_ROOT.rglob("*")})
 
+    def test_opt_in_completion_hook_records_only_facts_and_never_changes_outcome(self) -> None:
+        body = self.body.lower()
+        for phrase in (
+            "opt-in completion hook",
+            "usage status",
+            "feedback_required",
+            "recording failure",
+            "does not change the task outcome",
+            "do not run maintenance analysis",
+        ):
+            self.assertIn(phrase, body)
+
 
 if __name__ == "__main__":
     unittest.main()

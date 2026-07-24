@@ -2,6 +2,152 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+## [0.1.5] - 2026-07-24
+
+### Fixed
+
+- Recognize metadata-free canonical payloads created by the `0.1.0-rc.2` npm installer and
+  atomically relink Codex and Claude Code runtime targets during an upgrade.
+- Keep unversioned or structurally invalid managed-path symlinks as hard conflicts, and preserve
+  every earlier canonical payload for rollback.
+
+### Contract impact
+
+- The OpenAPI control-plane contract is unchanged. The existing installer `would-relink` behavior
+  now covers the historical npm layout that predated canonical `package.json` metadata.
+
+## [0.1.4] - 2026-07-24
+
+### Documentation
+
+- Clarify that `v0.1.2` is a historical source-only tag and that npm installations should use the
+  published `0.1.3` release until a later publication is explicitly authorized.
+- Install and verify the runtime and Maintainer Skills together on Codex and Claude Code machines,
+  while documenting how runtime-only installations opt out of private self-improvement analysis.
+- Add source-checkout command-resolution, npm authentication, credential-safety, and complete
+  component-uninstall guidance.
+
+### Contract impact
+
+- The Contract-First additive contract remains OpenAPI 1.3.0; this patch changes documentation,
+  package metadata, captured version examples, and release evidence only.
+
+### Verified
+
+- All 282 tests and 26 deterministic gates pass serially, including captured contract examples,
+  self-improvement acceptance traceability, process resource limits, and the isolated npm package
+  lifecycle.
+
+## [0.1.3] - 2026-07-22
+
+### Fixed
+
+- CLI capability probes now close inherited standard input, preventing fake or third-party version
+  commands from blocking when deterministic verification runs inside an interactive npm lifecycle.
+
+### Contract impact
+
+- The Contract-First behavioral control-plane remains OpenAPI 1.3.0; this patch changes only probe
+  process isolation and release metadata.
+
+## [0.1.2] - 2026-07-22
+
+### Added
+
+- Exact-digest standing authorization for coordinator-only unattended maintenance using an active
+  Codex/Claude Code CLI session without storing credentials, including a qualified absolute
+  Python/jsonschema runtime so launchd does not rely on its restricted `PATH`.
+- A serial `maintenance cycle` that synchronizes private evidence, evaluates deterministic due
+  findings, runs Codex and risk-required Claude with at most two attempts, and writes idempotent
+  private JSON/Markdown terminal reports with an optional content-free macOS notification.
+- Contract-First OpenAPI 1.3.0 operations and strict JSON Schemas for automation, cycles, reports,
+  config v2, plus SI-AC-19 through SI-AC-24 traceability.
+
+### Changed
+
+- The managed launchd job now runs the complete maintenance cycle instead of stopping after
+  `usage due`.
+
+### Safety
+
+- Collection and unattended analysis remain disabled by default. Binding drift, sync failure, or
+  invalid input blocks before model invocation. Scheduled execution cannot create proposals,
+  promote candidates, edit public source, use GitHub, or publish npm.
+
+### Verified
+
+- The deterministic Contract-First suite, complete unit suite, acceptance traceability, captured
+  examples, and isolated npm package lifecycle pass before publication.
+- The retained live active-session smoke remains an honest failed verification; this patch does not
+  claim that the isolated Codex primary analysis path passed live.
+
+## [0.1.1] - 2026-07-21
+
+### Added
+
+- Privacy-safe, opt-in self-improvement collection, deterministic thresholds, trend analysis,
+  retention, proposal, promotion, and Maintainer Skill workflows.
+- Active CLI session authentication and digest-bound secondary-review recovery for users without
+  separate OpenAI or Anthropic API keys.
+
+### Fixed
+
+- Cross-platform deterministic CI, Windows portability, line-ending stability, and canonical Skill
+  digest consistency across packaging and installation environments.
+
+### Contract impact
+
+- This patch release publishes the additive OpenAPI 1.2.0 Usage and Maintenance control plane
+  prepared on the release-candidate branch; the version bump itself adds no further API change.
+
+### Verified
+
+- Packaged lifecycle verification, 269 local tests, 26 deterministic gates, live serial
+  Codex-to-Claude Maintainer analysis, and Ubuntu/macOS/Windows CI passed before the release bump.
+- npm publication and GitHub Release creation remain separate from this source tag.
+
+## [0.1.0-rc.3] - 2026-07-19
+
+### Added
+
+- Opt-in, privacy-preserving usage collection, feedback, aggregation, thresholds, retention, and
+  deterministic trend/recurrence reports across coordinator and collector devices.
+- Strict launcher and Maintainer analyzer process watchers with timeout, process-group ownership,
+  peak RSS evidence, and serial Codex/Claude risk review.
+- Active CLI session authentication for Codex and Claude-compatible providers without requiring
+  separate OpenAI or Anthropic API keys, while excluding user hooks, plugins, tools, and history.
+- Digest-bound analysis recovery that reuses a passed Codex primary result and reruns only the
+  required Claude review, with safe failure codes and preserved resource evidence.
+- Approval-bound private proposal and promotion workflows with path allowlists, secret scanning,
+  exact target hashes, atomic rollback, and deliberately RED failing-test candidates.
+- Explicit runtime and Maintainer installation for both Codex and Claude Code, including safe
+  migration from verified legacy Git or earlier npm canonical symlinks.
+
+### Contract impact
+
+- The Contract-First behavioral control-plane is OpenAPI 1.2.0.
+- The change is additive for existing OpenAPI engineering operations and introduces new Usage and
+  Maintenance schemas and CLI commands. Maintenance proposal Schema v2 requires artifact bytes
+  and open-question bindings before promotion.
+
+### Safety and release state
+
+- Collection remains disabled by default and requires explicit local and separate sync opt-ins.
+- Model-backed jobs remain manual, serial, environment-approved, and excluded from ordinary CI.
+- `0.1.0-rc.3` is prepared but must not be published or tagged until deterministic, cross-platform,
+  and approved live evidence gates complete.
+
+### Verified
+
+- OpenAPI 1.2.0, all JSON Schemas, captured examples, and 269/269 tests pass locally.
+- The actual npm tarball completes isolated install, digest verification, and uninstall without
+  touching real Codex or Claude Code settings.
+- Ubuntu, macOS, and Windows deterministic jobs pass on PR #4.
+- The approved live Maintainer gate passed in strict Codex→Claude order. Claude Code used the
+  configured `deepseek-v4-pro[1m]` compatible model; both analyzers remained below 512 MiB RSS.
+
 ## [0.1.0-rc.2] - 2026-07-19
 
 ### Added

@@ -1,0 +1,19 @@
+command=["<repo>/.venv/bin/python3", "<repo>/skills/openapi-engineering/scripts/run_empirical_gate.py", "--help"]
+exit_code=0
+stdout:
+usage: run_empirical_gate.py [-h] --manifest MANIFEST [--execute]
+                             [--approve APPROVE] [--report REPORT]
+                             [--check-report CHECK_REPORT] [--pretty]
+
+Plan or run an approval-bound empirical generator gate.
+
+options:
+  -h, --help            show this help message and exit
+  --manifest MANIFEST
+  --execute
+  --approve APPROVE
+  --report REPORT
+  --check-report CHECK_REPORT
+  --pretty
+
+stderr:

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openapi-engineering.local/schemas/retention-plan.schema.json",
+  "title": "OpenAPI Engineering Retention Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "plan_version",
+    "status",
+    "scope",
+    "generated_at",
+    "local_cutoff",
+    "remote_cutoff",
+    "items",
+    "source_revision",
+    "plan_sha256",
+    "applied"
+  ],
+  "properties": {
+    "plan_version": { "const": 1 },
+    "status": { "enum": ["ok", "conflict"] },
+    "scope": { "enum": ["local", "remote"] },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "local_cutoff": { "type": "string", "format": "date-time" },
+    "remote_cutoff": { "type": "string", "format": "date-time" },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "kind", "sha256", "delete_count", "retain_count"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^(?:(?:local/events|feedback|aggregate)|remote/(?:events|feedback))/(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"
+          },
+          "kind": {
+            "enum": ["local-event", "local-feedback", "aggregate-event", "aggregate-feedback", "remote-event", "remote-feedback"]
+          },
+          "sha256": { "$ref": "#/$defs/sha256" },
+          "delete_count": { "type": "integer", "minimum": 1 },
+          "retain_count": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "source_revision": {
+      "type": ["string", "null"],
+      "pattern": "^[a-f0-9]{40,64}$"
+    },
+    "plan_sha256": { "$ref": "#/$defs/sha256" },
+    "applied": { "type": "boolean" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

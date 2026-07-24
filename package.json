@@ -1,6 +1,6 @@
 {
   "name": "@realpkuasule/openapi-engineering-skill",
-  "version": "0.1.0-rc.2",
+  "version": "0.1.5",
   "description": "Contract-First OpenAPI engineering skill for Codex and Claude Code",
   "license": "UNLICENSED",
   "type": "module",
@@ -12,17 +12,31 @@
   },
   "files": [
     "bin/",
+    "lib/usage/",
+    "packaging/launchd/",
     "skills/openapi-engineering/",
     "!skills/openapi-engineering/**/__pycache__/",
     "!skills/openapi-engineering/**/*.pyc",
     "!skills/openapi-engineering/**/*.pyo",
     "!skills/openapi-engineering/**/.DS_Store",
+    "skills/openapi-engineering-maintainer/",
+    "!skills/openapi-engineering-maintainer/**/__pycache__/",
+    "!skills/openapi-engineering-maintainer/**/*.pyc",
+    "!skills/openapi-engineering-maintainer/**/*.pyo",
+    "!skills/openapi-engineering-maintainer/**/.DS_Store",
+    "scripts/maintenance/",
+    "!scripts/maintenance/**/__pycache__/",
+    "!scripts/maintenance/**/*.pyc",
+    "contracts/schemas/usage-*.json",
+    "contracts/schemas/user-feedback.schema.json",
+    "contracts/schemas/maintenance-*.json",
+    "contracts/schemas/retention-plan.schema.json",
     "README.md",
     "CHANGELOG.md"
   ],
   "scripts": {
     "test": "python3 -m unittest tests.test_npm_distribution -v",
-    "prepublishOnly": "npm test"
+    "prepublishOnly": "python3 scripts/verify.py --tier deterministic"
   },
   "dependencies": {},
   "publishConfig": {

@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openapi-engineering.local/schemas/user-feedback.schema.json",
+  "title": "OpenAPI Engineering User Feedback",
+  "oneOf": [
+    { "$ref": "#/$defs/local_feedback" },
+    { "$ref": "#/$defs/sanitized_feedback" }
+  ],
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[a-z]+-[a-f0-9]{16,64}$" },
+    "device_alias": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,31}$" },
+    "rating": { "enum": ["met", "friction", "wrong-decision", "execution-error", "skipped"] },
+    "friction_tag": {
+      "enum": [
+        "too-many-questions",
+        "boundary-mismatch",
+        "wrong-tool",
+        "generation-quality",
+        "verification-gap",
+        "platform-drift",
+        "resource-usage",
+        "other"
+      ]
+    },
+    "local_feedback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "feedback_id",
+        "event_id",
+        "recorded_at",
+        "device_alias",
+        "rating",
+        "friction_tags",
+        "note",
+        "feedback_status"
+      ],
+      "properties": {
+        "schema_version": { "const": 1 },
+        "feedback_id": { "$ref": "#/$defs/identifier" },
+        "event_id": { "$ref": "#/$defs/identifier" },
+        "recorded_at": { "type": "string", "format": "date-time" },
+        "device_alias": { "$ref": "#/$defs/device_alias" },
+        "rating": { "$ref": "#/$defs/rating" },
+        "friction_tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/friction_tag" }
+        },
+        "note": { "type": ["string", "null"], "maxLength": 2000 },
+        "feedback_status": { "enum": ["answered", "unknown", "skipped"] }
+      }
+    },
+    "sanitized_feedback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "feedback_id",
+        "event_id",
+        "recorded_at",
+        "device_alias",
+        "rating",
+        "friction_tags",
+        "feedback_status"
+      ],
+      "properties": {
+        "schema_version": { "const": 1 },
+        "feedback_id": { "$ref": "#/$defs/identifier" },
+        "event_id": { "$ref": "#/$defs/identifier" },
+        "recorded_at": { "type": "string", "format": "date-time" },
+        "device_alias": { "$ref": "#/$defs/device_alias" },
+        "rating": { "$ref": "#/$defs/rating" },
+        "friction_tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/friction_tag" }
+        },
+        "feedback_status": { "enum": ["answered", "unknown", "skipped"] }
+      }
+    }
+  }
+}

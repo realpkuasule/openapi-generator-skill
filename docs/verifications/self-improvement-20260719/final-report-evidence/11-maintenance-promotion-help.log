@@ -1,0 +1,16 @@
+command=["<repo>/.venv/bin/python3", "<repo>/scripts/maintenance/promote_candidate.py", "--help"]
+exit_code=0
+stdout:
+usage: promote_candidate.py [-h] --proposal PROPOSAL --target-root TARGET_ROOT
+                            --approve APPROVE [--apply]
+
+Plan or apply an exact approval-bound maintenance promotion.
+
+options:
+  -h, --help            show this help message and exit
+  --proposal PROPOSAL
+  --target-root TARGET_ROOT
+  --approve APPROVE
+  --apply
+
+stderr:

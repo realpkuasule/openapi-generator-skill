@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shutil
@@ -15,9 +16,20 @@ from tests.support import REPO_ROOT, SKILL_ROOT, snapshot_tree
 PACKAGE_JSON = REPO_ROOT / "package.json"
 NODE_INSTALLER = REPO_ROOT / "bin" / "openapi-engineering-skill.mjs"
 PACKAGE_NAME = "@realpkuasule/openapi-engineering-skill"
-PACKAGE_VERSION = "0.1.0-rc.2"
-RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.0-rc.2.md"
+PACKAGE_VERSION = "0.1.5"
+RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.5.md"
 NPM = shutil.which("npm") or "npm"
+
+
+def nested_npm_environment(
+    environment: dict[str, str] | None = None,
+) -> dict[str, str]:
+    sanitized = dict(os.environ if environment is None else environment)
+    for key in tuple(sanitized):
+        if key.casefold() == "npm_config_dry_run":
+            sanitized.pop(key)
+    sanitized["npm_config_dry_run"] = "false"
+    return sanitized
 
 
 def run_cli(home: Path, *arguments: str) -> tuple[subprocess.CompletedProcess[str], dict]:
@@ -40,6 +52,31 @@ def run_cli(home: Path, *arguments: str) -> tuple[subprocess.CompletedProcess[st
 
 
 class NpmDistributionTests(unittest.TestCase):
+    def test_nested_npm_commands_disable_parent_dry_run(self) -> None:
+        environment = nested_npm_environment(
+            {"PATH": "/test/bin", "NPM_CONFIG_DRY_RUN": "true"}
+        )
+
+        self.assertEqual(environment["PATH"], "/test/bin")
+        self.assertEqual(environment["npm_config_dry_run"], "false")
+        self.assertNotIn("NPM_CONFIG_DRY_RUN", environment)
+
+    def test_python_skill_digest_uses_platform_neutral_relative_name_order(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            nested = root / "a" / "item.txt"
+            nested.parent.mkdir()
+            nested.write_bytes(b"nested")
+            (root / "a0.txt").write_bytes(b"flat")
+            expected = hashlib.sha256()
+            for name, content in (("a/item.txt", b"nested"), ("a0.txt", b"flat")):
+                expected.update(name.encode("utf-8"))
+                expected.update(b"\0")
+                expected.update(content)
+                expected.update(b"\0")
+
+            self.assertEqual(tree_digest(root), expected.hexdigest())
+
     def test_package_manifest_is_pinned_allowlisted_and_has_no_postinstall(self) -> None:
         manifest = json.loads(PACKAGE_JSON.read_text(encoding="utf-8"))
 
@@ -56,11 +93,25 @@ class NpmDistributionTests(unittest.TestCase):
             manifest["files"],
             [
                 "bin/",
+                "lib/usage/",
+                "packaging/launchd/",
                 "skills/openapi-engineering/",
                 "!skills/openapi-engineering/**/__pycache__/",
                 "!skills/openapi-engineering/**/*.pyc",
                 "!skills/openapi-engineering/**/*.pyo",
                 "!skills/openapi-engineering/**/.DS_Store",
+                "skills/openapi-engineering-maintainer/",
+                "!skills/openapi-engineering-maintainer/**/__pycache__/",
+                "!skills/openapi-engineering-maintainer/**/*.pyc",
+                "!skills/openapi-engineering-maintainer/**/*.pyo",
+                "!skills/openapi-engineering-maintainer/**/.DS_Store",
+                "scripts/maintenance/",
+                "!scripts/maintenance/**/__pycache__/",
+                "!scripts/maintenance/**/*.pyc",
+                "contracts/schemas/usage-*.json",
+                "contracts/schemas/user-feedback.schema.json",
+                "contracts/schemas/maintenance-*.json",
+                "contracts/schemas/retention-plan.schema.json",
                 "README.md",
                 "CHANGELOG.md",
             ],
@@ -68,6 +119,10 @@ class NpmDistributionTests(unittest.TestCase):
         self.assertEqual(manifest["publishConfig"], {"access": "public"})
         self.assertNotIn("postinstall", manifest.get("scripts", {}))
         self.assertEqual(manifest.get("dependencies", {}), {})
+        self.assertEqual(
+            manifest["scripts"]["prepublishOnly"],
+            "python3 scripts/verify.py --tier deterministic",
+        )
 
     def test_packed_files_exclude_caches_tests_evidence_and_development_tools(self) -> None:
         result = subprocess.run(
@@ -83,15 +138,126 @@ class NpmDistributionTests(unittest.TestCase):
 
         self.assertIn("bin/openapi-engineering-skill.mjs", paths)
         self.assertIn("skills/openapi-engineering/SKILL.md", paths)
+        self.assertIn("skills/openapi-engineering-maintainer/SKILL.md", paths)
+        self.assertIn("lib/usage/config.mjs", paths)
+        self.assertIn("lib/usage/maintenance-cycle.mjs", paths)
+        self.assertIn("lib/usage/maintenance-report.mjs", paths)
+        self.assertIn(
+            "packaging/launchd/com.realpkuasule.openapi-engineering-maintainer.plist", paths
+        )
+        self.assertIn("scripts/maintenance/analyze_usage.py", paths)
+        self.assertIn("contracts/schemas/usage-event.schema.json", paths)
+        self.assertIn("contracts/schemas/maintenance-cycle.schema.json", paths)
+        self.assertIn("contracts/schemas/maintenance-report.schema.json", paths)
+        self.assertIn("contracts/schemas/retention-plan.schema.json", paths)
+        self.assertIn(
+            "skills/openapi-engineering-maintainer/references/unattended-cycle.md", paths
+        )
+        self.assertIn(
+            "skills/openapi-engineering-maintainer/evals/unattended-cycle.yaml", paths
+        )
+        self.assertIn("scripts/maintenance/process_watch.py", paths)
         self.assertFalse(any("__pycache__" in path for path in paths))
         self.assertFalse(any(path.endswith((".pyc", ".pyo")) for path in paths))
+        self.assertFalse(any(path.startswith(prefix) for path in paths for prefix in ("docs/", "tests/")))
         self.assertFalse(
             any(
-                path.startswith(prefix)
+                path.startswith("contracts/")
+                and not path.startswith("contracts/schemas/")
                 for path in paths
-                for prefix in ("contracts/", "docs/", "scripts/", "tests/")
             )
         )
+
+    def test_real_tarball_installs_verifies_and_uninstalls_in_an_isolated_home(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            packages = root / "packages"
+            consumer = root / "consumer"
+            home = root / "home"
+            packages.mkdir()
+            packed = subprocess.run(
+                [
+                    NPM,
+                    "pack",
+                    "--ignore-scripts",
+                    "--json",
+                    "--pack-destination",
+                    str(packages),
+                ],
+                cwd=REPO_ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+                env=nested_npm_environment(),
+            )
+            self.assertEqual(packed.returncode, 0, packed.stderr)
+            tarball = packages / json.loads(packed.stdout)[0]["filename"]
+            installed_package = subprocess.run(
+                [
+                    NPM,
+                    "install",
+                    "--ignore-scripts",
+                    "--no-audit",
+                    "--no-fund",
+                    "--offline",
+                    "--package-lock=false",
+                    "--prefix",
+                    str(consumer),
+                    str(tarball),
+                ],
+                cwd=root,
+                text=True,
+                capture_output=True,
+                check=False,
+                env=nested_npm_environment(),
+            )
+            self.assertEqual(installed_package.returncode, 0, installed_package.stderr)
+            packaged_cli = (
+                consumer
+                / "node_modules"
+                / "@realpkuasule"
+                / "openapi-engineering-skill"
+                / "bin"
+                / "openapi-engineering-skill.mjs"
+            )
+
+            def packaged(*arguments: str) -> tuple[subprocess.CompletedProcess[str], dict]:
+                result = subprocess.run(
+                    ["node", str(packaged_cli), *arguments, "--home", str(home), "--json"],
+                    cwd=root,
+                    text=True,
+                    capture_output=True,
+                    check=False,
+                )
+                return result, json.loads(result.stdout) if result.stdout else {}
+
+            applied, apply_payload = packaged("install", "--apply")
+            verified, verify_payload = packaged("verify")
+            removed, remove_payload = packaged("uninstall", "--apply")
+
+            self.assertEqual(applied.returncode, 0, applied.stderr)
+            self.assertEqual(verified.returncode, 0, verified.stderr)
+            self.assertEqual(removed.returncode, 0, removed.stderr)
+            self.assertTrue(apply_payload["applied"])
+            self.assertTrue(verify_payload["verified"])
+            self.assertTrue(remove_payload["applied"])
+            self.assertEqual(
+                {row["action"] for row in remove_payload["installations"]},
+                {"remove"},
+            )
+            self.assertFalse((home / ".codex" / "skills" / "openapi-engineering").exists())
+            self.assertFalse((home / ".claude" / "skills" / "openapi-engineering").exists())
+            self.assertTrue(
+                (
+                    home
+                    / ".local"
+                    / "share"
+                    / "openapi-engineering-skill"
+                    / PACKAGE_VERSION
+                    / "skills"
+                    / "openapi-engineering"
+                ).is_dir()
+            )
 
     def test_release_plan_records_contract_impact_publish_and_rollback(self) -> None:
         content = RELEASE_PLAN.read_text(encoding="utf-8")
@@ -100,8 +266,8 @@ class NpmDistributionTests(unittest.TestCase):
             PACKAGE_NAME,
             PACKAGE_VERSION,
             "Contract-First",
-            "OpenAPI 1.1.0",
-            "no schema change",
+            "OpenAPI 1.3.0",
+            "additive contract",
             "npm publish",
             "rollback",
         ):
@@ -209,6 +375,194 @@ class NpmDistributionTests(unittest.TestCase):
             )
             self.assertTrue(canonical.is_dir())
             self.assertEqual(settings.read_text(encoding="utf-8"), '{"keep":true}\n')
+
+    def test_maintainer_component_is_explicit_and_installs_on_both_platforms(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory)
+
+            installed, install_payload = run_cli(
+                home,
+                "install",
+                "--component",
+                "runtime",
+                "--component",
+                "maintainer",
+                "--apply",
+            )
+            verified, verify_payload = run_cli(
+                home,
+                "verify",
+                "--component",
+                "runtime",
+                "--component",
+                "maintainer",
+            )
+
+            self.assertEqual(installed.returncode, 0, installed.stderr)
+            self.assertEqual(verified.returncode, 0, verified.stderr)
+            self.assertEqual(
+                {(row["platform"], row["component"]) for row in install_payload["installations"]},
+                {
+                    ("codex", "runtime"),
+                    ("claude", "runtime"),
+                    ("codex", "maintainer"),
+                    ("claude", "maintainer"),
+                },
+            )
+            self.assertTrue(
+                (home / ".codex" / "skills" / "openapi-engineering-maintainer").exists()
+            )
+            self.assertTrue(
+                (home / ".claude" / "skills" / "openapi-engineering-maintainer").exists()
+            )
+            self.assertTrue(verify_payload["verified"])
+
+    @unittest.skipIf(os.name == "nt", "versioned symlink migration is POSIX-only")
+    def test_install_safely_relinks_a_verified_older_npm_canonical(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory)
+            installed, _payload = run_cli(home, "install", "--apply")
+            self.assertEqual(installed.returncode, 0, installed.stderr)
+            managed = home / ".local" / "share" / "openapi-engineering-skill"
+            current = managed / PACKAGE_VERSION
+            older = managed / "0.1.0-rc.1"
+            current.rename(older)
+            package = json.loads((older / "package.json").read_text(encoding="utf-8"))
+            package["version"] = "0.1.0-rc.1"
+            (older / "package.json").write_text(json.dumps(package), encoding="utf-8")
+            for platform in (".codex", ".claude"):
+                target = home / platform / "skills" / "openapi-engineering"
+                target.unlink()
+                target.symlink_to(older / "skills" / "openapi-engineering", target_is_directory=True)
+
+            planned, plan = run_cli(home, "install")
+
+            self.assertEqual(planned.returncode, 0, planned.stderr)
+            self.assertEqual(
+                {row["action"] for row in plan["installations"]}, {"would-relink"}
+            )
+            self.assertFalse(current.exists())
+
+            upgraded, upgrade = run_cli(home, "install", "--apply")
+            verified, verification = run_cli(home, "verify")
+
+            self.assertEqual(upgraded.returncode, 0, upgraded.stderr)
+            self.assertEqual(verified.returncode, 0, verified.stderr)
+            self.assertEqual({row["action"] for row in upgrade["installations"]}, {"link"})
+            self.assertTrue(verification["verified"])
+            self.assertTrue(older.is_dir())
+
+    @unittest.skipIf(os.name == "nt", "historical npm symlink migration is POSIX-only")
+    def test_install_relinks_an_rc2_npm_canonical_without_package_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory)
+            older = (
+                home
+                / ".local"
+                / "share"
+                / "openapi-engineering-skill"
+                / "0.1.0-rc.2"
+                / "skills"
+                / "openapi-engineering"
+            )
+            older.parent.mkdir(parents=True)
+            shutil.copytree(SKILL_ROOT, older)
+            for platform in (".codex", ".claude"):
+                target = home / platform / "skills" / "openapi-engineering"
+                target.parent.mkdir(parents=True)
+                target.symlink_to(older, target_is_directory=True)
+
+            components = ("--component", "runtime", "--component", "maintainer")
+            planned, plan = run_cli(home, "install", *components)
+
+            self.assertEqual(planned.returncode, 0, planned.stderr)
+            self.assertEqual(
+                {
+                    (row["platform"], row["component"], row["action"])
+                    for row in plan["installations"]
+                },
+                {
+                    ("codex", "runtime", "would-relink"),
+                    ("claude", "runtime", "would-relink"),
+                    ("codex", "maintainer", "would-link"),
+                    ("claude", "maintainer", "would-link"),
+                },
+            )
+            self.assertEqual(
+                {
+                    row["previous_version"]
+                    for row in plan["installations"]
+                    if row["component"] == "runtime"
+                },
+                {"0.1.0-rc.2"},
+            )
+
+            applied, application = run_cli(home, "install", *components, "--apply")
+            verified, verification = run_cli(home, "verify", *components)
+
+            self.assertEqual(applied.returncode, 0, applied.stderr)
+            self.assertEqual({row["action"] for row in application["installations"]}, {"link"})
+            self.assertEqual(verified.returncode, 0, verified.stderr)
+            self.assertTrue(verification["verified"])
+            self.assertTrue(older.is_dir())
+
+    @unittest.skipIf(os.name == "nt", "managed symlink safety is POSIX-only")
+    def test_install_rejects_an_unversioned_managed_symlink_without_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory)
+            unmanaged = (
+                home
+                / ".local"
+                / "share"
+                / "openapi-engineering-skill"
+                / "manual-backup"
+                / "skills"
+                / "openapi-engineering"
+            )
+            unmanaged.parent.mkdir(parents=True)
+            shutil.copytree(SKILL_ROOT, unmanaged)
+            target = home / ".codex" / "skills" / "openapi-engineering"
+            target.parent.mkdir(parents=True)
+            target.symlink_to(unmanaged, target_is_directory=True)
+            before = snapshot_tree(home)
+
+            planned, plan = run_cli(home, "install")
+
+            self.assertEqual(planned.returncode, 1, planned.stderr)
+            self.assertEqual(plan["status"], "conflict")
+            self.assertEqual(plan["installations"][0]["action"], "conflict")
+            self.assertEqual(snapshot_tree(home), before)
+
+    @unittest.skipIf(os.name == "nt", "legacy source symlink migration is POSIX-only")
+    def test_install_migrates_legacy_git_canonical_without_deleting_it(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory)
+            legacy = (
+                home
+                / ".local"
+                / "share"
+                / "openapi-generator-skill"
+                / "v0.1.0-rc.1"
+                / "skills"
+                / "openapi-engineering"
+            )
+            legacy.parent.mkdir(parents=True)
+            shutil.copytree(SKILL_ROOT, legacy)
+            for platform in (".codex", ".claude"):
+                target = home / platform / "skills" / "openapi-engineering"
+                target.parent.mkdir(parents=True)
+                target.symlink_to(legacy, target_is_directory=True)
+
+            planned, plan = run_cli(home, "install")
+            applied, _application = run_cli(home, "install", "--apply")
+            verified, verification = run_cli(home, "verify")
+
+            self.assertEqual(planned.returncode, 0, planned.stderr)
+            self.assertEqual({row["action"] for row in plan["installations"]}, {"would-relink"})
+            self.assertEqual(applied.returncode, 0, applied.stderr)
+            self.assertEqual(verified.returncode, 0, verified.stderr)
+            self.assertTrue(verification["verified"])
+            self.assertTrue(legacy.is_dir())
 
 
 if __name__ == "__main__":

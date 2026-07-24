@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: OpenAPI Engineering Control Plane
-  version: 1.1.0
+  version: 1.3.0
   description: >-
     Platform-neutral contracts for helpers bundled with the openapi-engineering
     skill. Discovery, comparison, and proposal operations are read-only; the
@@ -14,6 +14,8 @@ tags:
   - name: Governance
   - name: Generation
   - name: Evaluation
+  - name: Usage
+  - name: Maintenance
 paths:
   /v1/inspections:
     post:
@@ -393,6 +395,563 @@ paths:
             application/json:
               schema:
                 $ref: './schemas/forward-eval-report.schema.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/usage/configuration:
+    post:
+      operationId: configureUsage
+      x-cli-command: >-
+        openapi-engineering-skill usage <status|enable|disable|sync-configure>
+        [--device <alias>] [--remote <url> --branch <branch>] [--apply]
+      x-cli-arguments:
+        action: first positional usage action
+        device: --device; local non-identifying device alias
+        remote: --remote; approved standard Git remote
+        branch: --branch; approved branch
+        apply: --apply; required for configuration changes, omitted for dry-run
+      x-cli-exit-codes:
+        '0': status returned, dry-run planned, or approved configuration applied
+        '1': requested state conflicts with existing authorization
+        '2': invalid or unsafe configuration
+      tags: [Usage]
+      summary: Inspect or change separately approved local collection and synchronization
+      description: >-
+        New installations and upgrades remain disabled. Status is read-only. Enable,
+        disable, and sync configuration are dry-run by default and require --apply.
+        Changing the remote, branch, device alias, state root, or data classification
+        invalidates the previous synchronization authorization.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsageConfigurationCommand'
+      responses:
+        '200':
+          description: Current or proposed configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageConfigurationResult'
+              examples:
+                disabledDefaults:
+                  externalValue: './examples/usage-status-response.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/usage/events:
+    post:
+      operationId: recordUsageEvent
+      x-cli-command: >-
+        openapi-engineering-skill usage record --completion-report <path>
+        --capture-mode <best-effort|launcher> [--launcher-report <path>]
+      x-cli-arguments:
+        completion_report: --completion-report; structured local completion facts
+        capture_mode: --capture-mode
+        launcher_report: --launcher-report; required for launcher mode and rejected for best-effort
+      x-cli-exit-codes:
+        '0': event recorded or collection-disabled no-op reported
+        '1': event rejected by privacy or integrity policy
+        '2': invalid input or inaccessible configured state
+      tags: [Usage]
+      summary: Record a local structured usage event after explicit opt-in
+      description: >-
+        Uses standing local opt-in. It never stores raw dialogue, source, specification
+        bodies, stdout/stderr, environment variables, credentials, or full argv. A
+        recording failure cannot change the original task outcome.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocalUsageEvent'
+      responses:
+        '200':
+          description: Recorded local event.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageRecordResult'
+              examples:
+                bestEffortEvent:
+                  externalValue: './examples/usage-record-response.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/usage/feedback:
+    post:
+      operationId: recordUsageFeedback
+      x-cli-command: >-
+        openapi-engineering-skill usage feedback --session <id> --rating <rating>
+        [--tag <tag>]
+      x-cli-arguments:
+        session: --session
+        rating: --rating; user-provided, never AI-inferred
+        tag: --tag; optional approved friction category
+      x-cli-exit-codes:
+        '0': feedback recorded or collection-disabled no-op reported
+        '1': session is unknown or already has immutable feedback
+        '2': invalid rating, tag, or local state
+      tags: [Usage]
+      summary: Record explicit user feedback separately from AI assessment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocalUserFeedback'
+      responses:
+        '200':
+          description: Recorded feedback.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocalUserFeedback'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/usage/synchronizations:
+    post:
+      operationId: synchronizeUsage
+      x-cli-command: openapi-engineering-skill usage sync
+      x-cli-arguments: {}
+      x-cli-exit-codes:
+        '0': approved sanitized queue synchronized or no pending data
+        '1': remote conflict or untrusted data blocked synchronization
+        '2': synchronization is disabled or configuration is invalid
+      tags: [Usage]
+      summary: Synchronize only schema-validated sanitized objects to an approved Git remote
+      description: >-
+        Uses standing synchronization opt-in. It disables Git hooks, writes only the
+        configured device partition, never stores credentials, and preserves the local
+        outbound queue on network, authentication, or non-fast-forward failure.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsageSynchronizationRequest'
+      responses:
+        '200':
+          description: Synchronization result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageSynchronizationResult'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/usage/summaries:
+    post:
+      operationId: summarizeUsage
+      x-cli-command: openapi-engineering-skill usage summarize --period <iso-week|30d|90d>
+      x-cli-arguments:
+        period: --period
+      x-cli-exit-codes:
+        '0': deterministic summary produced
+        '1': one or more inputs failed integrity validation
+        '2': invalid period or inaccessible state
+      tags: [Usage]
+      summary: Produce a deterministic summary without invoking a model
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsageSummaryRequest'
+      responses:
+        '200':
+          description: Deterministic usage summary.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageSummary'
+              examples:
+                weeklySummary:
+                  externalValue: './examples/usage-summary-response.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/usage/due-checks:
+    post:
+      operationId: checkUsageDue
+      x-cli-command: openapi-engineering-skill usage due
+      x-cli-arguments: {}
+      x-cli-exit-codes:
+        '0': no finding or deterministic findings emitted
+        '1': input integrity or ownership gate failed
+        '2': non-coordinator, disabled, or invalid state
+      tags: [Usage]
+      summary: Check idempotent weekly thresholds on the M4 coordinator
+      description: >-
+        Runs at low cost without a model. The same ISO week and input digest can produce
+        at most one summary and one analysis eligibility decision.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsageDueRequest'
+      responses:
+        '200':
+          description: Deterministic finding when a threshold is met.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageDueResult'
+              examples:
+                resourceFinding:
+                  externalValue: './examples/usage-due-response.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/maintenance/analyses:
+    post:
+      operationId: analyzeMaintenanceFindings
+      x-cli-command: >-
+        openapi-engineering-skill maintenance analyze --findings <path>
+        [--credential-mode <environment|active-cli-session>]
+        [--resume-analysis <path>]
+      x-cli-arguments:
+        findings: --findings; sanitized and schema-validated finding bundle only
+        credentialMode: >-
+          --credential-mode; environment uses approved API-key environment variables and is the
+          default, while active-cli-session explicitly uses only the active platform credential
+          channel: a staged Codex auth file or the allowlisted authentication/provider fields from
+          Claude Code's private user settings
+        resumeAnalysis: >-
+          --resume-analysis; validated prior analysis with the same input digest and a passed Codex
+          primary, a self-consistent analysis ID, and a required blocked/failed secondary review
+        timeoutSeconds: --timeout-seconds; 1..600, defaults to 600
+        warningRssMb: --rss-warning-mb; defaults to 512
+        hardRssMb: --rss-hard-mb; defaults to 1024 and must exceed warningRssMb
+      x-cli-exit-codes:
+        '0': private analysis produced
+        '1': analyzer failed or emitted invalid output
+        '2': input, authorization, timeout, or resource gate blocked analysis
+      tags: [Maintenance]
+      summary: Analyze threshold findings with Codex and optional serial Claude review
+      description: >-
+        Accepts at most 50 sanitized events. Codex is primary. Claude Code is invoked
+        serially only for safety, platform drift, P0/P1, low-confidence, or blocked
+        primary results. Neither analyzer may access target projects or local detail. Active CLI
+        session reuse is explicit, loads no hooks, plugins, permissions, MCP, history, or projects,
+        and removes any staged credential with the analyzer's temporary HOME. A Claude Code
+        compatible provider is recorded as the actual configured model and is not represented as
+        Anthropic model evidence.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaintenanceAnalysisRequest'
+      responses:
+        '200':
+          description: Private maintenance analysis.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaintenanceAnalysis'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/maintenance/automation:
+    post:
+      operationId: configureMaintenanceAutomation
+      x-cli-command: >-
+        openapi-engineering-skill maintenance automation <status|configure|disable>
+        [--credential-mode active-cli-session] [--python <absolute-executable>]
+        [--notify <none|macos>]
+        [--approve <sha256>] [--apply]
+      x-cli-arguments:
+        action: status, configure, or disable
+        credentialMode: configure requires active-cli-session
+        pythonExecutable: configure requires a Python 3.11+ absolute path that imports jsonschema
+        notification: terminal-report notification policy; macos is coordinator-only
+        approvalSha256: exact digest emitted by the unchanged configure dry-run
+        apply: omitted for status and dry-run; required with the exact digest to persist configure
+      x-cli-exit-codes:
+        '0': status returned, dry-run planned, or exact authorized configuration applied
+        '1': approval digest or an existing authorization is stale
+        '2': invalid coordinator, configuration, credential mode, notification, or unsafe state
+      tags: [Maintenance]
+      summary: Configure revocable unattended maintenance authorization
+      description: >-
+        Stores no credential. A configure dry-run qualifies and binds an explicit Python runtime,
+        coordinator identity, sync binding, Skill version and digest, analyzer order, resource
+        limits, retry limit, and notification policy. Apply requires that exact digest. Any later
+        runtime or configuration drift invalidates the authorization.
+        Disable is independent and never deletes reports or usage history.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaintenanceAutomationRequest'
+      responses:
+        '200':
+          description: Current automation state or a dry-run/apply result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaintenanceAutomationResult'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/maintenance/cycles:
+    post:
+      operationId: runMaintenanceCycle
+      x-cli-command: >-
+        openapi-engineering-skill maintenance cycle [--now <timestamp>]
+        [--adapter <codex|fake>] [--fake-response <path>]
+        [--secondary-adapter <claude|fake|none>] [--secondary-fake-response <path>] [--json]
+      x-cli-arguments:
+        requestedAt: --now; optional deterministic clock override
+        adapter: --adapter; codex in production, fake only for deterministic offline validation
+        fakeResponse: --fake-response; deterministic primary semantic-result fixture
+        secondaryAdapter: --secondary-adapter; claude in production, fake/none only for validation
+        secondaryFakeResponse: --secondary-fake-response; deterministic secondary fixture
+      x-cli-exit-codes:
+        '0': no finding, duplicate, or completed private analysis
+        '1': analyzer failed after producing terminal private evidence
+        '2': authorization, sync, input, credential, timeout, or resource gate blocked the cycle
+      tags: [Maintenance]
+      summary: Run one authorized unattended coordinator maintenance cycle
+      description: >-
+        Validates the standing authorization, synchronizes the approved private Git partition,
+        performs the idempotent weekly due check, and starts Codex only when a deterministic finding
+        exists. Risk-required Claude review runs strictly after Codex. The same
+        period/input/authorization has at most two serialized attempts and one immutable terminal
+        report. A terminal report is written atomically as private JSON and Markdown before a fixed,
+        content-free macOS notification is attempted. No proposal or public write occurs.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaintenanceCycleRequest'
+      responses:
+        '200':
+          description: Cycle result; inspect the private report only when report_id is non-null.
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/maintenance-cycle.schema.json'
+              examples:
+                completedAnalysis:
+                  externalValue: './examples/maintenance-cycle-response.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/usage/schedulers:
+    post:
+      operationId: configureUsageScheduler
+      x-cli-command: >-
+        openapi-engineering-skill usage scheduler <status|install|uninstall>
+        [--hour <0-23> --minute <0-59>] [--apply]
+      x-cli-arguments:
+        action: scheduler status, install, or uninstall
+        hour: --hour; local daily due-check hour
+        minute: --minute; local daily due-check minute
+        apply: --apply; omitted for status or dry-run
+      x-cli-exit-codes:
+        '0': status returned, dry-run planned, or digest-matched change applied
+        '1': existing scheduler file is divergent
+        '2': non-macOS, non-coordinator, invalid time, or unsafe target
+      tags: [Usage]
+      summary: Manage the M4 daily maintenance cycle with dry-run-first semantics
+      description: >-
+        Installs one daily maintenance cycle with RunAtLoad catch-up. The cycle remains a zero-model
+        due check unless a valid standing authorization and deterministic finding both exist. It
+        manages only the exact digest-matched plist it created and never installs on collector nodes.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsageSchedulerRequest'
+      responses:
+        '200':
+          description: Scheduler status or change plan.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageSchedulerResult'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/usage/sessions:
+    post:
+      operationId: runUsageSession
+      x-cli-command: >-
+        openapi-engineering-skill session run --agent <codex|claude>
+        --project-alias <alias> [--output <path>] -- <argv>
+      x-cli-arguments:
+        agent: --agent; attribution only, command remains explicit argv
+        project_alias: --project-alias; used only after a separately approved record step
+        output: --output; optional atomic launcher report path
+        argv: exact arguments after --; never executed through a shell
+      x-cli-exit-codes:
+        '0': child completed successfully and launcher report was emitted
+        '1': child exited nonzero
+        '2': spawn, timeout, RSS limit, unsupported watcher, or isolation gate blocked
+      tags: [Usage]
+      summary: Run one explicitly requested strict sample in an owned process group
+      description: >-
+        Monitors only the process group it starts. Records bounded duration, exit, RSS,
+        timeout, and reclamation facts without persisting raw argv, stdout, or stderr.
+        The launcher never terminates an existing Codex, Claude, browser, or user process.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsageSessionRequest'
+      responses:
+        '200':
+          description: Strict launcher evidence.
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/usage-event.schema.json#/$defs/launcher_result'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/usage/cleanups:
+    post:
+      operationId: cleanupUsageRetention
+      x-cli-command: >-
+        openapi-engineering-skill usage cleanup [--scope <local|remote>]
+        [--approve <plan-sha256>] [--apply]
+      x-cli-arguments:
+        scope: --scope; local state by default, remote requires coordinator sync authorization
+        approve: --approve; exact digest emitted by a fresh dry-run plan
+        apply: --apply; requires --approve and revalidates every current file digest
+      x-cli-exit-codes:
+        '0': dry-run plan emitted, no expired data, or exact approved cleanup applied
+        '1': plan digest or a target file changed
+        '2': invalid cutoff, symlink, unsafe state, or malformed retained data
+      tags: [Usage]
+      summary: Plan or apply bounded retention cleanup without touching durable objects
+      description: >-
+        Local event and feedback rows use the configured local retention. Imported
+        sanitized aggregate rows and approved private Git event/feedback partitions use
+        remote retention. Remote cleanup is a separate scope so local and Git changes
+        cannot partially commit together. Summaries, findings, incidents,
+        analyses, proposals, promoted objects, holds, outbound data, and authorization
+        are outside this operation. Dry-run is read-only; apply requires the exact plan
+        digest and atomically rewrites only digest-matched files.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsageCleanupRequest'
+      responses:
+        '200':
+          description: Digest-bound cleanup plan or application report.
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/retention-plan.schema.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/usage/trends:
+    post:
+      operationId: analyzeUsageTrends
+      x-cli-command: openapi-engineering-skill usage trends
+      x-cli-arguments:
+        now: --now; deterministic report boundary
+        fix_at: --fix-at; optional exact change boundary for before/after comparison
+      x-cli-exit-codes:
+        '0': deterministic trend report produced, including insufficient evidence
+        '1': local or aggregate evidence failed validation
+        '2': collection is disabled or the request boundary is invalid
+      tags: [Usage]
+      summary: Compare deterministic 30/90-day usage windows and detect recurrence
+      description: >-
+        Uses only validated usage facts. At least five samples in both 30-day windows
+        are required before declaring improvement or worsening. AI self-scores never
+        count as outcome evidence. Input and device arrival order do not affect the digest.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [now]
+              properties:
+                now: { type: string, format: date-time }
+                fix_at: { type: [string, 'null'], format: date-time }
+      responses:
+        '200':
+          description: Deterministic trend and recurrence report.
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/usage-trend.schema.json'
+              examples:
+                insufficientTrend:
+                  externalValue: './examples/usage-trend-response.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/maintenance/proposals:
+    post:
+      operationId: buildMaintenanceProposal
+      x-cli-command: openapi-engineering-skill maintenance propose --analysis <path>
+      x-cli-arguments:
+        analysis: --analysis; schema-validated private analysis
+      x-cli-exit-codes:
+        '0': immutable private proposal produced
+        '1': proposal could not bind every input and target hash
+        '2': analysis or local integrity gate blocked proposal creation
+      tags: [Maintenance]
+      summary: Build an immutable private proposal without changing source
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaintenanceAnalysis'
+      responses:
+        '200':
+          description: Approval-bound private proposal.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaintenanceProposal'
+              examples:
+                approvalBoundProposal:
+                  externalValue: './examples/maintenance-proposal-response.json'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /v1/maintenance/promotions:
+    post:
+      operationId: promoteMaintenanceProposal
+      x-cli-command: >-
+        openapi-engineering-skill maintenance promote --proposal <path>
+        --approve <sha256>
+      x-cli-arguments:
+        proposal: --proposal
+        approval_digest: --approve; exact immutable proposal SHA-256
+        target_root: --target-root; explicit repository or approved private workspace root
+        apply: --apply; omitted for a zero-write immutable plan
+      x-cli-exit-codes:
+        '0': approved private evaluation or failing-test skeleton promoted atomically
+        '1': digest, input, target hash, or allowed path is stale
+        '2': request is invalid or promotion preflight is blocked
+      tags: [Maintenance]
+      summary: Promote only an exactly approved proposal into approved private paths
+      description: >-
+        Promotion never edits public source automatically. It requires an exact digest
+        binding inputs, contract impact, target file hashes, failing tests, verification,
+        resources, artifact bytes, open questions, and rollback; any drift causes zero writes.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaintenancePromotionRequest'
+      responses:
+        '200':
+          description: Exact approved promotion result.
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/maintenance-promotion.schema.json'
+              examples:
+                zeroWritePlan:
+                  externalValue: './examples/maintenance-promotion-response.json'
         '400':
           $ref: '#/components/responses/InvalidRequest'
 components:
@@ -858,3 +1417,229 @@ components:
       $ref: './schemas/verification-report.schema.json'
     CompletionReport:
       $ref: './schemas/completion-report.schema.json'
+    UsageConfiguration:
+      $ref: './schemas/usage-config.schema.json'
+    LocalUsageEvent:
+      $ref: './schemas/usage-event.schema.json#/$defs/local_event'
+    SanitizedUsageEvent:
+      $ref: './schemas/usage-event.schema.json#/$defs/sanitized_event'
+    LocalUserFeedback:
+      $ref: './schemas/user-feedback.schema.json#/$defs/local_feedback'
+    SanitizedUserFeedback:
+      $ref: './schemas/user-feedback.schema.json#/$defs/sanitized_feedback'
+    UsageSummary:
+      $ref: './schemas/usage-summary.schema.json'
+    MaintenanceFinding:
+      $ref: './schemas/maintenance-finding.schema.json'
+    MaintenanceAnalysis:
+      $ref: './schemas/maintenance-analysis.schema.json'
+    MaintenanceCycle:
+      $ref: './schemas/maintenance-cycle.schema.json'
+    MaintenanceReport:
+      $ref: './schemas/maintenance-report.schema.json'
+    MaintenanceProposal:
+      $ref: './schemas/maintenance-proposal.schema.json'
+    UsageConfigurationCommand:
+      type: object
+      additionalProperties: false
+      required: [action, apply]
+      properties:
+        action: { enum: [status, enable, disable, sync-configure] }
+        apply: { type: boolean, default: false }
+        device: { type: [string, 'null'], pattern: '^[a-z0-9][a-z0-9-]{0,31}$' }
+        remote: { type: [string, 'null'], minLength: 1, maxLength: 2048 }
+        branch: { type: [string, 'null'], minLength: 1, maxLength: 200 }
+    UsageConfigurationResult:
+      type: object
+      additionalProperties: false
+      required: [status, action, applied, config]
+      properties:
+        status: { enum: [ok, conflict] }
+        action: { enum: [status, enable, disable, sync-configure] }
+        applied: { type: boolean }
+        config:
+          $ref: './schemas/usage-config.schema.json'
+    UsageRecordResult:
+      type: object
+      additionalProperties: false
+      required: [status, recorded, feedback_required, outbound_queued, event]
+      properties:
+        status: { enum: [ok, disabled, duplicate] }
+        recorded: { type: boolean }
+        feedback_required: { type: boolean }
+        outbound_queued: { type: boolean }
+        event:
+          oneOf:
+            - $ref: './schemas/usage-event.schema.json#/$defs/local_event'
+            - type: 'null'
+    UsageSynchronizationRequest:
+      type: object
+      additionalProperties: false
+      required: [requested_at]
+      properties:
+        requested_at: { type: string, format: date-time }
+    UsageSynchronizationResult:
+      type: object
+      additionalProperties: false
+      required: [status, synchronized, pending, commit]
+      properties:
+        status: { enum: [ok, blocked] }
+        synchronized: { type: integer, minimum: 0 }
+        pending: { type: integer, minimum: 0 }
+        commit: { type: [string, 'null'], pattern: '^[a-f0-9]{40,64}$' }
+    UsageSummaryRequest:
+      type: object
+      additionalProperties: false
+      required: [period]
+      properties:
+        period: { enum: [iso-week, 30d, 90d] }
+    UsageDueRequest:
+      type: object
+      additionalProperties: false
+      required: [requested_at]
+      properties:
+        requested_at: { type: string, format: date-time }
+    UsageDueResult:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - period_id
+        - input_sha256
+        - eligible_for_analysis
+        - finding_count
+        - summary
+        - findings
+      properties:
+        status: { enum: [due, not-due, no-findings] }
+        period_id: { type: string, pattern: '^[0-9]{4}-W[0-9]{2}$' }
+        input_sha256: { type: string, pattern: '^[a-f0-9]{64}$' }
+        eligible_for_analysis: { type: boolean }
+        finding_count: { type: integer, minimum: 0 }
+        summary:
+          $ref: './schemas/usage-summary.schema.json'
+        findings:
+          type: array
+          items:
+            $ref: './schemas/maintenance-finding.schema.json'
+    UsageSchedulerRequest:
+      type: object
+      additionalProperties: false
+      required: [action, apply]
+      properties:
+        action: { enum: [status, install, uninstall] }
+        apply: { type: boolean, default: false }
+        hour: { type: integer, minimum: 0, maximum: 23, default: 3 }
+        minute: { type: integer, minimum: 0, maximum: 59, default: 0 }
+    UsageSchedulerResult:
+      type: object
+      additionalProperties: false
+      required: [status, action, applied, state, target, sha256]
+      properties:
+        status: { enum: [ok, conflict] }
+        action: { enum: [status, install, uninstall] }
+        applied: { type: boolean }
+        state: { enum: [missing, would-install, installed, would-remove, removed, conflict] }
+        target: { type: string, minLength: 1 }
+        sha256: { type: [string, 'null'], pattern: '^[a-f0-9]{64}$' }
+    UsageSessionRequest:
+      type: object
+      additionalProperties: false
+      required: [agent, project_alias, argv]
+      properties:
+        agent: { enum: [codex, claude] }
+        project_alias: { type: string, minLength: 1, maxLength: 80 }
+        argv:
+          type: array
+          minItems: 1
+          items: { type: string }
+    UsageCleanupRequest:
+      type: object
+      additionalProperties: false
+      required: [requested_at, scope, apply]
+      properties:
+        requested_at: { type: string, format: date-time }
+        scope: { enum: [local, remote], default: local }
+        apply: { type: boolean, default: false }
+        approval_sha256: { type: [string, 'null'], pattern: '^[a-f0-9]{64}$' }
+    MaintenanceAnalysisRequest:
+      type: object
+      additionalProperties: false
+      required: [findings, sanitized_events]
+      properties:
+        findings:
+          type: array
+          minItems: 1
+          items:
+            $ref: './schemas/maintenance-finding.schema.json'
+        sanitized_events:
+          type: array
+          maxItems: 50
+          items:
+            $ref: './schemas/usage-event.schema.json#/$defs/sanitized_event'
+        credential_mode:
+          enum: [environment, active-cli-session]
+          default: environment
+        resume_analysis:
+          oneOf:
+            - $ref: './schemas/maintenance-analysis.schema.json'
+            - type: 'null'
+          default: null
+        timeout_seconds: { type: integer, minimum: 1, maximum: 600, default: 600 }
+        warning_rss_mb: { type: integer, minimum: 1, default: 512 }
+        hard_rss_mb: { type: integer, minimum: 2, default: 1024 }
+    MaintenanceAutomationRequest:
+      type: object
+      additionalProperties: false
+      required: [action, apply]
+      properties:
+        action: { enum: [status, configure, disable] }
+        credential_mode:
+          type: [string, 'null']
+          enum: [active-cli-session, null]
+          default: null
+        python_executable:
+          type: [string, 'null']
+          minLength: 1
+          maxLength: 4096
+          default: null
+        notification: { enum: [none, macos], default: none }
+        approval_sha256: { type: [string, 'null'], pattern: '^[a-f0-9]{64}$' }
+        apply: { type: boolean, default: false }
+      allOf:
+        - if:
+            properties:
+              action: { const: configure }
+          then:
+            required: [credential_mode, python_executable]
+            properties:
+              credential_mode: { const: active-cli-session }
+              python_executable: { type: string }
+    MaintenanceAutomationResult:
+      type: object
+      additionalProperties: false
+      required: [status, action, applied, approval_sha256, config]
+      properties:
+        status: { enum: [ok, stale] }
+        action: { enum: [status, configure, disable] }
+        applied: { type: boolean }
+        approval_sha256: { type: [string, 'null'], pattern: '^[a-f0-9]{64}$' }
+        config:
+          $ref: './schemas/usage-config.schema.json'
+    MaintenanceCycleRequest:
+      type: object
+      additionalProperties: false
+      required: [requested_at]
+      properties:
+        requested_at: { type: string, format: date-time }
+    MaintenancePromotionRequest:
+      type: object
+      additionalProperties: false
+      required: [proposal, approval_sha256, apply]
+      properties:
+        proposal:
+          $ref: './schemas/maintenance-proposal.schema.json'
+        approval_sha256: { type: string, pattern: '^[a-f0-9]{64}$' }
+        apply: { type: boolean, default: false }
+    MaintenancePromotionResult:
+      $ref: './schemas/maintenance-promotion.schema.json'

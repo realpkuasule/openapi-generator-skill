@@ -1,0 +1,46 @@
+{
+  "approval_sha256": "a356bdd6f3288c17635fd67d05ac068a378bc85092078fa1af12275e758eb81d",
+  "artifacts": [
+    {
+      "content": "def test_approved_candidate_remains_red():\n    assert False\n",
+      "content_sha256": "0e97882577a9114584ad76e808e8e69bf79342cf1317436ef1f1c2795fa98d4e",
+      "kind": "failing-test",
+      "media_type": "text/x-python",
+      "path": "tests/test_maintenance_candidate_usage_resource.py"
+    }
+  ],
+  "candidate_id": "candidate-0123456789abcdef",
+  "config_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "contract_impact": "compatible",
+  "failing_tests": [
+    "tests/test_maintenance_candidate_usage_resource.py"
+  ],
+  "generated_at": "2026-07-19T12:00:00Z",
+  "input_digests": [
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "ce7c6adcc9077536ca04f5ebdf710b27bd3ed547694109fa8c031be3b736ca10"
+  ],
+  "open_questions": [],
+  "proposal_id": "proposal-6513a40962cd5cb2",
+  "resources": {
+    "hard_rss_mb": 1024,
+    "max_concurrency": 1,
+    "timeout_seconds": 600,
+    "warning_rss_mb": 512
+  },
+  "rollback": [
+    "Remove only the approved candidate fixture if its digest still matches."
+  ],
+  "schema_version": 2,
+  "skill_sha256": "dd520db50387f60f69787cb6c9f13101d18a6bc933fb3d961ce5f0f8fddff6f6",
+  "skill_version": "0.1.4",
+  "target_files": [
+    {
+      "expected_sha256": null,
+      "path": "tests/test_maintenance_candidate_usage_resource.py"
+    }
+  ],
+  "verification": [
+    "Run the new failing test before implementation."
+  ]
+}

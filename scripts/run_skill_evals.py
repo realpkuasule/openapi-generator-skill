@@ -338,6 +338,7 @@ def write_report(path: Path, report: dict[str, Any]) -> None:
 
 
 def main() -> int:
+    global SKILL_ROOT
     parser = argparse.ArgumentParser(description="Run isolated OpenAPI engineering skill evals.")
     parser.add_argument("--adapter", choices=("fake", "codex", "claude"), default="fake")
     parser.add_argument("--case", action="append", default=[])
@@ -348,6 +349,8 @@ def main() -> int:
     parser.add_argument("--report", type=Path)
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--retry-nonpassing", action="store_true")
+    parser.add_argument("--eval-root", type=Path, default=DEFAULT_EVAL_ROOT)
+    parser.add_argument("--skill-root", type=Path, default=SKILL_ROOT)
     args = parser.parse_args()
     if args.timeout < 1:
         parser.error("--timeout must be positive")
@@ -357,8 +360,11 @@ def main() -> int:
         parser.error("--resume requires --report")
     if args.retry_nonpassing and not args.resume:
         parser.error("--retry-nonpassing requires --resume")
+    SKILL_ROOT = args.skill_root.expanduser().resolve()
+    if not (SKILL_ROOT / "SKILL.md").is_file():
+        parser.error("--skill-root must contain SKILL.md")
     try:
-        cases = load_cases(DEFAULT_EVAL_ROOT, args.case)
+        cases = load_cases(args.eval_root.expanduser().resolve(), args.case)
     except EvalCaseError as exc:
         print(json.dumps({"status": "error", "message": str(exc)}, sort_keys=True))
         return 2

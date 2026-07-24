@@ -22,6 +22,8 @@ class CiWorkflowTests(unittest.TestCase):
         commands = "\n".join(str(step.get("run", "")) for step in steps)
         self.assertIn("uv sync --locked", commands)
         self.assertIn("scripts/verify.py --tier deterministic", commands)
+        uses = {step.get("uses") for step in steps}
+        self.assertIn("actions/setup-node@v4", uses)
         self.assertEqual(payload["permissions"], {"contents": "read"})
 
     def test_live_forward_and_release_gates_are_manual_and_never_pr_side_effects(self) -> None:
@@ -43,6 +45,28 @@ class CiWorkflowTests(unittest.TestCase):
             str(step.get("run", "")) for step in release["steps"]
         )
         self.assertIn("scripts/verify.py --tier full", release_commands)
+
+    def test_maintainer_analysis_is_manual_serial_and_environment_approved(self) -> None:
+        payload = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+        job = payload["jobs"]["live-maintainer"]
+        self.assertIn("workflow_dispatch", job["if"])
+        self.assertIn("run_maintainer", job["if"])
+        self.assertEqual(job["environment"], "live-maintenance")
+        self.assertIn("self-hosted", job["runs-on"])
+        commands = "\n".join(str(step.get("run", "")) for step in job["steps"])
+        self.assertIn("scripts/maintenance/analyze_usage.py", commands)
+        self.assertIn("--adapter codex", commands)
+        self.assertIn("--secondary-adapter claude", commands)
+        self.assertIn("--credential-mode environment", commands)
+        self.assertNotIn("&", commands)
+        self.assertNotIn("${{ inputs.maintenance_bundle_path }}", commands)
+        analysis_step = next(
+            step for step in job["steps"] if "analyze_usage.py" in step.get("run", "")
+        )
+        self.assertEqual(
+            analysis_step["env"]["MAINTENANCE_BUNDLE_PATH"],
+            "${{ inputs.maintenance_bundle_path }}",
+        )
 
 
 if __name__ == "__main__":
