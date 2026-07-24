@@ -568,6 +568,14 @@ async function canonicalStates(versionRoot, canonicals, expectedDigests) {
   return states;
 }
 
+function isManagedVersionDirectory(name, legacy) {
+  if (legacy) {
+    if (!name.startsWith("v")) return false;
+    name = name.slice(1);
+  }
+  return /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/.test(name);
+}
+
 async function managedPreviousCanonical(home, destination, skillName) {
   const roots = [
     {
@@ -602,18 +610,25 @@ async function managedPreviousCanonical(home, destination, skillName) {
     ) {
       continue;
     }
-    if (managed.legacy) {
-      const skill = await pathInfo(join(destination, "SKILL.md"));
-      if (!parts[0].startsWith("v") || !skill?.isFile() || skill.isSymbolicLink()) continue;
-    } else {
+    const skill = await pathInfo(join(destination, "SKILL.md"));
+    if (
+      !isManagedVersionDirectory(parts[0], managed.legacy)
+      || !skill?.isFile()
+      || skill.isSymbolicLink()
+    ) {
+      continue;
+    }
+    if (!managed.legacy) {
       const packagePath = join(versionRoot, "package.json");
       const packageInfo = await pathInfo(packagePath);
-      if (!packageInfo?.isFile() || packageInfo.isSymbolicLink()) continue;
-      try {
-        const metadata = JSON.parse(await readFile(packagePath, "utf8"));
-        if (metadata.name !== PACKAGE.name || metadata.version !== parts[0]) continue;
-      } catch {
-        continue;
+      if (packageInfo) {
+        if (!packageInfo.isFile() || packageInfo.isSymbolicLink()) continue;
+        try {
+          const metadata = JSON.parse(await readFile(packagePath, "utf8"));
+          if (metadata.name !== PACKAGE.name || metadata.version !== parts[0]) continue;
+        } catch {
+          continue;
+        }
       }
     }
     return {

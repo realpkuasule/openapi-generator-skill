@@ -4,6 +4,20 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [0.1.5] - 2026-07-24
+
+### Fixed
+
+- Recognize metadata-free canonical payloads created by the `0.1.0-rc.2` npm installer and
+  atomically relink Codex and Claude Code runtime targets during an upgrade.
+- Keep unversioned or structurally invalid managed-path symlinks as hard conflicts, and preserve
+  every earlier canonical payload for rollback.
+
+### Contract impact
+
+- The OpenAPI control-plane contract is unchanged. The existing installer `would-relink` behavior
+  now covers the historical npm layout that predated canonical `package.json` metadata.
+
 ## [0.1.4] - 2026-07-24
 
 ### Documentation

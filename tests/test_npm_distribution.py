@@ -16,8 +16,8 @@ from tests.support import REPO_ROOT, SKILL_ROOT, snapshot_tree
 PACKAGE_JSON = REPO_ROOT / "package.json"
 NODE_INSTALLER = REPO_ROOT / "bin" / "openapi-engineering-skill.mjs"
 PACKAGE_NAME = "@realpkuasule/openapi-engineering-skill"
-PACKAGE_VERSION = "0.1.4"
-RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.4.md"
+PACKAGE_VERSION = "0.1.5"
+RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.5.md"
 NPM = shutil.which("npm") or "npm"
 
 
@@ -451,6 +451,87 @@ class NpmDistributionTests(unittest.TestCase):
             self.assertEqual({row["action"] for row in upgrade["installations"]}, {"link"})
             self.assertTrue(verification["verified"])
             self.assertTrue(older.is_dir())
+
+    @unittest.skipIf(os.name == "nt", "historical npm symlink migration is POSIX-only")
+    def test_install_relinks_an_rc2_npm_canonical_without_package_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory)
+            older = (
+                home
+                / ".local"
+                / "share"
+                / "openapi-engineering-skill"
+                / "0.1.0-rc.2"
+                / "skills"
+                / "openapi-engineering"
+            )
+            older.parent.mkdir(parents=True)
+            shutil.copytree(SKILL_ROOT, older)
+            for platform in (".codex", ".claude"):
+                target = home / platform / "skills" / "openapi-engineering"
+                target.parent.mkdir(parents=True)
+                target.symlink_to(older, target_is_directory=True)
+
+            components = ("--component", "runtime", "--component", "maintainer")
+            planned, plan = run_cli(home, "install", *components)
+
+            self.assertEqual(planned.returncode, 0, planned.stderr)
+            self.assertEqual(
+                {
+                    (row["platform"], row["component"], row["action"])
+                    for row in plan["installations"]
+                },
+                {
+                    ("codex", "runtime", "would-relink"),
+                    ("claude", "runtime", "would-relink"),
+                    ("codex", "maintainer", "would-link"),
+                    ("claude", "maintainer", "would-link"),
+                },
+            )
+            self.assertEqual(
+                {
+                    row["previous_version"]
+                    for row in plan["installations"]
+                    if row["component"] == "runtime"
+                },
+                {"0.1.0-rc.2"},
+            )
+
+            applied, application = run_cli(home, "install", *components, "--apply")
+            verified, verification = run_cli(home, "verify", *components)
+
+            self.assertEqual(applied.returncode, 0, applied.stderr)
+            self.assertEqual({row["action"] for row in application["installations"]}, {"link"})
+            self.assertEqual(verified.returncode, 0, verified.stderr)
+            self.assertTrue(verification["verified"])
+            self.assertTrue(older.is_dir())
+
+    @unittest.skipIf(os.name == "nt", "managed symlink safety is POSIX-only")
+    def test_install_rejects_an_unversioned_managed_symlink_without_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory)
+            unmanaged = (
+                home
+                / ".local"
+                / "share"
+                / "openapi-engineering-skill"
+                / "manual-backup"
+                / "skills"
+                / "openapi-engineering"
+            )
+            unmanaged.parent.mkdir(parents=True)
+            shutil.copytree(SKILL_ROOT, unmanaged)
+            target = home / ".codex" / "skills" / "openapi-engineering"
+            target.parent.mkdir(parents=True)
+            target.symlink_to(unmanaged, target_is_directory=True)
+            before = snapshot_tree(home)
+
+            planned, plan = run_cli(home, "install")
+
+            self.assertEqual(planned.returncode, 1, planned.stderr)
+            self.assertEqual(plan["status"], "conflict")
+            self.assertEqual(plan["installations"][0]["action"], "conflict")
+            self.assertEqual(snapshot_tree(home), before)
 
     @unittest.skipIf(os.name == "nt", "legacy source symlink migration is POSIX-only")
     def test_install_migrates_legacy_git_canonical_without_deleting_it(self) -> None:
