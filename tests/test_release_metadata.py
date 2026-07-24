@@ -7,12 +7,13 @@ import unittest
 from tests.support import REPO_ROOT
 
 
-RELEASE_TAG = "v0.1.3"
-NPM_VERSION = "0.1.3"
-PEP440_VERSION = "0.1.3"
+RELEASE_TAG = "v0.1.4"
+NPM_VERSION = "0.1.4"
+PEP440_VERSION = "0.1.4"
+PUBLISHED_NPM_VERSION = "0.1.3"
 README = REPO_ROOT / "README.md"
 CHANGELOG = REPO_ROOT / "CHANGELOG.md"
-RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.3.md"
+RELEASE_PLAN = REPO_ROOT / "docs" / "plans" / "npm-release-v0.1.4.md"
 
 
 class ReleaseMetadataTests(unittest.TestCase):
@@ -39,7 +40,8 @@ class ReleaseMetadataTests(unittest.TestCase):
             "--platform claude",
             "--apply",
             "uninstall",
-            "@realpkuasule/openapi-engineering-skill@0.1.3",
+            f"@realpkuasule/openapi-engineering-skill@{PUBLISHED_NPM_VERSION}",
+            f"npm `latest` remains `v{PUBLISHED_NPM_VERSION}`",
             "scripts/verify.py --tier deterministic",
             "multi-turn boundary interview",
             "no-codegen",
@@ -51,7 +53,7 @@ class ReleaseMetadataTests(unittest.TestCase):
     def test_changelog_contains_dated_release(self) -> None:
         content = CHANGELOG.read_text(encoding="utf-8")
 
-        self.assertIn("## [0.1.3] - 2026-07-22", content)
+        self.assertIn("## [0.1.4] - 2026-07-24", content)
         self.assertIn("Contract-First", content)
         self.assertIn("Codex", content)
         self.assertIn("Claude Code", content)

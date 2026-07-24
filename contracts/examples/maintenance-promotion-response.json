@@ -1,8 +1,8 @@
 {
   "action": "would-promote",
   "applied": false,
-  "approval_sha256": "baa08be1dd93b447a7faa912bd05349ffd6cb7c06afbd31a495e9ab2b67c992d",
-  "plan_sha256": "e13d5ec9e7cea2b9900030ea1ee97db142b9382956a20ad8cdb316b49abd1b8c",
+  "approval_sha256": "a356bdd6f3288c17635fd67d05ac068a378bc85092078fa1af12275e758eb81d",
+  "plan_sha256": "e2c0b741f09a76ee6e21f3e74ff91c3e9d1400be6371aa3f43fbb20050a6fab3",
   "proposal_id": "proposal-6513a40962cd5cb2",
   "schema_version": 1,
   "status": "ok",

@@ -11,22 +11,30 @@ generator, an official SDK, contract-governance tooling, MCP integration, or a d
 
 ## Release
 
-The current patch release is `v0.1.3`. npm installation requires Node.js 20 or newer;
-repository validation requires Python 3.11 or newer. This repository does not yet declare an
-open-source license, so the release is intended for controlled evaluation until the
+The current source release is `v0.1.4`. npm `latest` remains `v0.1.3` because this release boundary
+ends after the source tag and push; it does not authorize `npm publish`. npm installation requires
+Node.js 20 or newer; repository validation requires Python 3.11 or newer. This repository does not
+yet declare an open-source license, so the release is intended for controlled evaluation until the
 project owner selects one.
+
+The earlier `v0.1.2` tag is retained as an immutable historical source tag but was never published
+to npm; use npm `0.1.3` for new package installations or `v0.1.4` for a pinned source checkout.
 
 ## Pinned npm installation
 
-Use the exact `0.1.3` release on every machine. The first command is a read-only dry run, the second
-applies the installation, and the third verifies the installed digests:
+Use the exact `0.1.3` release on every machine. The commands below install both the runtime Skill
+and the optional Maintainer Skill for Codex and Claude Code. The first command is a read-only dry
+run, the second applies the installation, and the third verifies the installed digests:
 
 ```bash
 npx --yes @realpkuasule/openapi-engineering-skill@0.1.3 install \
+  --component runtime --component maintainer \
   --platform codex --platform claude --json
 npx --yes @realpkuasule/openapi-engineering-skill@0.1.3 install \
+  --component runtime --component maintainer \
   --platform codex --platform claude --apply --json
 npx --yes @realpkuasule/openapi-engineering-skill@0.1.3 verify \
+  --component runtime --component maintainer \
   --platform codex --platform claude --json
 ```
 
@@ -35,10 +43,32 @@ The npm CLI copies a versioned canonical payload to
 immutable tree. It has no `postinstall` script and never writes during `npm install` or the default
 dry run.
 
-Add `--component maintainer` only on machines where private self-improvement analysis is intended.
-Re-running `install` with a newer pinned release safely plans and then relinks verified earlier npm or
-legacy Git canonical symlinks; it preserves the old payload for rollback. Divergent copies remain
-conflicts and are never overwritten.
+Omit `--component maintainer` on machines that only need the project-aware runtime Skill. The
+Maintainer Skill is required for private self-improvement analysis and never enables collection or
+unattended execution by itself. Re-running `install` with a newer pinned release safely plans and
+then relinks verified earlier npm or legacy Git canonical symlinks; it preserves the old payload for
+rollback. Divergent copies remain conflicts and are never overwritten.
+
+If npm reports `openapi-engineering-skill: command not found` while the current directory is this
+source checkout, run the command from another directory or use npm's explicit package form:
+
+```bash
+npm exec --yes --package=@realpkuasule/openapi-engineering-skill@0.1.3 -- \
+  openapi-engineering-skill verify \
+  --component runtime --component maintainer \
+  --platform codex --platform claude --json
+```
+
+Installing a public release does not require npm authentication. For package publication or when
+the registry reports `E401`, verify the active account and use npm's browser login flow:
+
+```bash
+npm whoami
+npm login --auth-type=web
+```
+
+Never place an npm token, password, or one-time code in this repository or in a command recorded by
+the Skill.
 
 ## Optional self-improvement loop
 
@@ -172,7 +202,7 @@ canonical skill tree:
 ```bash
 git clone git@github.com:realpkuasule/openapi-generator-skill.git
 cd openapi-generator-skill
-git checkout v0.1.3
+git checkout v0.1.4
 python3 scripts/install_skill.py --platform codex --platform claude
 python3 scripts/install_skill.py --platform codex --platform claude --apply
 ```
@@ -195,8 +225,10 @@ Preview removal, then apply it:
 
 ```bash
 npx --yes @realpkuasule/openapi-engineering-skill@0.1.3 uninstall \
+  --component runtime --component maintainer \
   --platform codex --platform claude --json
 npx --yes @realpkuasule/openapi-engineering-skill@0.1.3 uninstall \
+  --component runtime --component maintainer \
   --platform codex --platform claude --apply --json
 ```
 

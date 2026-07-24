@@ -4,6 +4,28 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-07-24
+
+### Documentation
+
+- Clarify that `v0.1.2` is a historical source-only tag and that npm installations should use the
+  published `0.1.3` release until a later publication is explicitly authorized.
+- Install and verify the runtime and Maintainer Skills together on Codex and Claude Code machines,
+  while documenting how runtime-only installations opt out of private self-improvement analysis.
+- Add source-checkout command-resolution, npm authentication, credential-safety, and complete
+  component-uninstall guidance.
+
+### Contract impact
+
+- The Contract-First additive contract remains OpenAPI 1.3.0; this patch changes documentation,
+  package metadata, captured version examples, and release evidence only.
+
+### Verified
+
+- All 282 tests and 26 deterministic gates pass serially, including captured contract examples,
+  self-improvement acceptance traceability, process resource limits, and the isolated npm package
+  lifecycle.
+
 ## [0.1.3] - 2026-07-22
 
 ### Fixed
